@@ -8,11 +8,18 @@ import { FaWindowClose } from "react-icons/fa";
 import { ImCheckboxChecked } from "react-icons/im";
 import { Loader } from "rsuite";
 import { BiRightArrow, BiLeftArrow } from "react-icons/bi";
+import { FiInfo } from "react-icons/fi";
 import ScrollToTop from "../../utilities/moveToTop/moveToTop";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
 const LandingPage = ({ setinfo }) => {
   var [table, settable] = useState([]);
   const [radio, setradio] = useState();
+  const [name, setname] = useState();
+  const [uploadcount, setuploadcount] = useState();
   var [table2, settable2] = useState();
   const [search, setsearch] = useState({
     search: "",
@@ -22,21 +29,23 @@ const LandingPage = ({ setinfo }) => {
 
   const [valueDropdown, setValueDropdown] = useState(5);
 
+  const [isHovering, setIsHovering] = useState(false);
+
   const tableheaders = [
-    { value: "LMS Updates", colspan: "6" },
+    { value: "LMS Updates", colspan: "3" },
     { value: "Bank statements updates", colspan: "2" },
     { value: "Bureau Updates", colspan: "2" },
   ];
 
   const tablesubheaders = [
     "Lead id selection",
-    "Deal id",
-    "Customer id",
+    // "Deal id",
+    // "Customer id",
     "Customer name",
     "Last modification date",
     "Uploaded",
-    "Downloaded",
-    "Ready to download",
+    // "Downloaded",
+    "Digitized",
     "Synced",
     "Sync-Date",
   ];
@@ -121,9 +130,35 @@ const LandingPage = ({ setinfo }) => {
     setinfo(localarray);
   };
 
+  const handleMouseOver = () => {
+    setIsHovering(true);
+  };
+
+  const handleMouseOut = () => {
+    setIsHovering(false);
+  };
+
+  console.log(table);
+
+  const HtmlTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: "#000000",
+      color: "#ffffff",
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(13),
+      // border: "1px solid #dadde9",
+    },
+  }));
+
   return (
     <div>
-      <NavBar radiovalue={radio}></NavBar>
+      <NavBar
+        radiovalue={radio}
+        namevalue={name}
+        uploadcount={uploadcount}
+      ></NavBar>
 
       <div className="landingPage">
         {table ? (
@@ -170,6 +205,9 @@ const LandingPage = ({ setinfo }) => {
                                   value={item.lead_id}
                                   onClick={() => {
                                     setradio(item.lead_id);
+                                    setname(item.name);
+                                    setuploadcount(item.bank_uploaded);
+
                                     setvalues(
                                       item.lead_id,
                                       item.customer_id,
@@ -180,13 +218,35 @@ const LandingPage = ({ setinfo }) => {
                                 {item.lead_id}
                               </label>
                             </td>
-                            <td>{item.deal_id}</td>
-                            <td>{item.customer_id}</td>
+                            {/* <td>{item.deal_id}</td> */}
+                            {/* <td>{item.customer_id}</td> */}
                             <td>{item.name}</td>
                             <td>{item.creation_time}</td>
                             <td>{item.bank_uploaded}</td>
-                            <td>{item.bank_download}</td>
-                            <td>{item.bank_download_ready}</td>
+                            {/* <td>{item.bank_download}</td> */}
+                            <td>
+                              <div id="hover_text">
+                                <span id="hoverText">
+                                  {item.bank_download}
+                                  {item.bank_uploaded !==
+                                    item.bank_download && (
+                                    <HtmlTooltip
+                                      title={
+                                        <React.Fragment>
+                                          In-progress:
+                                          <br></br>
+                                          Failed :
+                                        </React.Fragment>
+                                      }
+                                    >
+                                      <Button className="hover_button">
+                                        <FiInfo></FiInfo>
+                                      </Button>
+                                    </HtmlTooltip>
+                                  )}
+                                </span>
+                              </div>
+                            </td>
                             {item.bureau_updated === "Yes" && (
                               <td>
                                 <ImCheckboxChecked
@@ -263,5 +323,4 @@ const LandingPage = ({ setinfo }) => {
     </div>
   );
 };
-
 export default LandingPage;

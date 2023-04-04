@@ -32,7 +32,10 @@ function App() {
         <Routes>
           <Route path="/" exact element={<HomePage />} />
           <Route path="/home" element={<LandingPage setinfo={setinfo} />} />
-          <Route path="/upload/:radiovalue" element={<Upload />} />
+          <Route
+            path="/upload/:radiovalue/:name/:uploadcount/"
+            element={<Upload />}
+          />
           {/* <Route path="/download/:radiovalue" element={<Downloadpage />} /> */}
           <Route path="/bureau/:radiovalue" element={<Bureau info={info} />} />
         </Routes>

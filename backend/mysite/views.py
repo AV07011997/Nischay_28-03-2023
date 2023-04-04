@@ -176,7 +176,7 @@ def home_page(request):
 
         bank_lead['lead_id'] = bank_lead['lead_id'].astype(str)
         customer_detail = customer_detail.merge(bank_lead, on="lead_id", how="left")  ## no need of this line
-        cust = pd.DataFrame(customer_detail.groupby('lead_id').size().reset_index(name="bank_uploaded"))
+        cust = pd.DataFrame(bank_lead.groupby('lead_id').size().reset_index(name="bank_uploaded"))
         customer_detail = customer_detail.merge(cust, on="lead_id", how="left")
 
         if (bank_download_ready.empty == False):
@@ -426,7 +426,7 @@ def uploadBankStatments(request):
             uploaded_file = request.FILES[str(item)]
             key = cutFile(uploaded_file)
             try:
-                pdfs = r'C:\Users\shubhamraj\Downloads\temp' ## pdf storage path
+                pdfs = r'C:\Users\Abhishek\Desktop\pdf_files' ## pdf storage path
                 os.makedirs(pdfs, exist_ok=True)
                 file_path = os.path.join(pdfs, f'{lead_id}_{next_count}_{key}')
                 with open(file_path, 'wb') as f:

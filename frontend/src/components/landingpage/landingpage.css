@@ -79,4 +79,8 @@
 .table {
   align-items: center;
   display: block;
+  justify-content: center;
+}
+#hoverText > button {
+  min-width: 0px;
 }

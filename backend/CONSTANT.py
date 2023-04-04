@@ -2,10 +2,10 @@
 
 
 ## Present in Diffrent bank.py files
-OUTPUT_PATH = r'/Users/shubhamraj/Desktop/digitised/'
+OUTPUT_PATH = r'/Users/Abhishek/Desktop/digitised/'
 
 ## Present in bank name extraction
-TESSERACT = "C:\\Users\\shubhamraj\\AppData\\Local\\Tesseract-OCR\\tesseract.exe"
+TESSERACT = "C:\\Users\\Abhishek\\AppData\\Local\\Tesseract-OCR\\tesseract.exe"
 
 ##user id & password of your SQL database
 
@@ -16,5 +16,5 @@ USER = "root"
 PASSWORD = "Knowlvers@555"
 
 ## analyze -> views
-LOC1 = r"/Users/shubhamraj/Desktop/a3_kit/templates/test1.html"
-LOC2 = r"/Users/shubhamraj/Desktop/a3_kit/templates/test2.html"
+LOC1 = r"/Users/Abhishek/Desktop/a3_kit/templates/test1.html"
+LOC2 = r"/Users/Abhishek/Desktop/a3_kit/templates/test2.html"

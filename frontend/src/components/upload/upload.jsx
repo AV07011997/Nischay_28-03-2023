@@ -30,6 +30,8 @@ const Upload = () => {
   const navigate = useNavigate();
   const params = useParams();
   var { radiovalue } = params;
+  var { name } = params;
+  var { uploadcount } = params;
 
   var mergedFilesUrl = [];
   var tableData = [];
@@ -45,11 +47,14 @@ const Upload = () => {
 
   useEffect(() => {
     getApi(APIADDRESS.UPLOADSTATEMENT + radiovalue + "/").then((response) => {
-      const table = objectFunction(response[2]);
-      const table1 = objectFunction(response[0]);
+      if (response) {
+        console.log(response);
+        const table = objectFunction(response[2]);
+        const table1 = objectFunction(response[0]);
 
-      settable(table);
-      settable1(table1);
+        settable(table);
+        settable1(table1);
+      }
     });
   }, []);
 
@@ -92,18 +97,20 @@ const Upload = () => {
       }
     }
   }, [table]);
+  // console.log(table);
 
   const uplooadfiles = () => {
-    formData.append("lead_id", table1[0].lead_id);
-    formData.append("name", table1[0].name);
-    formData.append("lead_id__count", table1[0].lead_id__count);
+    formData.append("lead_id", radiovalue);
+    formData.append("name", name);
+    formData.append("lead_id__count", uploadcount);
     for (let files in mergefiles) {
       formData.append(files, mergefiles[files][0]);
     }
 
     postApi(APIADDRESS.UPLOADFILES, formData, false, false).then((response) => {
       if (response == 1) {
-        // navigate(`/download/${radiovalue}`);
+        alert("Statements uploaded successfully");
+        navigate(`/home`);
       }
     });
   };
@@ -125,7 +132,7 @@ const Upload = () => {
         <NavBar radiovalue={radiovalue}></NavBar>
       </div>
       <div>
-        <Pageinfo leadId={radiovalue}></Pageinfo>
+        <Pageinfo leadId={radiovalue} name={name}></Pageinfo>
       </div>
 
       <input

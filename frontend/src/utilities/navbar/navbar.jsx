@@ -9,6 +9,10 @@ import { Navigate } from "react-router-dom";
 
 const NavBar = (radiovalue) => {
   var navigatevalue = radiovalue.radiovalue;
+  var navigatenamevalue = radiovalue.namevalue;
+  var uploadcount = radiovalue.uploadcount;
+  // console.log(namevalue);
+
   const navigate = useNavigate();
 
   const logout = () => {
@@ -20,7 +24,7 @@ const NavBar = (radiovalue) => {
     } else if (item == "DOWNLOAD") {
       // navigate(`/download/${navigatevalue}`);
     } else if (item == "UPLOAD") {
-      navigate(`/upload/${navigatevalue}`);
+      navigate(`/upload/${navigatevalue}/${navigatenamevalue}/${uploadcount}`);
       console.log(item);
       console.log(radiovalue);
     } else if (item == "BUREAU") {
