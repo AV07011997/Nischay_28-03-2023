@@ -1,4 +1,11 @@
 # import constants
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
+
+import django
+django.setup()
+
+from django.core.management import call_command
 import schedule
 import boto3
 import time
@@ -21,8 +28,15 @@ from form26as import get_form26as_data
 from form16 import get_form16_data
 from fstype_extraction_bank import bank_extraction
 from bank_name_extraction import fstype_extraction
+from django.db import connection
+from datetime import datetime
+from mysite.models import downloaded_file_details
+
+
+
 from fstype_extraction_itr import itr_extraction
 import glob
+
 
 # bucket = 'a3bank'  ###define bucket name
 # bucket1 = 'a3itr'  ###define bucket name
@@ -47,7 +61,7 @@ def job():
         host='localhost',
         user='root',  ###connect to database
         password='Knowlvers@555',
-        database="details"
+        database="a5_kit"
     )
 
     mycursor = mydb.cursor()
@@ -157,8 +171,17 @@ def job():
             str(files[i])
             print('hdfc')
             file_path = hdfc_digitization(files[i])
+            file_name = files[i].split('\\')[-1][:-4]
 
-            # response = s3.Bucket(bucket2).upload_file(file_path, Key=os.path.basename(file_path))
+            lead_id = file_name.split("\\")[0][:6]
+
+
+            # with connection.cursor() as cursor:
+            #     queryset = "INSERT INTO a5_kit.mysite_downloaded_file_details(lead_id, file_name,date ) VALUES(" + lead_id + ",'" + file_name + "," + now() + ");"
+            #     cursor.execute(queryset)
+
+            u = downloaded_file_details(lead_id=lead_id,file_name=file_name, date=datetime.now())
+            u.save()
             os.remove(files[i])
 
         elif fstype == 'SBI':

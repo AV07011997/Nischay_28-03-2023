@@ -5,7 +5,8 @@ from string import digits
 from datetime import datetime as dt
 from time import time
 
-def sbi_digitization(pdf_path,pdf_password):
+def sbi_digitization(pdf_path):
+    passwrd = ''
 
     start = time()
         #function to concatenate descripton split into multiple rows in email statments
@@ -1144,14 +1145,17 @@ def sbi_digitization(pdf_path,pdf_password):
     final['bank_name'] = 'SBI'
     
     final['lid'] = file_name.split('_')[0]
+    final.to_csv(r'C:\Users\Abhishek\Desktop\digitized_files\{}_b.csv'.format(file_name), index=False)
 
-    final.to_csv(r'/Users/hardikbhardwaj/Downloads/Statements/{}_b.csv'.format(file_name), index=False)
+    return r'C:\Users\Abhishek\Desktop\digitized_files\{}_b.csv'.format(file_name)
 
-    end = time()
-
-    print(end-start)
-   
-    return r'/Users/hardikbhardwaj/Downloads/Statements/{}_b.csv'.format(file_name)
+    # final.to_csv(r'/Users/hardikbhardwaj/Downloads/Statements/{}_b.csv'.format(file_name), index=False)
+    #
+    # end = time()
+    #
+    # print(end-start)
+    #
+    # return r'/Users/hardikbhardwaj/Downloads/Statements/{}_b.csv'.format(file_name)
 
 # try:
 #     sbi_digitization(r"/Users/hardikbhardwaj/Desktop/NARESH  KUMAR BANKING.pdf",'')

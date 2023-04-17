@@ -83,7 +83,7 @@ const LandingPage = ({ setinfo }) => {
     });
   }, []);
 
-  // console.log(table2);
+  console.log(table2);
 
   useEffect(() => {
     let local = [];
