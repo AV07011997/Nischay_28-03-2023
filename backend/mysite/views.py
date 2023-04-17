@@ -175,12 +175,16 @@ def home_page(request):
     try:
 
         bank_lead['lead_id'] = bank_lead['lead_id'].astype(str)
-        customer_detail = customer_detail.merge(bank_lead, on="lead_id", how="left")  ## no need of this line
-        cust = pd.DataFrame(bank_lead.groupby('lead_id').size().reset_index(name="bank_uploaded"))
-        customer_detail = customer_detail.merge(cust, on="lead_id", how="left")
-
-        if (bank_download_ready.empty == False):
+        # customer_detail = customer_detail.merge(bank_lead, on="lead_id", how="left")  ## no need of this line
+        if(bank_lead.empty==False):
+            cust = pd.DataFrame(bank_lead.groupby('lead_id').size().reset_index(name="bank_uploaded"))
+            customer_detail = customer_detail.merge(cust, on="lead_id", how="left")
+        if(bank_download_ready.empty==False):
             customer_detail = customer_detail.merge(bank_download_ready, on="lead_id", how="left")
+
+
+        # if (bank_download_ready.empty == False):
+        #     customer_detail = customer_detail.merge(bank_download_ready, on="lead_id", how="left")
 
         customer_detail = customer_detail.drop_duplicates().reset_index()
         customer_detail = customer_detail.drop(['index'], axis=1)
@@ -250,13 +254,15 @@ def home_page(request):
         print(e)
 
     try:
-        customer_detail['bank_uploaded'] = customer_detail['bank_uploaded'].astype('int64')
+        if (bank_lead.empty == False):
+            customer_detail['bank_uploaded'] = customer_detail['bank_uploaded'].astype('int64')
     except Exception as e:
         print("8")
         print(e)
 
     try:
-        customer_detail['bank_download'] = customer_detail['bank_download'].astype('int64')
+        if(bank_lead.empty==False):
+            customer_detail['bank_download'] = customer_detail['bank_download'].astype('int64')
     except Exception as e:
         print("9")
         print(e)

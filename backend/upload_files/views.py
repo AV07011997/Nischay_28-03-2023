@@ -177,7 +177,6 @@ from mysite.models import *
 import json
 import os
 
-
 from django.db import connection
 
 
@@ -185,8 +184,10 @@ from django.db import connection
 def upload_statements(request, text):
     queryset = upload_file_details.objects.all().values("lead_id", "name").annotate(Count("lead_id")).filter(
         lead_id=text)
-    if(queryset):
+    queryset3 = upload_file_details.objects.all().values("lead_id", "file_name", "name")
+    if (queryset):
         data = pd.DataFrame(list(queryset))
+        data3 = pd.DataFrame(list(queryset3))
 
         queryset1 = los_did_cid_generation.objects.all().filter(lead_id=text).values("lead_id", "name")
         data1 = pd.DataFrame(list(queryset1))
@@ -200,14 +201,18 @@ def upload_statements(request, text):
         data = data.to_dict('split')
         data1 = data1.to_dict('split')
         data2 = data2.to_dict('split')
+        data3 = data3.to_dict('split')
 
-        pydict = json.dumps([data, data1, data2])
+        # pydict = json.dumps([data, data1, data2,data3])
+        pydict = json.dumps([data3, data2])
+
         return HttpResponse(pydict)
     else:
-        return HttpResponse('0')
+        data3 = pd.DataFrame(list(queryset3))
+        data3 = data3.to_dict('split')
+        pydict = json.dumps([data3])
 
-
-
+        return HttpResponse(pydict)
 
 
 def cutFile(f):
@@ -289,7 +294,7 @@ def uploadBankStatments(request):
             uploaded_file = request.FILES[str(item)]
             key = cutFile(uploaded_file)
             try:
-                pdfs = r'C:\Users\Abhishek\Desktop\pdf_files' ## pdf storage path
+                pdfs = r'C:\Users\Abhishek\Desktop\pdf_files'  ## pdf storage path
                 os.makedirs(pdfs, exist_ok=True)
                 file_path = os.path.join(pdfs, f'{lead_id}_{next_count}_{key}')
                 with open(file_path, 'wb') as f:

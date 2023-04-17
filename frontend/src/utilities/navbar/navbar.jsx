@@ -25,14 +25,14 @@ const NavBar = (radiovalue) => {
       // navigate(`/download/${navigatevalue}`);
     } else if (item == "UPLOAD") {
       navigate(`/upload/${navigatevalue}/${navigatenamevalue}/${uploadcount}`);
-      console.log(item);
-      console.log(radiovalue);
+      // console.log(item);
+      // console.log(radiovalue);
     } else if (item == "BUREAU") {
       navigate(`/bureau/${navigatevalue}`);
     } else if (item == "HOME") {
       navigate("/home");
     }
-    console.log(item);
+    // console.log(item);
   };
 
   return (

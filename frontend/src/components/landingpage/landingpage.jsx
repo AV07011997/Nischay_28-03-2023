@@ -39,12 +39,9 @@ const LandingPage = ({ setinfo }) => {
 
   const tablesubheaders = [
     "Lead id selection",
-    // "Deal id",
-    // "Customer id",
     "Customer name",
-    "Last modification date",
+    "Creation Time",
     "Uploaded",
-    // "Downloaded",
     "Digitized",
     "Synced",
     "Sync-Date",
@@ -138,7 +135,7 @@ const LandingPage = ({ setinfo }) => {
     setIsHovering(false);
   };
 
-  console.log(table);
+  // console.log(table);
 
   const HtmlTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />

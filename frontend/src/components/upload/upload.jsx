@@ -48,16 +48,21 @@ const Upload = () => {
   useEffect(() => {
     getApi(APIADDRESS.UPLOADSTATEMENT + radiovalue + "/").then((response) => {
       if (response) {
-        console.log(response);
-        const table = objectFunction(response[2]);
+        // console.log(response);
+
+        if (response[1]) {
+          table = objectFunction(response[1]);
+          settable(table);
+        }
+
         const table1 = objectFunction(response[0]);
 
-        settable(table);
         settable1(table1);
       }
     });
   }, []);
 
+  // console.log(table1);
   var newFiles = [];
   var pdfurl = [];
 
@@ -100,19 +105,51 @@ const Upload = () => {
   // console.log(table);
 
   const uplooadfiles = () => {
-    formData.append("lead_id", radiovalue);
-    formData.append("name", name);
-    formData.append("lead_id__count", uploadcount);
-    for (let files in mergefiles) {
-      formData.append(files, mergefiles[files][0]);
+    var repeatnumber = 0;
+    var repeateddocuments = {};
+    var repeatfiles = [];
+
+    for (let filesDataBase of table1) {
+      // console.log(filesDataBase);
+      for (let newFiles in mergefiles) {
+        // console.log(mergefiles[newFiles][0]);
+        if (filesDataBase.file_name == mergefiles[newFiles][0].name) {
+          repeatnumber = repeatnumber + 1;
+          let repeatfilesvariable =
+            "File Name: " +
+            filesDataBase.file_name +
+            " Customer Name: " +
+            filesDataBase.name +
+            " Lead ID: " +
+            filesDataBase.lead_id +
+            " ";
+          repeatfiles.push(repeatfilesvariable);
+        }
+      }
     }
 
-    postApi(APIADDRESS.UPLOADFILES, formData, false, false).then((response) => {
-      if (response == 1) {
-        alert("Statements uploaded successfully");
-        navigate(`/home`);
+    if (repeatnumber > 0) {
+      alert("File(s) already present in the database ");
+
+      alert(repeatfiles.join("\n"));
+    }
+    if (repeatnumber == 0) {
+      formData.append("lead_id", radiovalue);
+      formData.append("name", name);
+      formData.append("lead_id__count", uploadcount);
+      for (let files in mergefiles) {
+        formData.append(files, mergefiles[files][0]);
       }
-    });
+
+      postApi(APIADDRESS.UPLOADFILES, formData, false, false).then(
+        (response) => {
+          if (response == 1) {
+            alert("Statements uploaded successfully");
+            navigate(`/home`);
+          }
+        }
+      );
+    }
   };
 
   const removepdfview = (fileurl) => {
@@ -180,9 +217,10 @@ const Upload = () => {
                   }}
                 >
                   <AiFillDelete
-                    size={25}
+                    size={20}
                     style={{ color: "red" }}
                   ></AiFillDelete>
+                  {items[0].name}
                 </button>
               </div>
               <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.1.81/build/pdf.worker.min.js">
