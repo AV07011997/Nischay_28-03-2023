@@ -212,7 +212,9 @@ const LandingPage = ({ setinfo }) => {
                                     );
                                   }}
                                 />
-                                {item.lead_id}
+                                <span className="radiobuttongap">
+                                  {item.lead_id}
+                                </span>
                               </label>
                             </td>
                             {/* <td>{item.deal_id}</td> */}
@@ -221,27 +223,28 @@ const LandingPage = ({ setinfo }) => {
                             <td>{item.creation_time}</td>
                             <td>{item.bank_uploaded}</td>
                             {/* <td>{item.bank_download}</td> */}
-                            <td>
-                              <div id="hover_text">
-                                <span id="hoverText">
-                                  {item.bank_download}
-                                  {item.bank_uploaded !==
-                                    item.bank_download && (
-                                    <HtmlTooltip
-                                      title={
-                                        <React.Fragment>
-                                          In-progress:
-                                          <br></br>
-                                          Failed :
-                                        </React.Fragment>
-                                      }
-                                    >
-                                      <Button className="hover_button">
-                                        <FiInfo></FiInfo>
-                                      </Button>
-                                    </HtmlTooltip>
-                                  )}
-                                </span>
+                            <td className="digitizedtd">
+                              <div className="hover_text">
+                                {item.bank_download}
+
+                                {item.bank_uploaded !== item.bank_download && (
+                                  <HtmlTooltip
+                                    title={
+                                      <React.Fragment>
+                                        In-progress:
+                                        {item.bank_uploaded -
+                                          item.failed_count -
+                                          item.bank_download}
+                                        <br></br>
+                                        Failed :{item.failed_count}
+                                      </React.Fragment>
+                                    }
+                                  >
+                                    <Button className="hover_button">
+                                      <FiInfo></FiInfo>
+                                    </Button>
+                                  </HtmlTooltip>
+                                )}
                               </div>
                             </td>
                             {item.bureau_updated === "Yes" && (

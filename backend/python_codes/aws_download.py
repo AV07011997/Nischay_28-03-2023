@@ -31,11 +31,14 @@ from bank_name_extraction import fstype_extraction
 from django.db import connection
 from datetime import datetime
 from mysite.models import downloaded_file_details
+from mysite.models import failed_digitization
 
 
 
 from fstype_extraction_itr import itr_extraction
 import glob
+import csv
+
 
 
 # bucket = 'a3bank'  ###define bucket name
@@ -159,20 +162,28 @@ def job():
     #         print(e)
     #
     # mydb.commit()  ### until and unless you commit table will not be updated
+    for filename in os.listdir(csv_path):
+        if filename.endswith('.csv'):
+            file_path = os.path.join(csv_path, filename)
+            with open(file_path, newline='') as csvfile:
+                reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+                next(reader)
+                for row in reader:
+                    print(row)
+
+
+
     files = glob.glob(r"C:\Users\Abhishek\Desktop\pdf_files\*.pdf")
 
     for i in range(len(files)):
         print(files[i])
         fstype = bank_extraction(files[i])
-        if fstype == None:
-            fstype = fstype_extraction(files[i])
 
         if fstype == 'HDFC':
             str(files[i])
             print('hdfc')
             file_path = hdfc_digitization(files[i])
             file_name = files[i].split('\\')[-1][:-4]
-
             lead_id = file_name.split("\\")[0][:6]
 
 
@@ -180,33 +191,77 @@ def job():
             #     queryset = "INSERT INTO a5_kit.mysite_downloaded_file_details(lead_id, file_name,date ) VALUES(" + lead_id + ",'" + file_name + "," + now() + ");"
             #     cursor.execute(queryset)
 
+
             u = downloaded_file_details(lead_id=lead_id,file_name=file_name, date=datetime.now())
             u.save()
             os.remove(files[i])
 
-        elif fstype == 'SBI':
-            str(files[i])
-
-            file_path = sbi_digitization(files[i])
-            # response = s3.Bucket(bucket2).upload_file(file_path, Key=os.path.basename(file_path))
+        else:
+            file_name = files[i].split('\\')[-1][:-4]
+            lead_id = file_name.split("\\")[0][:6]
+            u = failed_digitization(lead_id=lead_id, file_name=file_name)
+            u.save()
             os.remove(files[i])
 
-        elif fstype == 'ICICI':
-            str(files[i])
+        # elif fstype == 'SBI':
+        #     file_name = files[i].split('\\')[-1][:-4]
+        #
+        #     lead_id = file_name.split("\\")[0][:6]
+        #
+        #     u = failed_digitization(lead_id=lead_id, file_name=file_name)
+        #     u.save()
+        #     os.remove(files[i])
+        #
+        #     pass
+        #     # str(files[i])
+        #     #
+        #     # file_path = sbi_digitization(files[i])
+        #     # # response = s3.Bucket(bucket2).upload_file(file_path, Key=os.path.basename(file_path))
+        #     # os.remove(files[i])
+        #
+        # elif fstype == 'ICICI':
+        #     file_name = files[i].split('\\')[-1][:-4]
+        #
+        #     lead_id = file_name.split("\\")[0][:6]
+        #
+        #     u = failed_digitization(lead_id=lead_id,file_name=file_name)
+        #     u.save()
+        #     os.remove(files[i])
+        #
+        #     pass
+        #
+        #     # str(files[i])
+        #     #
+        #     # file_path = icici_digitization(files[i])
+        #     # # response = s3.Bucket(bucket2).upload_file(file_path, Key=os.path.basename(file_path))
+        #
+        #
+        # elif fstype == 'AXIS':
+        #     file_name = files[i].split('\\')[-1][:-4]
+        #
+        #     lead_id = file_name.split("\\")[0][:6]
+        #
+        #     u = failed_digitization(lead_id=lead_id, file_name=file_name)
+        #     u.save()
+        #     os.remove(files[i])
+        #     pass
+        #     # file_path = axis_digitization(files[i])
+        #     # # response = s3.Bucket(bucket2).upload_file(file_path, Key=os.path.basename(file_path))
+        #     # os.remove(files[i])
 
-            file_path = icici_digitization(files[i])
-            # response = s3.Bucket(bucket2).upload_file(file_path, Key=os.path.basename(file_path))
-            os.remove(files[i])
-
-        elif fstype == 'AXIS':
-            file_path = axis_digitization(files[i])
-            # response = s3.Bucket(bucket2).upload_file(file_path, Key=os.path.basename(file_path))
-            os.remove(files[i])
-
-        elif fstype == 'Corporation':
-            file_path = corporation_digitization(files[i],'')
-            # response = s3.Bucket(bucket2).upload_file(file_path, Key=os.path.basename(file_path))
-            os.remove(files[i])
+        # elif fstype == 'Corporation':
+        #     file_name = files[i].split('\\')[-1][:-4]
+        #     lead_id = file_name.split("\\")[0][:6]
+        #     u = failed_digitization(lead_id=lead_id,file_name=file_name)
+        #     u.save()
+        #
+        #     os.remove(files[i])
+        #
+        #     pass
+        #
+        #     # file_path = corporation_digitization(files[i],'')
+        #     # # response = s3.Bucket(bucket2).upload_file(file_path, Key=os.path.basename(file_path))
+        #     # os.remove(files[i])
 
 schedule.every(0.1).minutes.do(job)  ### frequency of code execution
 

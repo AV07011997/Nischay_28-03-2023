@@ -12,6 +12,8 @@ class digitized_file_status(models.Model):
         return (self.lead_id)
 
 
+
+
 class upload_file_details(models.Model):
     # id = models.AutoField(primary_key=True, default=True)
     lead_id = models.CharField(max_length=30)
@@ -32,6 +34,12 @@ class downloaded_file_details(models.Model):
 
     # def __str__(self):
     #     return(self.lead_id)
+
+class failed_digitization(models.Model):
+    lead_id=models.CharField(max_length=10)
+    file_name=models.CharField(max_length=100)
+
+
 
 
 class los_did_cid_generation(models.Model):
@@ -118,6 +126,7 @@ class bank_bank(models.Model):
     source_of_trans = models.CharField(max_length=20)
     sub_mode = models.CharField(max_length=30)
     transaction_type = models.CharField(max_length=30)
+    lead_id=models.CharField(max_length=30)
 
     def __str__(self):
         return (self.customer_id)

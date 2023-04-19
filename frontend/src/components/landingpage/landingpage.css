@@ -81,6 +81,10 @@
   display: block;
   justify-content: center;
 }
-#hoverText > button {
-  min-width: 0px;
+.hover_text {
+  padding-left: 5px;
+  text-align: left;
+}
+.digitizedtd {
+  width: 108px;
 }

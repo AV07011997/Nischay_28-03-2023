@@ -1210,7 +1210,7 @@ def home_page(request):
         pass
 
     try:
-        queryset = digitized_file_status.objects.all().values("lead_id").order_by()
+        queryset = failed_digitization.objects.all().values("lead_id","file_name").order_by()
         bank_download_ready = pd.DataFrame(list(queryset))
     except:
         pass
@@ -1239,13 +1239,16 @@ def home_page(request):
             cust = pd.DataFrame(bank_lead.groupby('lead_id').size().reset_index(name="bank_uploaded"))
             customer_detail = customer_detail.merge(cust, on="lead_id", how="left")
         if(bank_download_ready.empty==False):
-            customer_detail = customer_detail.merge(bank_download_ready, on="lead_id", how="left")
+            grouped= bank_download_ready.groupby('lead_id')['file_name'].count().reset_index(name='failed_count')
+
+            customer_detail = customer_detail.merge(grouped, on="lead_id", how="left")
 
 
         # if (bank_download_ready.empty == False):
         #     customer_detail = customer_detail.merge(bank_download_ready, on="lead_id", how="left")
 
         customer_detail = customer_detail.drop_duplicates().reset_index()
+        # customer_detail['failed_count']=customer_detail.count('file_name').groupby('lead_id')
         customer_detail = customer_detail.drop(['index'], axis=1)
 
         # customer_detail = customer_detail.groupby(lead_id)
@@ -1335,12 +1338,13 @@ def home_page(request):
 
     customer_detail = customer_detail.sort_values('lead_id')
 
-    if 'bank_download_ready' not in customer_detail:
-        customer_detail['bank_download_ready'] = 0
+    # if 'bank_download_ready' not in customer_detail:
+    #     customer_detail['bank_download_ready'] = customer_detail['failed_count']
 
     ##below lambda and loop statements need some bug fixing
-    customer_detail['bank_download_ready'] = customer_detail['bank_download_ready'].apply(
-        lambda x: int(x) if pd.notnull(x) else 0)
+    # customer_detail['bank_download_ready'] = customer_detail['bank_download_ready'].apply(
+    #     lambda x: int(x) if pd.notnull(x) else 0)
+
     customer_detail['bank_uploaded'] = customer_detail['bank_uploaded'].apply(lambda x: int(x) if pd.notnull(x) else 0)
     customer_detail['bank_download'] = customer_detail['bank_download'].apply(lambda x: int(x) if pd.notnull(x) else 0)
 

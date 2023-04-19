@@ -48,6 +48,8 @@ def fstype_extraction(filepath,scanned_flag):
              return 'SBI'
          if 'ICICI' in result.upper():
              return 'ICICI'
+         else:
+             return 0
         
 
 
@@ -77,5 +79,7 @@ def fstype_extraction(filepath,scanned_flag):
             return 'SBI'
         if 'ICICI' in result.upper():
             return 'ICICI'
+        else:
+            return 0
         os.remove(r'/Users/Abhishek/Desktop/digitised/temp.png')
         
