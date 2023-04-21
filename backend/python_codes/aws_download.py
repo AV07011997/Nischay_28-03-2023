@@ -32,6 +32,7 @@ from django.db import connection
 from datetime import datetime
 from mysite.models import downloaded_file_details
 from mysite.models import failed_digitization
+from mysite.models import bank_bank
 
 
 
@@ -70,6 +71,15 @@ def job():
     mycursor = mydb.cursor()
     file_path = r'C:\Users\Abhishek\Desktop\pdf_files'  ## Here the pdf is stored after uploading it into the web
     csv_path = r'C:\Users\Abhishek\Desktop\digitized_files'  ##  Here we will store the csv after digitisation
+
+    # with open(csv_path, newline='') as csvfile:
+    #     # Create a reader object to iterate over the rows
+    #     reader = csv.reader(csvfile)
+    #
+    #     # Iterate over each row in the CSV file
+    #     for row in reader:
+    #         # Process the row data here
+    #         print(row)
 
     # objects_bank = s3.Bucket(bucket).objects.all()   ###get all objects in the bucket
     # objects_itr = s3.Bucket(bucket1).objects.all()   ###get all objects in the bucket
@@ -162,14 +172,43 @@ def job():
     #         print(e)
     #
     # mydb.commit()  ### until and unless you commit table will not be updated
+
+
+
     for filename in os.listdir(csv_path):
+        lead_id = filename.split("\\")[0][:6]
         if filename.endswith('.csv'):
-            file_path = os.path.join(csv_path, filename)
-            with open(file_path, newline='') as csvfile:
-                reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-                next(reader)
-                for row in reader:
-                    print(row)
+            with open(os.path.join(csv_path, filename), 'r') as csvfile:
+                # Create a CSV reader object
+                csvreader = csv.reader(csvfile)
+                # Loop through each row in the CSV file
+                next(csvreader)
+                #start after header in a csv
+
+                for row in csvreader:
+
+                    datetime_object = datetime.strptime(row[0], '%d/%m/%Y')
+                    new_date = datetime_object.strftime('%Y-%m-%d')
+
+                    timestamp=datetime.now()
+                    timestamp.strftime('%Y-%m-%d')
+                    print(row[0])
+
+
+                    u = bank_bank(txn_date=new_date, description=row[1], cheque_number=row[2], debit=row[3], credit=row[4], balance=row[5], account_name=row[6], account_number=row[7], mode=row[8], entity=row[9], source_of_trans=row[10], sub_mode=row[11], transaction_type=row[12], bank_name=row[13], lead_id=lead_id,creation_time=timestamp)
+                    u.save()
+
+                    # Combine the file path and name
+
+            file_location = os.path.join('C:/Users/Abhishek/Desktop/digitized_files/',filename)
+            os.remove(file_location)
+
+
+
+
+
+
+
 
 
 
