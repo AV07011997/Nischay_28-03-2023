@@ -6,7 +6,8 @@ const Pageinfo = ({ leadId, name }) => {
   return (
     <div className="pageinfo">
       <h4>
-        {obj[0]}:{leadId} {obj[1]}:{name}
+        {obj[0]}:{leadId}
+        <span className="gapInfo">&nbsp;&nbsp;&nbsp;</span> {obj[1]}:{name}
       </h4>
     </div>
   );

@@ -3,4 +3,8 @@
   width: 90%;
   margin-left: 5%;
   text-align: center;
+  padding: 10px;
+}
+.gapInfo {
+  width: 10px;
 }

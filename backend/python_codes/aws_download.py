@@ -33,6 +33,8 @@ from datetime import datetime
 from mysite.models import downloaded_file_details
 from mysite.models import failed_digitization
 from mysite.models import bank_bank
+import pandas as pd
+
 
 
 
@@ -172,8 +174,13 @@ def job():
     #         print(e)
     #
     # mydb.commit()  ### until and unless you commit table will not be updated
+    # Retrieve the name field from all rows in the Person model
+    names = bank_bank.objects.values('txn_date','description','cheque_number','debit','credit','balance','account_name','account_number','mode','entity','source_of_trans','sub_mode','transaction_type','bank_name','lead_id','creation_time')
 
 
+    # Iterate through the QuerySet to access individual values
+    for name in names:
+        print(name)
 
     for filename in os.listdir(csv_path):
         lead_id = filename.split("\\")[0][:6]
