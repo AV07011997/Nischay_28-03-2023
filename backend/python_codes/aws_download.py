@@ -34,6 +34,7 @@ from mysite.models import downloaded_file_details
 from mysite.models import failed_digitization
 from mysite.models import bank_bank
 import pandas as pd
+from django.db.models import Min, Max
 
 
 
@@ -176,7 +177,8 @@ def job():
     # mydb.commit()  ### until and unless you commit table will not be updated
     # Retrieve the name field from all rows in the Person model
     names = bank_bank.objects.values('txn_date','description','cheque_number','debit','credit','balance','account_name','account_number','mode','entity','source_of_trans','sub_mode','transaction_type','bank_name','lead_id','creation_time')
-
+    values=pd.DataFrame(names)
+    qs = bank_bank.objects.filter(lead_id=238032).values('account_number', 'bank_name').annotate(from_date=Min('txn_date'), to_date=Max('txn_date'))
 
     # Iterate through the QuerySet to access individual values
     for name in names:

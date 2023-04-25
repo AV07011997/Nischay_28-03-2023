@@ -31,6 +31,8 @@ urlpatterns = [
     # path('shubham/<str:text>/', mysite_views.upload_statements, name="upload_statements"),
     # path('bankstatements/', mysite_views.uploadBankStatments, name='bankstatements'),
     path('upload_file/', include('upload_files.urls')),
+    path('analyze/', include('analyze.urls')),
+
     # path('bureau/', include('bureau.urls'), name="bureau"),
     ## Below are the urls for bureau
 
