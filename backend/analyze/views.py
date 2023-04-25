@@ -644,10 +644,13 @@ def bank_customer_kpi(request):
                     data5['End_Date'] = pd.to_datetime(data5['End_Date'], format = "%Y-%m-%d").strftime('%d/%m/%Y')
                     print(data4)
                     E_Z_N_B = data4.get('Entries_Zero_Neg_Bal')
-                    return render(request, 'bck.html', {'data' : data,'data1' : data1,'data2' : data2, 'data3' : data3, 'data4' : data4, 'data5' : data5, 'n2':n2, 'p1':p1,'EZNB':E_Z_N_B})
 
+                    pydict = json.dumps([data, data1, data2,data4,data5,n2,p1,E_Z_N_B])
+                    # return render(request, 'bck.html', {'data' : data,'data1' : data1,'data2' : data2, 'data3' : data3, 'data4' : data4, 'data5' : data5, 'n2':n2, 'p1':p1,'EZNB':E_Z_N_B})
 
-    return render(request, 'bck.html', {'data' : data, 'n2':n2, 'p1':p1})
+    return HttpResponse(pydict)
+
+    # return render(request, 'bck.html', {'data' : data, 'n2':n2, 'p1':p1})
 
 @login_required
 def bureauAnalyze(request):
