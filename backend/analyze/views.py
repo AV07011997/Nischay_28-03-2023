@@ -250,19 +250,20 @@ def bank_customer_month_kpi(request):
         return JsonResponse({"status": "failed"})
 
     else:
-        customer_id = request.session["customer_id"]
-        deal_id=request.session["deal_id"]
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT account_number, bank_name, min(txn_date) as from_date, max(txn_date) as to_date  FROM bank_bank WHERE customer_id = " + customer_id  + " GROUP BY account_number" + ";")
-            data = dictfetchall(cursor)
-            
-            for date in data:
+        lead_id = request.session["lead_id"]
+        # deal_id=request.session["deal_id"]
+        # with connection.cursor() as cursor:
+        #     cursor.execute("SELECT account_number, bank_name, min(txn_date) as from_date, max(txn_date) as to_date  FROM bank_bank WHERE customer_id = " + customer_id  + " GROUP BY account_number" + ";")
+        #     data = dictfetchall(cursor)
+        data = bank_bank.objects.filter(lead_id=lead_id).values('account_number', 'bank_name').annotate(from_date=Min('txn_date'), to_date=Max('txn_date'))
+
+        for date in data:
 
                 date['from_date'] = date['from_date'].strftime('%d/%m/%Y')
                 date['to_date'] = date['to_date'].strftime('%d/%m/%Y')
 
 
-            if request.method=="POST":
+        if request.method=="POST":
                 n=request.POST.get('optbank')
                 # print (n)
                 n2 = n
@@ -273,9 +274,16 @@ def bank_customer_month_kpi(request):
                     
                     p1 = 'q'
 
-                    cursor.execute("SELECT txn_date, credit, debit, balance, account_number, account_name, mode, sub_mode, entity, source_of_trans, description FROM bank_bank WHERE account_number like " + n  +";")
-                    data1 = dictfetchall(cursor)
-                        
+                    # cursor.execute("SELECT txn_date, credit, debit, balance, account_number, account_name, mode, sub_mode, entity, source_of_trans, description FROM bank_bank WHERE account_number like " + n  +";")
+                    # data1 = dictfetchall(cursor)
+                    data1 = bank_bank.objects.filter(account_number__startswith=n).values('txn_date', 'credit',
+                                                                                                'debit', 'balance',
+                                                                                                'account_number',
+                                                                                                'account_name', 'mode',
+                                                                                                'sub_mode', 'entity',
+                                                                                                'source_of_trans',
+                                                                                                'description')
+
                     data1 = pd.DataFrame(data1)
                     # print(data1)
                     KPI = KPIs(data1)
@@ -441,9 +449,16 @@ def bank_customer_month_kpi(request):
                     n1=n[1:-1]
 
                     # print(n1)
-                    return render(request, "bcmk.html",{'data' : data,'data1' : data1, 'n' : n1, 'n2':n2, 'p1':p1 })
+                    pydict = json.dumps([data,data1,n1,n2,p1])
 
-            return render(request, "bcmk.html",{ 'data' : data, 'n2':n2, 'p1':p1 })
+                    return HttpResponse(pydict)
+
+                    # return render(request, "bcmk.html",{'data' : data,'data1' : data1, 'n' : n1, 'n2':n2, 'p1':p1 })
+
+        pydict = json.dumps([data,n2,p1])
+
+        return HttpResponse(pydict)
+        # return render(request, "bcmk.html",{ 'data' : data, 'n2':n2, 'p1':p1 })
 
 
 
@@ -646,8 +661,10 @@ def bank_customer_kpi(request):
                     E_Z_N_B = data4.get('Entries_Zero_Neg_Bal')
 
                     pydict = json.dumps([data, data1, data2,data4,data5,n2,p1,E_Z_N_B])
-                    # return render(request, 'bck.html', {'data' : data,'data1' : data1,'data2' : data2, 'data3' : data3, 'data4' : data4, 'data5' : data5, 'n2':n2, 'p1':p1,'EZNB':E_Z_N_B})
+                    return HttpResponse(pydict)
 
+                    # return render(request, 'bck.html', {'data' : data,'data1' : data1,'data2' : data2, 'data3' : data3, 'data4' : data4, 'data5' : data5, 'n2':n2, 'p1':p1,'EZNB':E_Z_N_B})
+    pydict = json.dumps([data, n2, p1])
     return HttpResponse(pydict)
 
     # return render(request, 'bck.html', {'data' : data, 'n2':n2, 'p1':p1})
