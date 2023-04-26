@@ -37,7 +37,10 @@ function App() {
             path="/upload/:radiovalue/:name/:uploadcount/"
             element={<Upload />}
           />
-          <Route path="/bank_customer_kpi/" element={<AnalyzeBankSummary></AnalyzeBankSummary>}></Route>
+          <Route
+            path="/bank_customer_kpi/"
+            element={<AnalyzeBankSummary></AnalyzeBankSummary>}
+          ></Route>
           {/* <Route path="/download/:radiovalue" element={<Downloadpage />} /> */}
           <Route path="/bureau/:radiovalue" element={<Bureau info={info} />} />
         </Routes>

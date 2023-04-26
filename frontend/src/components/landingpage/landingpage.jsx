@@ -83,7 +83,9 @@ const LandingPage = ({ setinfo }) => {
     });
   }, []);
 
-  console.log(table2);
+  useEffect(() => {
+    localStorage.setItem("leadID", JSON.stringify(radio));
+  }, [radio]);
 
   useEffect(() => {
     let local = [];
