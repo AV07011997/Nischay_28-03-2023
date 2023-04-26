@@ -9,4 +9,5 @@ export const APIADDRESS = {
   DOWNLOAD1: "download1/",
   TEST: "test/",
   BUREAUDATA: "get_bureau_data/",
+  ANALYZEBANKSUMMARY:"bank_customer_kpi/"
 };

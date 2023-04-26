@@ -243,7 +243,7 @@ def bank_customer_month_kpi(request):
     status = {}
     n2 = ''
     p1 = ''
-    print("Getting analyze data.")
+    # print("Getting analyze data.")
     if "deal_id" not in request.session or "customer_id" not in request.session:
         status["type"] = "deal"
         status["message"] = "Please select a deal first!"
@@ -466,8 +466,8 @@ def bank_customer_month_kpi(request):
 # import os
 # from django.conf import settings
 
-@login_required
-@csrf_protect
+# @login_required
+# @csrf_protect
 def bank_customer_kpi(request):
 
     try:
@@ -486,7 +486,7 @@ def bank_customer_kpi(request):
     status = {}
     n2 = ''
     p1 = ''
-    print("Getting analyze data.")
+    # print("Getting analyze data.")
     if "deal_id" not in request.session or "customer_id" not in request.session:
         status["type"] = "deal"
         status["message"] = "Please select a deal first!"
@@ -513,7 +513,7 @@ def bank_customer_kpi(request):
                 date['to_date'] = date['to_date'].strftime('%d/%m/%Y')
 
 
-            if request.method=="POST":
+        if request.method=="POST":
                 n=request.POST.get('optbank')
                 # print (n)
                 n2 = n      
@@ -529,8 +529,8 @@ def bank_customer_kpi(request):
                     )
 
                     data1 = pd.DataFrame(data1)
-                    print('output from views')
-                    print(data1['account_number'])
+                    # print('output from views')
+                    # print(data1['account_number'])
                     KPI = bck(data1)
                     KPI1 = KPI[1]
                     KPI2 = KPI[2]
@@ -1261,19 +1261,19 @@ def bureau_customer_kpi(request):
     
         
         KPI = bureau_cust_kpi(bureau_ref_dtl,bureau_score_segment,bureau_account_segment_tl,bureau_enquiry_segment_iq,bureau_address_segment,customer_id,deal_id,bureau_automated)
-        print(type(KPI))
+        # print(type(KPI))
 
         if type(KPI) is not type(None):
 
             data  = KPI[0]
-            print(data)
+            # print(data)
             data1 = KPI[1]
             data2 = KPI[2]
             data3 = KPI[3]
             data4 = KPI[4]
             gantt_chart_loan_timeline(bureau_account_segment_tl)
 
-            print('data', data)
+            # print('data', data)
             specifics = data[data['source'] == 'cibil']
 
             # print(specifics['sum_of_current_balance_of_secured_active_loans'])
@@ -1784,7 +1784,7 @@ def bureau_customer_kpi(request):
 def itr(request):
    
     status = {}
-    print("suahib")
+    # print("suahib")
     if "deal_id" not in request.session or "customer_id" not in request.session:
         status["type"] = "deal"
         status["message"] = "Please select a deal first!"
@@ -1803,7 +1803,7 @@ def itr(request):
         fy1=""
         measures=""
         count_measures=""
-        print(customer_id)
+        # print(customer_id)
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM  form26as_parta WHERE CUSTOMER_ID = " + customer_id + ";")
             form26_parta = dictfetchall(cursor)
@@ -1836,9 +1836,9 @@ def itr(request):
 
         KPI1 = itr_display345(form26_parta,form26_partb,form26as_asseseedetails)
         
-        print(KPI1)
+        # print(KPI1)
         data = KPI1[0]
-        print("XXX")
+        # print("XXX")
         try:
             data['April'] = data['April'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
             data['April'] = data['April'].astype(str).apply(lambda x : x.split('.')[0])
@@ -2898,7 +2898,7 @@ def bureau_customer_month_kpi(request):
         
             # json_records = data1.to_json(orient ='records') 
             # data1 = json.loads(json_records)
-            print(years)
+            # print(years)
             if len(years) == 3:
                 payload = {'fy1_1_1':fy1_1_1, 'fy1_1_2':fy1_1_2, 'fy1_1_3':fy1_1_3, 'fy1_1_4':fy1_1_4, 'fy1_1_5':fy1_1_5, 'fy1_1_6':fy1_1_6, 'fy1_1_7':fy1_1_7, 'fy1_1_8':fy1_1_8, 'fy1_1_9':fy1_1_9, 'fy1_1_10':fy1_1_10, 'fy1_1_11':fy1_1_11, 'fy1_1_12':fy1_1_12, 'fy1_2_1':fy1_2_1, 'fy1_2_2':fy1_2_2, 'fy1_2_3':fy1_2_3, 'fy1_2_4':fy1_2_4, 'fy1_2_5':fy1_2_5, 'fy1_2_6':fy1_2_6, 'fy1_2_7':fy1_2_7, 'fy1_2_8':fy1_2_8, 'fy1_2_9':fy1_2_9, 'fy1_2_10':fy1_1_10, 'fy1_2_11':fy1_1_11, 'fy1_2_12':fy1_2_12, 'fy2_1_1':fy2_1_1, 'fy2_1_2':fy2_1_2, 'fy2_1_3':fy2_1_3, 'fy2_1_4':fy2_1_4, 'fy2_1_5':fy2_1_5, 'fy2_1_6':fy2_1_6, 'fy2_1_7':fy2_1_7, 'fy2_1_8':fy2_1_8, 'fy2_1_9':fy2_1_9, 'fy2_1_10':fy2_1_10, 'fy2_1_11':fy2_1_11, 'fy2_1_12':fy2_1_12, 'fy2_2_1':fy2_2_1, 'fy2_2_2':fy2_2_2, 'fy2_2_3':fy2_2_3, 'fy2_2_4':fy2_2_4, 'fy2_2_5':fy2_2_5, 'fy2_2_6':fy2_2_6, 'fy2_2_7':fy2_2_7, 'fy2_2_8':fy2_2_8, 'fy2_2_9':fy2_2_9, 'fy2_2_10':fy2_2_10, 'fy2_2_11':fy2_2_11, 'fy2_2_12':fy2_2_12, 'fy3_1_1':fy3_1_1, 'fy3_1_2':fy3_1_2, 'fy3_1_3':fy3_1_3, 'fy3_1_4':fy3_1_4, 'fy3_1_5':fy3_1_5, 'fy3_1_6':fy3_1_6, 'fy3_1_7':fy3_1_7, 'fy3_1_8':fy3_1_8, 'fy3_1_9':fy3_1_9, 'fy3_1_10':fy3_1_10, 'fy3_1_11':fy3_1_11, 'fy3_1_12':fy3_1_12, 'fy3_2_1':fy3_2_1, 'fy3_2_2':fy3_2_2, 'fy3_2_3':fy3_2_3, 'fy3_2_4':fy3_2_4, 'fy3_2_5':fy3_2_5, 'fy3_2_6':fy3_2_6, 'fy3_2_7':fy3_2_7, 'fy3_2_8':fy3_2_8, 'fy3_2_9':fy3_2_9, 'fy3_2_10':fy3_2_10, 'fy3_2_11':fy3_2_11, 'fy3_2_12':fy3_2_12, 'years':years}
                 return render(request, "bureau_c_m_k.html", payload)
@@ -2919,13 +2919,13 @@ def statement(request):
         with connection.cursor() as cursor:
             cursor.execute("SELECT distinct(lead_id) from los_did_cid_generation")
             data = dictfetchall(cursor)
-            print(data)
+            # print(data)
             data=pd.DataFrame(data)
             lead_id=list(set(data['lead_id']))
             lead_id_session=int(request.session['lead_session'])
            
             lead_id.remove(lead_id_session)
-            print(lead_id)
+            # print(lead_id)
             
                 
         return render(request, 'statement.html', {'data':data,'lead_id' : lead_id})
@@ -2977,7 +2977,7 @@ def statement1(request):
         # if debit_to=="":
         #     debit_to="1000000000"
 
-        print(select3)
+        # print(select3)
         if n != None:
             n = "'%" + n[1:-1] + "%'"
         
@@ -2990,25 +2990,25 @@ def statement1(request):
         to="'" + to + "'"
         
         if to !="''" and from1 !="''" and cust_id != "Select" and lead_id !="Select" and n !="Select":
-            print("suhaibyyy")
+            # print("suhaibyyy")
             if balance_from=="" and balance_to=="" and debit_to =="" and debit_to=="" and credit_to=="" and credit_from =="":
                 if transaction_type!='select':
                     with connection.cursor() as cursor:
                         cursor.execute("SELECT txn_date,description,cheque_number,debit,credit,balance FROM bank_bank where txn_date between " + from1 + " and " + to + " and customer_id = " +  cust_id  +  " and account_number like " +  n + " and transaction_type="+transaction_type+";")
                         data1 = dictfetchall(cursor)
-                        print(data1)
-                        print("suhaibxxxx")
+                        # print(data1)
+                        # print("suhaibxxxx")
                         message=""
                         if len(data1)==0:
                             message="no data is available for selected date"
-                            print("suhaib")
+                            # print("suhaib")
                         return JsonResponse({"result":data1,'message' : message })
                     
                 with connection.cursor() as cursor:
                     cursor.execute("SELECT txn_date,description,cheque_number,debit,credit,balance FROM bank_bank where txn_date between " + from1 + " and " + to + " and customer_id = " +  cust_id  +  " and account_number like " +  n + ";")
                     data1 = dictfetchall(cursor)
-                    print(data1)
-                    print("suhaibxxxx")
+                    # print(data1)
+                    # print("suhaibxxxx")
                     message=""
                     if len(data1)==0:
                         message="no data is available for selected date"

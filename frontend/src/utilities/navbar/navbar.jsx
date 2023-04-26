@@ -11,7 +11,6 @@ const NavBar = (radiovalue) => {
   var navigatevalue = radiovalue.radiovalue;
   var navigatenamevalue = radiovalue.namevalue;
   var uploadcount = radiovalue.uploadcount;
-  // console.log(namevalue);
 
   const navigate = useNavigate();
 
@@ -94,7 +93,12 @@ const NavBar = (radiovalue) => {
                         <a>Month-wise</a>
                       </Dropdown.Item>
                     </Dropdown.Menu>
-                    <Dropdown.Menu title="BANK">
+                    <Dropdown.Menu
+                      title="BANK"
+                      onClick={() => {
+                        navigate("/bank_customer_kpi");
+                      }}
+                    >
                       <Dropdown.Item>
                         <a>Summary</a>
                       </Dropdown.Item>

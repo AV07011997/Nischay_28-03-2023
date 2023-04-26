@@ -8,6 +8,7 @@ import Downloadpage from "./components/download/download";
 import Bureau from "./components/bureau/bureau";
 import { createBrowserHistory } from "history";
 import { useState } from "react";
+import AnalyzeBankSummary from "./components/analyze/bank/summary/summary";
 function App() {
   const history = createBrowserHistory();
 
@@ -36,6 +37,7 @@ function App() {
             path="/upload/:radiovalue/:name/:uploadcount/"
             element={<Upload />}
           />
+          <Route path="/bank_customer_kpi/" element={<AnalyzeBankSummary></AnalyzeBankSummary>}></Route>
           {/* <Route path="/download/:radiovalue" element={<Downloadpage />} /> */}
           <Route path="/bureau/:radiovalue" element={<Bureau info={info} />} />
         </Routes>
