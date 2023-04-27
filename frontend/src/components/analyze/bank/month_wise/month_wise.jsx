@@ -1,21 +1,44 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getApi, postApi } from "../../../../callapi";
 import { APIADDRESS } from "../../../../constants/constants";
 import NavBar from "../../../../utilities/navbar/navbar";
+// import { useState } from "react"
+import { objectFunction } from "../../../../constants/objectFunction";
 const AnalyzeBankMonthWise = (leadID) => {
+  var [table1, settable1] = useState();
   const tableheaders = [
-    { value: "Account number", colspan: "0" },
-    { value: "Bank name", colspan: "0" },
+    { value: "Account number", colSpan: "0" },
+    { value: "Bank name", colSpan: "0" },
     { value: "Transactions", rowspan: "2" },
   ];
 
   const tablesubheaders = ["", "", "From", "To"];
+
   console.log(localStorage.getItem("leadID"));
+  // useEffect(() => {
+  //   postApi("analyze/" + APIADDRESS.ANALYZEBANKMONTHWISE, {
+  //     leadID: localStorage.getItem("leadID"),
+  //   }).then((response) => {
+  //     console.log(response);
+  //     if (response) {
+  //       table1 = objectFunction(response);
+  //       settable1(table1);
+  //     }
+  //   });
+  // }, []);
   useEffect(() => {
     postApi("analyze/" + APIADDRESS.ANALYZEBANKMONTHWISE, {
-      leadID: "Hello",
+      leadID: localStorage.getItem("leadID"),
+      optbank: "01208020000685",
+    }).then((response) => {
+      console.log(response);
+      if (response) {
+        table1 = objectFunction(response);
+        settable1(table1);
+      }
     });
   }, []);
+  console.log(table1);
 
   return (
     <div>
@@ -41,7 +64,7 @@ const AnalyzeBankMonthWise = (leadID) => {
         <table>
           <thead>
             <tr>
-              <th class="rm-head" colspan="3"></th>
+              <th class="rm-head" colSpan="3"></th>
 
               <th class="header-table" width="100">
                 Jul-20{" "}
@@ -66,12 +89,12 @@ const AnalyzeBankMonthWise = (leadID) => {
           </thead>
           <tbody>
             <tr>
-              <td rowspan="10" class="header-table">
+              <td rowSpan="10" class="header-table">
                 Inflows
               </td>
             </tr>
             <tr>
-              <td rowspan="3">Non Cash Credits</td>
+              <td rowSpan="3">Non Cash Credits</td>
             </tr>
             <tr>
               <td class="count-value">Count</td>
@@ -100,7 +123,7 @@ const AnalyzeBankMonthWise = (leadID) => {
               <td class="num">₹3,22,24,265 </td>
             </tr>
             <tr>
-              <td rowspan="3">Cash Credits</td>
+              <td rowSpan="3">Cash Credits</td>
             </tr>
             <tr>
               <td class="count-value">Count</td>
@@ -129,7 +152,7 @@ const AnalyzeBankMonthWise = (leadID) => {
               <td class="num">₹46,26,000 </td>
             </tr>
             <tr>
-              <td rowspan="3">Total Credits</td>
+              <td rowSpan="3">Total Credits</td>
             </tr>
             <tr>
               <td class="count-value">Count</td>

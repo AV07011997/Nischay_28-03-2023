@@ -48,6 +48,7 @@ const Upload = () => {
   useEffect(() => {
     getApi(APIADDRESS.UPLOADSTATEMENT + radiovalue + "/").then((response) => {
       if (response) {
+        console.log(response);
         if (response[1]) {
           table = objectFunction(response[1]);
           settable(table);

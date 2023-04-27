@@ -84,7 +84,7 @@ const LandingPage = ({ setinfo }) => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("leadID", JSON.stringify(radio));
+    localStorage.setItem("leadID", radio);
   }, [radio]);
 
   useEffect(() => {
