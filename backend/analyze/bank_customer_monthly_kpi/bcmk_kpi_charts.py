@@ -32,17 +32,7 @@ def bcmk_charts(data):
 
     final["month_year"]=pd.to_datetime(final["txn_date"]).dt.to_period('m')
 
-    # try:
-    #     final["credit"]=final["credit"].str.replace(",","")
 
-    #     final["debit"]=final["debit"].str.replace(",","")
-
-    #     final["balance"]=final["balance"].str.replace(",","")
-    # except:
-    #     pass
-    # final["credit"]=final["credit"].astype(float)
-    # final["debit"]=final["debit"].astype(float)
-    # final["balance"]=final["balance"].astype(float)
 
     ###########################Inflows
     #####Non Cash credits

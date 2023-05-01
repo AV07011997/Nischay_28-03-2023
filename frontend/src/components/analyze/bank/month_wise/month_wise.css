@@ -1,0 +1,34 @@
+.highlighted_headers {
+  background-color: black;
+  color: white;
+}
+
+.table1_monthwise {
+  border: 1px solid black;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  margin-top: 30px;
+  font-size: medium;
+}
+.table1_monthwise,
+td,
+th {
+  border: 1px solid grey;
+}
+.thead_table1_monthwise {
+  background-color: black;
+  color: white;
+}
+.table1_monthwise,
+th {
+  padding: 1px;
+}
+.table1_monthwise,
+td {
+  padding: 2px;
+}
+.graph_monthwise {
+  width: 50%;
+}

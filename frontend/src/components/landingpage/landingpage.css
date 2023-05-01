@@ -84,6 +84,7 @@
 .hover_text {
   padding-left: 5px;
   text-align: left;
+  width: 80px;
 }
 .digitizedtd {
   width: 108px;

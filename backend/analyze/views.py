@@ -83,18 +83,18 @@ def loan_kpi(request):
 
 def bank_customer_month_kpi(request):
     try:
-        os.remove(settings.STATICFILES_DIRS[0] + '/assets/images/bcmk_fig.png')
+        os.remove('C:/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/bcmk_fig.png')
     except:
         pass
 
     try:
-        os.remove(settings.STATICFILES_DIRS[0] + '/assets/images/bcmk_fig_1.png')
+        os.remove('C:/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/bcmk_fig1.png')
     except:
         pass
-    try:
-        os.remove(settings.STATICFILES_DIRS[0] + '/assets/images/saved_figure_2.png')
-    except:
-        pass
+    # try:
+    #     os.remove(settings.STATICFILES_DIRS[0] + '/assets/images/saved_figure_2.png')
+    # except:
+    #     pass
 
     status = {}
     n2 = ''
@@ -123,7 +123,7 @@ def bank_customer_month_kpi(request):
             date['from_date'] = date['from_date'].strftime('%d/%m/%Y')
             date['to_date'] = date['to_date'].strftime('%d/%m/%Y')
 
-        if request.method == "POST":
+        if request.POST.getlist('optbank'):
             n = ''
             n = n.join(request.POST.getlist('optbank'))
             n = n.rstrip()

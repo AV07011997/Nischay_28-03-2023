@@ -60,7 +60,7 @@ const Upload = () => {
       }
     });
   }, []);
-
+  console.log(table1);
   var newFiles = [];
   var pdfurl = [];
 
