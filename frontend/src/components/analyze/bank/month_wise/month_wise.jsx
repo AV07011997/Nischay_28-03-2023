@@ -5,6 +5,7 @@ import NavBar from "../../../../utilities/navbar/navbar";
 import { Loader, Navbar } from "rsuite";
 import "./month_wise.css";
 import ReactDOM from "react-dom";
+import SELECTBANKCUSTOMER from "../../../../utilities/selectBankCustomer/selectBankCustomer";
 
 const AnalyzeBankMonthWise = (leadID) => {
   var [table1, settable1] = useState();
@@ -30,41 +31,50 @@ const AnalyzeBankMonthWise = (leadID) => {
 
   console.log(localStorage.getItem("leadID"));
 
-  useEffect(() => {
-    const getTable = async () => {
-      const response = await postApi(
-        "analyze/" + APIADDRESS.ANALYZEBANKMONTHWISE,
-        {
-          leadID: localStorage.getItem("leadID"),
-        }
-      );
-      console.log(response);
-      settable1(response[0]);
-    };
+  // First table api called *****************************************************************************
 
-    getTable(); // run it, run it
-  }, []);
+  // useEffect(() => {
+  //   const getTable = async () => {
+  //     const response = await postApi(
+  //       "analyze/" + APIADDRESS.ANALYZEBANKMONTHWISE,
+  //       {
+  //         leadID: localStorage.getItem("leadID"),
+  //       }
+  //     );
+  //     console.log(response);
+  //     settable1(response[0]);
+  //   };
 
-  // console.log(table1);
+  //   getTable(); // run it, run it
+  // }, []);
 
-  const table2 = (optbank) => {
-    setacc_number(optbank);
-    console.log("called");
-    const getTable = async () => {
-      const response = await postApi(
-        "analyze/" + APIADDRESS.ANALYZEBANKMONTHWISE,
-        {
-          leadID: localStorage.getItem("leadID"),
-          optbank: optbank,
-        }
-      );
-      // console.log(response[0]["data"][1]);
-      setoptbank(response[0]["data"][1]);
-    };
+  // *******************************************************************************************************
 
-    getTable();
-  };
-  console.log(optbank);
+  // second tabkle api call function after account number selection ****************************************
+  // const table2 = (optbank) => {
+  //   setacc_number(optbank);
+  //   console.log("called");
+  //   const getTable = async () => {
+  //     const response = await postApi(
+  //       "analyze/" + APIADDRESS.ANALYZEBANKMONTHWISE,
+  //       {
+  //         leadID: localStorage.getItem("leadID"),
+  //         optbank: optbank,
+  //       }
+  //     );
+  //     // console.log(response[0]["data"][1]);
+  //     setoptbank(response[0]["data"][1]);
+  //   };
+
+  //   getTable();
+  // };
+  // console.log(optbank);
+
+  // *********************************************************************************************************
+
+  function handledata(data) {
+    setoptbank(data);
+  }
 
   function openWindow(type, amount) {
     const getPopUpData = async () => {
@@ -98,7 +108,16 @@ const AnalyzeBankMonthWise = (leadID) => {
   return (
     <div>
       <NavBar></NavBar>
-      <div className="div_table1_monthwise">
+      {/* <SELECTBANKCUSTOMER
+        apiaddress={APIADDRESS.ANALYZEBANKMONTHWISE}
+      ></SELECTBANKCUSTOMER> */}
+
+      <SELECTBANKCUSTOMER
+        onData={handledata}
+        apiaddress={APIADDRESS.ANALYZEBANKMONTHWISE}
+      ></SELECTBANKCUSTOMER>
+
+      {/* <div className="div_table1_monthwise">
         {table1 ? (
           <table className="table1_monthwise">
             <thead className="thead_table1_monthwise">
@@ -155,7 +174,8 @@ const AnalyzeBankMonthWise = (leadID) => {
             content="loading..."
           ></Loader>
         )}
-      </div>
+      </div> */}
+
       {optbank && (
         <div className="div_table1_monthwise">
           <table className="table1_monthwise">
