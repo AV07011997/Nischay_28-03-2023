@@ -94,17 +94,24 @@ const NavBar = (props) => {
                         <a>Month-wise</a>
                       </Dropdown.Item>
                     </Dropdown.Menu>
-                    <Dropdown.Menu
-                      title="BANK"
-                      onClick={() => {
-                        navigate("/bank_customer_kpi");
-                      }}
-                    >
+                    <Dropdown.Menu title="BANK">
                       <Dropdown.Item>
-                        <a>Summary</a>
+                        <a
+                          onClick={() => {
+                            navigate("/bank_customer_kpi");
+                          }}
+                        >
+                          Summary
+                        </a>
                       </Dropdown.Item>
                       <Dropdown.Item>
-                        <a>Month-wise</a>
+                        <a
+                          onClick={() => {
+                            navigate("/analyzeMonthWise");
+                          }}
+                        >
+                          Month-wise
+                        </a>
                       </Dropdown.Item>
                       <Dropdown.Item>
                         <a>Counterparties</a>

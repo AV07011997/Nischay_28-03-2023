@@ -4,7 +4,7 @@ import { APIADDRESS } from "../../../../constants/constants";
 import NavBar from "../../../../utilities/navbar/navbar";
 import { Loader, Navbar } from "rsuite";
 import "./month_wise.css";
-import ReactDOM from "react-dom";
+// import ReactDOM from "react-dom";
 import SELECTBANKCUSTOMER from "../../../../utilities/selectBankCustomer/selectBankCustomer";
 
 const AnalyzeBankMonthWise = (leadID) => {
@@ -72,7 +72,9 @@ const AnalyzeBankMonthWise = (leadID) => {
 
   // *********************************************************************************************************
 
-  function handledata(data) {
+  function handledata(data, acc_number) {
+    console.log(acc_number);
+    setacc_number(acc_number);
     setoptbank(data);
   }
 
@@ -182,11 +184,11 @@ const AnalyzeBankMonthWise = (leadID) => {
             <thead className="thead_table1_monthwise">
               <tr>
                 <th colSpan={3}></th>
-                <th>Jul-20</th>
-                <th>Jun-20</th>
-                <th>May-20</th>
-                <th>Apr-20</th>
-                <th>Mar-20</th>
+                {optbank.map((item) => {
+                  if (item) {
+                    return <td>{item.month_year}</td>;
+                  }
+                })}
               </tr>
             </thead>
             <tbody>

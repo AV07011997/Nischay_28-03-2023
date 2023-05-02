@@ -43,10 +43,11 @@ const SELECTBANKCUSTOMER = (props) => {
   };
   console.log(optbank);
 
-  function sendData(data) {
-    props.onData(data);
+  function sendData(data, acc_number) {
+    props.onData(data, acc_number);
   }
-  sendData(optbank);
+
+  sendData(optbank, acc_number);
 
   return (
     <div className="div_table1_monthwise">
