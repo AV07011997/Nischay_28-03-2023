@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { getApi, postApi } from "../../../../callapi";
 import { APIADDRESS } from "../../../../constants/constants";
 import NavBar from "../../../../utilities/navbar/navbar";
-import { Loader } from "rsuite";
+import { Loader, Navbar } from "rsuite";
 import "./month_wise.css";
+import ReactDOM from "react-dom";
 
 const AnalyzeBankMonthWise = (leadID) => {
   var [table1, settable1] = useState();
   var [optbank, setoptbank] = useState();
+  const [acc_number, setacc_number] = useState();
+
   const tableheaders = [
     { value: "Account number", colSpan: "0" },
     { value: "Bank name", colSpan: "0" },
@@ -19,7 +22,7 @@ const AnalyzeBankMonthWise = (leadID) => {
   }
 
   function TableCell({ value }) {
-    const color = checkNegativeString(value) ? "red" : "black";
+    const color = checkNegativeString(value) ? "red" : "#575757";
     return <td style={{ color }}>{value}</td>;
   }
 
@@ -41,8 +44,11 @@ const AnalyzeBankMonthWise = (leadID) => {
 
     getTable(); // run it, run it
   }, []);
+
   // console.log(table1);
+
   const table2 = (optbank) => {
+    setacc_number(optbank);
     console.log("called");
     const getTable = async () => {
       const response = await postApi(
@@ -59,6 +65,36 @@ const AnalyzeBankMonthWise = (leadID) => {
     getTable();
   };
   console.log(optbank);
+
+  function openWindow(type, amount) {
+    const getPopUpData = async () => {
+      console.log("hello");
+      const response = await postApi(
+        "analyze/" + APIADDRESS.ANALYZEBANKMONTHWISEPOPUP,
+        {
+          type: type,
+          amount: amount,
+          account_number: acc_number,
+        }
+      );
+      console.log(response);
+    };
+
+    getPopUpData();
+
+    const newWindow = window.open("", "_blank");
+    const customElement = document.createElement("div");
+
+    // Create and style yourtype custom element here
+    customElement.style.backgroundColor = "lightblue";
+    customElement.style.width = "200px";
+    customElement.style.height = "200px";
+
+    // Render your custom element into the new window's document
+    newWindow.document.body.appendChild(customElement);
+    // ReactDOM.render(<h1>Hello, world!</h1>, customElement);
+  }
+
   return (
     <div>
       <NavBar></NavBar>
@@ -284,7 +320,18 @@ const AnalyzeBankMonthWise = (leadID) => {
                 </td>
                 {optbank.map((item) => {
                   if (item) {
-                    return <td>{item.Max_credit_Amount}</td>;
+                    return (
+                      <td>
+                        <button
+                          className="button_monthwise"
+                          onClick={() => {
+                            openWindow("credit", item.Max_credit_Amount);
+                          }}
+                        >
+                          {item.Max_credit_Amount}
+                        </button>
+                      </td>
+                    );
                   }
                 })}
               </tr>
@@ -295,7 +342,13 @@ const AnalyzeBankMonthWise = (leadID) => {
                 </td>
                 {optbank.map((item) => {
                   if (item) {
-                    return <td>{item.Max_debit_Amount}</td>;
+                    return (
+                      <td>
+                        <button className="button_monthwise">
+                          {item.Max_debit_Amount}
+                        </button>
+                      </td>
+                    );
                   }
                 })}
               </tr>
@@ -315,11 +368,7 @@ const AnalyzeBankMonthWise = (leadID) => {
                 </td>
                 {optbank.map((item) => {
                   if (item) {
-                    return (
-                      <a>
-                        <td>{item.Month_End_balance}</td>;
-                      </a>
-                    );
+                    return <td>{item.Month_End_balance}</td>;
                   }
                 })}
               </tr>

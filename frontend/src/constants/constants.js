@@ -11,4 +11,5 @@ export const APIADDRESS = {
   BUREAUDATA: "get_bureau_data/",
   ANALYZEBANKSUMMARY: "bank_customer_kpi/",
   ANALYZEBANKMONTHWISE: "bank_customer_month_kpi/",
+  ANALYZEBANKMONTHWISEPOPUP: "bank_customer_kpi_popup/",
 };

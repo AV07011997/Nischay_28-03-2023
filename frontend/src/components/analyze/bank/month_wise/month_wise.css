@@ -32,3 +32,10 @@ td {
 .graph_monthwise {
   width: 50%;
 }
+.maxCreditLink {
+  width: auto;
+}
+.button_monthwise {
+  background: transparent;
+  color: blue;
+}
