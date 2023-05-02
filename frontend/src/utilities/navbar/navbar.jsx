@@ -7,10 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Navigate } from "react-router-dom";
 
-const NavBar = (radiovalue) => {
-  var navigatevalue = radiovalue.radiovalue;
-  var navigatenamevalue = radiovalue.namevalue;
-  var uploadcount = radiovalue.uploadcount;
+const NavBar = (props) => {
+  console.log(localStorage.getItem("leadID"));
+  var navigatevalue = props.radiovalue;
+  var navigatenamevalue = props.namevalue;
+  var uploadcount = props.uploadcount;
 
   const navigate = useNavigate();
 

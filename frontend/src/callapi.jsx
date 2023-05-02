@@ -3,7 +3,7 @@ import { backendaddress } from "../src/constants/constants";
 
 export const postApi = async (address, data, content_type, process_data) => {
   var response;
-  console.log(data);
+  // console.log(data);
 
   await $.ajax({
     url: backendaddress + address,
@@ -12,6 +12,7 @@ export const postApi = async (address, data, content_type, process_data) => {
     contentType: content_type,
     processData: process_data,
     success: function (res) {
+      // console.log(res);
       response = JSON.parse(res);
     },
   });

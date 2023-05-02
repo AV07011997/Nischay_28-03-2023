@@ -5,9 +5,12 @@ import { APIADDRESS } from "../../../../constants/constants";
 const AnalyzeBankSummary = (leadID) => {
   useEffect(() => {
     postApi("analyze/" + APIADDRESS.ANALYZEBANKSUMMARY, {
-      leadID: "Hello",
+      leadID: localStorage.getItem("leadID"),
+    }).then((res) => {
+      console.log(res);
     });
   }, []);
+
   return <div>Hello</div>;
 };
 export default AnalyzeBankSummary;

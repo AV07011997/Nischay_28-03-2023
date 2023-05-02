@@ -354,13 +354,10 @@ def bank_customer_kpi(request):
     n2 = ''
     p1 = ''
     # print("Getting analyze data.")
-    if "deal_id" not in request.session or "customer_id" not in request.session:
-        status["type"] = "deal"
-        status["message"] = "Please select a deal first!"
-        return JsonResponse({"status": "failed"})
-
+    if (0):
+        pass
     else:
-        lead_id = request.session["lead_id"]
+        lead_id = int(request.POST["leadID"])
         # deal_id=request.session["deal_id"]
         # with connection.cursor() as cursor:
         #     cursor.execute("SELECT account_number, bank_name, min(txn_date) as from_date, max(txn_date) as to_date  FROM bank_bank WHERE customer_id = " + customer_id  + " GROUP BY account_number" + ";")
@@ -528,7 +525,7 @@ def bank_customer_kpi(request):
 
                 # return render(request, 'bck.html', {'data' : data,'data1' : data1,'data2' : data2, 'data3' : data3, 'data4' : data4, 'data5' : data5, 'n2':n2, 'p1':p1,'EZNB':E_Z_N_B})
     pydict = json.dumps([data, n2, p1])
-    return HttpResponse(pydict)
+    return HttpResponse(json.dumps(pydict))
 
     # return render(request, 'bck.html', {'data' : data, 'n2':n2, 'p1':p1})
 

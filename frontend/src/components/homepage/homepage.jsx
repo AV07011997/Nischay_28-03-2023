@@ -29,6 +29,7 @@ const HomePage = () => {
     });
     console.log(response);
     if (response.login_page == true) {
+      console.log(true);
       navigate("/home");
     } else {
       toast.error("Please Enter Valid Credentials");
