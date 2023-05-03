@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import { Navigate } from "react-router-dom";
 
 const NavBar = (props) => {
-  console.log(localStorage.getItem("leadID"));
   var navigatevalue = props.radiovalue;
   var navigatenamevalue = props.namevalue;
   var uploadcount = props.uploadcount;
@@ -19,7 +18,7 @@ const NavBar = (props) => {
     navigate("/");
   };
   const handleclick = (item) => {
-    if (navigatevalue == undefined) {
+    if (localStorage.getItem("leadID") == undefined || null) {
       toast.error("Please select a Lead Id first");
     } else if (item == "DOWNLOAD") {
       // navigate(`/download/${navigatevalue}`);

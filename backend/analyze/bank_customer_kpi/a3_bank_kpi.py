@@ -38,8 +38,9 @@ def bck(data):
   df2 = df2[df2['balance'].notna()]
   df2['balance'].fillna(method='ffill', inplace=True)
   df2['month_year'] = df2['date'].dt.month.astype(str)+'-'+df2['date'].dt.year.astype(str)
-  
-  a = df2.groupby('month_year').balance.mean()
+  df['balance']=df['balance'].astype(float)
+  a = df2.groupby('month_year')['balance'].mean()
+
   avg_mthly_bal = a.sum()/a.shape[0]
 
 

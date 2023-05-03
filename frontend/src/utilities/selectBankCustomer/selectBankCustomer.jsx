@@ -17,7 +17,7 @@ const SELECTBANKCUSTOMER = (props) => {
       const response = await postApi("analyze/" + api_address, {
         leadID: localStorage.getItem("leadID"),
       });
-      //   console.log(response);
+      console.log(response);
       settable1(response[0]);
     };
 

@@ -81,12 +81,12 @@ def loan_kpi(request):
 
 def bank_customer_month_kpi(request):
     try:
-        os.remove('C:/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/bcmk_fig.png')
+        os.remove('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
     except:
         pass
 
     try:
-        os.remove('C:/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/bcmk_fig1.png')
+        os.remove('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
     except:
         pass
     # try:
@@ -333,7 +333,205 @@ def bank_customer_month_kpi(request):
 
 # @login_required
 # @csrf_protect
+# def bank_customer_kpi(request):
+#     try:
+#         os.remove(settings.STATICFILES_DIRS[0] + '/assets/images/saved_figure_1.png')
+#     except:
+#         pass
+
+#     try:
+#         os.remove(settings.STATICFILES_DIRS[0] + '/assets/images/saved_figure.png')
+#     except:
+#         pass
+#     try:
+#         os.remove(settings.STATICFILES_DIRS[0] + '/assets/images/saved_figure_2.png')
+#     except:
+#         pass
+#     status = {}
+#     n2 = ''
+#     p1 = ''
+#     # print("Getting analyze data.")
+#     if (0):
+#         pass
+#     else:
+#         lead_id = int(request.POST["leadID"])
+#         # deal_id=request.session["deal_id"]
+#         # with connection.cursor() as cursor:
+#         #     cursor.execute("SELECT account_number, bank_name, min(txn_date) as from_date, max(txn_date) as to_date  FROM bank_bank WHERE customer_id = " + customer_id  + " GROUP BY account_number" + ";")
+#         #     data = dictfetchall(cursor)
+#         # print(data)
+#         # names = bank_bank.objects.values('txn_date', 'description', 'cheque_number', 'debit', 'credit', 'balance',
+#         #                                  'account_name', 'account_number', 'mode', 'entity', 'source_of_trans',
+#         #                                  'sub_mode', 'transaction_type', 'bank_name', 'lead_id', 'creation_time')
+#         # meta_data = pd.DataFrame(names)
+#         # print(meta_data)
+
+#         data = bank_bank.objects.filter(lead_id=lead_id).values('account_number', 'bank_name').annotate(
+#             from_date=Min('txn_date'), to_date=Max('txn_date'))
+
+#         for date in data:
+#             date['from_date'] = date['from_date'].strftime('%d/%m/%Y')
+#             date['to_date'] = date['to_date'].strftime('%d/%m/%Y')
+
+#         if request.POST.getlist('optbank'):
+            
+#             n = request.POST.get('optbank')
+#             # print (n)
+#             n2 = n
+#             if n is not None:
+#                 n = "'%" + n[1:-1] + "%'"
+#                 # print(n)
+#                 p1 = 'q'
+#                 # cursor.execute("SELECT txn_date, credit, debit, balance, account_number, account_name, mode, sub_mode, entity, source_of_trans, description, transaction_type FROM bank_bank WHERE account_number like " + n  +";")
+#                 # data1 = dictfetchall(cursor)
+#                 data1 = bank_bank.objects.filter(account_number__startswith=n).values(
+#                     'txn_date', 'credit', 'debit', 'balance', 'account_number', 'account_name', 'mode', 'sub_mode',
+#                     'entity', 'source_of_trans', 'description', 'transaction_type'
+#                 )
+
+#                 data1 = pd.DataFrame(data1)
+#                 # print('output from views')
+#                 # print(data1['account_number'])
+#                 KPI = bck(data1)
+#                 KPI1 = KPI[1]
+#                 KPI2 = KPI[2]
+#                 KPI3 = KPI[3]
+#                 KPI4 = KPI[4]
+#                 KPI = KPI[0]
+
+#                 # KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x : round(x))
+#                 # KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+#                 # KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x: str(x).split('.')[0])
+
+#                 KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(
+#                     lambda x: x if pd.notnull(x) else 0)
+#                 KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x: round(x))
+#                 KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(
+#                     lambda x: format_currency(x, 'INR', locale='en_IN'))
+#                 KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x: str(x).split('.')[0])
+
+#                 # KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x : round(x))
+#                 # KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+#                 # KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: str(x).split('.')[0])
+
+#                 KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: x if pd.notnull(x) else 0)
+#                 KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: round(x))
+#                 KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(
+#                     lambda x: format_currency(x, 'INR', locale='en_IN'))
+#                 KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: str(x).split('.')[0])
+
+#                 # KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x : round(x))
+#                 # KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+#                 # KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: str(x).split('.')[0])
+
+#                 KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: x if pd.notnull(x) else 0)
+#                 KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: round(x))
+#                 KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(
+#                     lambda x: format_currency(x, 'INR', locale='en_IN'))
+#                 KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: str(x).split('.')[0])
+
+#                 # KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x : round(x))
+#                 # KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+#                 # KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: str(x).split('.')[0])
+
+#                 KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
+#                 KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: round(x))
+#                 KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(
+#                     lambda x: format_currency(x, 'INR', locale='en_IN'))
+#                 KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: str(x).split('.')[0])
+
+#                 KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
+#                 KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: round(x))
+#                 KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(
+#                     lambda x: format_currency(x, 'INR', locale='en_IN'))
+#                 KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: str(x).split('.')[0])
+
+#                 # KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x : round(x))
+#                 # KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+#                 # KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: str(x).split('.')[0])
+
+#                 # KPI = pd.DataFrame.from_dict(KPI)
+
+#                 # KPI2['Highest_Credit_Amount'] = KPI2['Highest_Credit_Amount'].apply(lambda x : round(x,2))
+#                 # KPI2['Highest_Credit_Amount'] = KPI2['Highest_Credit_Amount'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+
+#                 # KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x : round(x))
+#                 # KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+#                 # KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: str(x).split('.')[0])
+
+#                 KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
+#                 KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: round(x))
+#                 KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(
+#                     lambda x: format_currency(x, 'INR', locale='en_IN'))
+#                 KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: str(x).split('.')[0])
+
+#                 # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x : round(x))
+#                 # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+#                 # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: str(x).split('.')[0])
+
+#                 KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
+#                 KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: round(x))
+#                 KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(
+#                     lambda x: format_currency(x, 'INR', locale='en_IN'))
+#                 KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: str(x).split('.')[0])
+
+#                 KPI2['Ratio_Debit_Credit'] = KPI2['Ratio_Debit_Credit'].apply(lambda x: round(x, 2))
+#                 KPI2['Ratio_Cash_Total_Credit'] = KPI2['Ratio_Cash_Total_Credit'].apply(lambda x: round(x, 2))
+
+#                 # KPI2['Highest_Credit_Amount_Org'] = KPI2['Highest_Credit_Amount'].apply(lambda x : x.split(' ')[0])
+#                 # KPI2['Highest_Credit_Amount_Org'] = KPI2['Highest_Credit_Amount_Org'].astype('str')
+#                 # KPI2['Highest_Credit_Amount_Org'].apply(lambda x : x.replace(',',''))
+
+#                 # KPI2['Highest_Credit_Amount_Org'].apply(lambda x : x.replace('₹',''))
+
+#                 KPI2['Highest_Credit_Amount'] = KPI2['Highest_Credit_Amount'].apply(lambda x: str(x).split('.')[0])
+#                 KPI2['Lowest_Debit_Amount'] = KPI2['Lowest_Debit_Amount'].apply(lambda x: str(x).split('.')[0])
+
+#                 json_records = KPI.to_json(orient='records')
+#                 data1 = json.loads(json_records)
+#                 # print(data1)
+#                 data1 = data1[0]
+
+#                 json_records = KPI1.to_json(orient='records')
+#                 data2 = json.loads(json_records)
+#                 # print(data2)
+#                 data2 = data2[0]
+
+#                 json_records = KPI2.to_json(orient='records')
+#                 data3 = json.loads(json_records)
+#                 # print(data3)
+#                 data3 = data3[0]
+
+#                 json_records = KPI3.to_json(orient='records')
+#                 data4 = json.loads(json_records)
+#                 # print(data4)
+#                 data4 = data4[0]
+
+#                 # print(KPI4)
+#                 json_records = KPI4.to_json(orient='records', date_format='iso')
+#                 data5 = json.loads(json_records)
+#                 # print(data5)
+#                 data5 = data5[0]
+
+#                 data5['Start_Date'] = pd.to_datetime(data5['Start_Date'], format="%Y-%m-%d").strftime('%d/%m/%Y')
+#                 data5['End_Date'] = pd.to_datetime(data5['End_Date'], format="%Y-%m-%d").strftime('%d/%m/%Y')
+#                 print(data4)
+#                 E_Z_N_B = data4.get('Entries_Zero_Neg_Bal')
+
+#                 pydict = json.dumps([data, data1, data2, data4, data5, n2, p1, E_Z_N_B])
+#                 return HttpResponse(pydict)
+
+#                 # return render(request, 'bck.html', {'data' : data,'data1' : data1,'data2' : data2, 'data3' : data3, 'data4' : data4, 'data5' : data5, 'n2':n2, 'p1':p1,'EZNB':E_Z_N_B})
+#         # pydict = json.dumps([data, n2, p1])
+#         finaldata = pd.DataFrame(list([data, n2, p1]))
+#         finaldata = finaldata.to_dict('split')
+#         pydict = json.dumps([finaldata])
+#         return HttpResponse(json.dumps(pydict))
+
+#     # return render(request, 'bck.html', {'data' : data, 'n2':n2, 'p1':p1})
+
 def bank_customer_kpi(request):
+
     try:
         os.remove(settings.STATICFILES_DIRS[0] + '/assets/images/saved_figure_1.png')
     except:
@@ -355,176 +553,171 @@ def bank_customer_kpi(request):
         pass
     else:
         lead_id = int(request.POST["leadID"])
-        # deal_id=request.session["deal_id"]
-        # with connection.cursor() as cursor:
-        #     cursor.execute("SELECT account_number, bank_name, min(txn_date) as from_date, max(txn_date) as to_date  FROM bank_bank WHERE customer_id = " + customer_id  + " GROUP BY account_number" + ";")
-        #     data = dictfetchall(cursor)
-        # print(data)
-        # names = bank_bank.objects.values('txn_date', 'description', 'cheque_number', 'debit', 'credit', 'balance',
-        #                                  'account_name', 'account_number', 'mode', 'entity', 'source_of_trans',
-        #                                  'sub_mode', 'transaction_type', 'bank_name', 'lead_id', 'creation_time')
-        # meta_data = pd.DataFrame(names)
-        # print(meta_data)
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT account_number, bank_name, min(txn_date) as from_date, max(txn_date) as to_date  FROM a5_kit.mysite_bank_bank WHERE lead_id = " + str(lead_id)  + " GROUP BY account_number" + ";")
+            data = dictfetchall(cursor)
+            # print(data)
 
-        data = bank_bank.objects.filter(lead_id=lead_id).values('account_number', 'bank_name').annotate(
-            from_date=Min('txn_date'), to_date=Max('txn_date'))
+            for date in data:
 
-        for date in data:
-            date['from_date'] = date['from_date'].strftime('%d/%m/%Y')
-            date['to_date'] = date['to_date'].strftime('%d/%m/%Y')
+                date['from_date'] = date['from_date'].strftime('%d/%m/%Y')
+                date['to_date'] = date['to_date'].strftime('%d/%m/%Y')
 
-        if request.method == "POST":
-            n = request.POST.get('optbank')
-            # print (n)
-            n2 = n
-            if n is not None:
-                n = "'%" + n[1:-1] + "%'"
-                # print(n)
-                p1 = 'q'
-                # cursor.execute("SELECT txn_date, credit, debit, balance, account_number, account_name, mode, sub_mode, entity, source_of_trans, description, transaction_type FROM bank_bank WHERE account_number like " + n  +";")
-                # data1 = dictfetchall(cursor)
-                data1 = bank_bank.objects.filter(account_number__startswith=n).values(
-                    'txn_date', 'credit', 'debit', 'balance', 'account_number', 'account_name', 'mode', 'sub_mode',
-                    'entity', 'source_of_trans', 'description', 'transaction_type'
-                )
 
-                data1 = pd.DataFrame(data1)
-                # print('output from views')
-                # print(data1['account_number'])
-                KPI = bck(data1)
-                KPI1 = KPI[1]
-                KPI2 = KPI[2]
-                KPI3 = KPI[3]
-                KPI4 = KPI[4]
-                KPI = KPI[0]
+            if request.POST.getlist('optbank'):
+                n=request.POST.get('optbank')
+                # print (n)
+                n2 = n      
+                if n is not None:
+                    n = "'%" + n[1:-1] + "%'"
+                    # print(n)
+                    p1 = 'q'       
+                    cursor.execute("SELECT txn_date, credit, debit, balance, account_number, account_name, mode, sub_mode, entity, source_of_trans, description, transaction_type FROM mysite_bank_bank WHERE account_number like " + n  +";")
+                    data1 = dictfetchall(cursor)
+                                
+                    data1 = pd.DataFrame(data1)
+                    print('output from views')
+                    print(data1['account_number'])
+                    KPI = bck(data1)
+                    KPI1 = KPI[1]
+                    KPI2 = KPI[2]
+                    KPI3 = KPI[3]
+                    KPI4 = KPI[4]
+                    KPI = KPI[0]
 
-                # KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x : round(x))
-                # KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
-                # KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x: str(x).split('.')[0])
+                    # KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x : round(x))
+                    # KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN')) 
+                    # KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x: str(x).split('.')[0])
 
-                KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(
-                    lambda x: x if pd.notnull(x) else 0)
-                KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x: round(x))
-                KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(
-                    lambda x: format_currency(x, 'INR', locale='en_IN'))
-                KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x: str(x).split('.')[0])
+                    KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x: round(x))
+                    KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI['Average_Monthly_Balance'] = KPI['Average_Monthly_Balance'].apply(lambda x: str(x).split('.')[0])
 
-                # KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x : round(x))
-                # KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
-                # KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: str(x).split('.')[0])
 
-                KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: x if pd.notnull(x) else 0)
-                KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: round(x))
-                KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(
-                    lambda x: format_currency(x, 'INR', locale='en_IN'))
-                KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: str(x).split('.')[0])
+                    # KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x : round(x))
+                    # KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN')) 
+                    # KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: str(x).split('.')[0])
 
-                # KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x : round(x))
-                # KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
-                # KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: str(x).split('.')[0])
+                    KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: round(x))
+                    KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI['Average_Monthly_Credit'] = KPI['Average_Monthly_Credit'].apply(lambda x: str(x).split('.')[0])
 
-                KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: x if pd.notnull(x) else 0)
-                KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: round(x))
-                KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(
-                    lambda x: format_currency(x, 'INR', locale='en_IN'))
-                KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: str(x).split('.')[0])
 
-                # KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x : round(x))
-                # KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
-                # KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: str(x).split('.')[0])
+                    # KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x : round(x))
+                    # KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN')) 
+                    # KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: str(x).split('.')[0])
 
-                KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
-                KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: round(x))
-                KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(
-                    lambda x: format_currency(x, 'INR', locale='en_IN'))
-                KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: str(x).split('.')[0])
+                    KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: round(x))
+                    KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI['Average_Monthly_Debit'] = KPI['Average_Monthly_Debit'].apply(lambda x: str(x).split('.')[0])
 
-                KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
-                KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: round(x))
-                KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(
-                    lambda x: format_currency(x, 'INR', locale='en_IN'))
-                KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: str(x).split('.')[0])
 
-                # KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x : round(x))
-                # KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
-                # KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: str(x).split('.')[0])
 
-                # KPI = pd.DataFrame.from_dict(KPI)
+                    # KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x : round(x))
+                    # KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    # KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: str(x).split('.')[0])
 
-                # KPI2['Highest_Credit_Amount'] = KPI2['Highest_Credit_Amount'].apply(lambda x : round(x,2))
-                # KPI2['Highest_Credit_Amount'] = KPI2['Highest_Credit_Amount'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: round(x))
+                    KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: str(x).split('.')[0])
 
-                # KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x : round(x))
-                # KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
-                # KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: str(x).split('.')[0])
 
-                KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
-                KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: round(x))
-                KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(
-                    lambda x: format_currency(x, 'INR', locale='en_IN'))
-                KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: str(x).split('.')[0])
+                    KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: round(x))
+                    KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: str(x).split('.')[0])
 
-                # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x : round(x))
-                # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
-                # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: str(x).split('.')[0])
 
-                KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
-                KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: round(x))
-                KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(
-                    lambda x: format_currency(x, 'INR', locale='en_IN'))
-                KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: str(x).split('.')[0])
+                    # KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x : round(x))
+                    # KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    # KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: str(x).split('.')[0])
 
-                KPI2['Ratio_Debit_Credit'] = KPI2['Ratio_Debit_Credit'].apply(lambda x: round(x, 2))
-                KPI2['Ratio_Cash_Total_Credit'] = KPI2['Ratio_Cash_Total_Credit'].apply(lambda x: round(x, 2))
+                    # KPI = pd.DataFrame.from_dict(KPI)
+                    
+                    # KPI2['Highest_Credit_Amount'] = KPI2['Highest_Credit_Amount'].apply(lambda x : round(x,2))
+                    # KPI2['Highest_Credit_Amount'] = KPI2['Highest_Credit_Amount'].apply(lambda x: format_currency(x, 'INR', locale='en_IN')) 
 
-                # KPI2['Highest_Credit_Amount_Org'] = KPI2['Highest_Credit_Amount'].apply(lambda x : x.split(' ')[0])
-                # KPI2['Highest_Credit_Amount_Org'] = KPI2['Highest_Credit_Amount_Org'].astype('str')
-                # KPI2['Highest_Credit_Amount_Org'].apply(lambda x : x.replace(',',''))
+                    # KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x : round(x))
+                    # KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    # KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: str(x).split('.')[0]) 
 
-                # KPI2['Highest_Credit_Amount_Org'].apply(lambda x : x.replace('₹',''))
+                    KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: round(x))
+                    KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: str(x).split('.')[0])
 
-                KPI2['Highest_Credit_Amount'] = KPI2['Highest_Credit_Amount'].apply(lambda x: str(x).split('.')[0])
-                KPI2['Lowest_Debit_Amount'] = KPI2['Lowest_Debit_Amount'].apply(lambda x: str(x).split('.')[0])
 
-                json_records = KPI.to_json(orient='records')
-                data1 = json.loads(json_records)
-                # print(data1)
-                data1 = data1[0]
+                    # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x : round(x))
+                    # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN')) 
+                    # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: str(x).split('.')[0]) 
 
-                json_records = KPI1.to_json(orient='records')
-                data2 = json.loads(json_records)
-                # print(data2)
-                data2 = data2[0]
+                    KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: round(x))
+                    KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: str(x).split('.')[0])
 
-                json_records = KPI2.to_json(orient='records')
-                data3 = json.loads(json_records)
-                # print(data3)
-                data3 = data3[0]
 
-                json_records = KPI3.to_json(orient='records')
-                data4 = json.loads(json_records)
-                # print(data4)
-                data4 = data4[0]
+                    KPI2['Ratio_Debit_Credit'] = KPI2['Ratio_Debit_Credit'].apply(lambda x : round(x,2))
+                    KPI2['Ratio_Cash_Total_Credit'] = KPI2['Ratio_Cash_Total_Credit'].apply(lambda x : round(x,2))
 
-                # print(KPI4)
-                json_records = KPI4.to_json(orient='records', date_format='iso')
-                data5 = json.loads(json_records)
-                # print(data5)
-                data5 = data5[0]
+                    # KPI2['Highest_Credit_Amount_Org'] = KPI2['Highest_Credit_Amount'].apply(lambda x : x.split(' ')[0])
+                    # KPI2['Highest_Credit_Amount_Org'] = KPI2['Highest_Credit_Amount_Org'].astype('str')
+                    # KPI2['Highest_Credit_Amount_Org'].apply(lambda x : x.replace(',',''))   
+                    
+                    # KPI2['Highest_Credit_Amount_Org'].apply(lambda x : x.replace('₹',''))
+                    
 
-                data5['Start_Date'] = pd.to_datetime(data5['Start_Date'], format="%Y-%m-%d").strftime('%d/%m/%Y')
-                data5['End_Date'] = pd.to_datetime(data5['End_Date'], format="%Y-%m-%d").strftime('%d/%m/%Y')
-                print(data4)
-                E_Z_N_B = data4.get('Entries_Zero_Neg_Bal')
 
-                pydict = json.dumps([data, data1, data2, data4, data5, n2, p1, E_Z_N_B])
-                return HttpResponse(pydict)
+                    KPI2['Highest_Credit_Amount'] = KPI2['Highest_Credit_Amount'].apply(lambda x: str(x).split('.')[0]) 
+                    KPI2['Lowest_Debit_Amount'] = KPI2['Lowest_Debit_Amount'].apply(lambda x: str(x).split('.')[0]) 
+                    
 
-                # return render(request, 'bck.html', {'data' : data,'data1' : data1,'data2' : data2, 'data3' : data3, 'data4' : data4, 'data5' : data5, 'n2':n2, 'p1':p1,'EZNB':E_Z_N_B})
-    pydict = json.dumps([data, n2, p1])
+                    json_records = KPI.to_json(orient ='records') 
+                    data1 = json.loads(json_records)
+                    # print(data1)
+                    data1 = data1[0]
+                    
+                    json_records = KPI1.to_json(orient ='records') 
+                    data2 = json.loads(json_records)
+                    # print(data2)
+                    data2 = data2[0]
+                    
+                    json_records = KPI2.to_json(orient ='records') 
+                    data3 = json.loads(json_records)
+                    # print(data3)
+                    data3 = data3[0]
+                    
+                    json_records = KPI3.to_json(orient ='records') 
+                    data4 = json.loads(json_records)
+                    # print(data4)
+                    data4 = data4[0]
+
+                    # print(KPI4)
+                    json_records = KPI4.to_json(orient ='records', date_format = 'iso') 
+                    data5 = json.loads(json_records)
+                    # print(data5)
+                    data5 = data5[0]
+
+                    data5['Start_Date'] = pd.to_datetime(data5['Start_Date'], format = "%Y-%m-%d").strftime('%d/%m/%Y')
+                    data5['End_Date'] = pd.to_datetime(data5['End_Date'], format = "%Y-%m-%d").strftime('%d/%m/%Y')
+                    print(data4)
+                    E_Z_N_B = data4.get('Entries_Zero_Neg_Bal')
+                    finaldata = pd.DataFrame(list([data, data1,data2,data3,data4,data5,n2, p1,E_Z_N_B]))
+                    finaldata = finaldata.to_dict('split')
+                    pydict = json.dumps([finaldata])
+                    return HttpResponse(json.dumps(pydict))
+                    
+                    # return HttpResponse( {'data' : data,'data1' : data1,'data2' : data2, 'data3' : data3, 'data4' : data4, 'data5' : data5, 'n2':n2, 'p1':p1,'EZNB':E_Z_N_B})
+
+
+    finaldata = pd.DataFrame(list([data, n2, p1]))
+    finaldata = finaldata.to_dict('split')
+    pydict = json.dumps([finaldata])
     return HttpResponse(json.dumps(pydict))
-
-    # return render(request, 'bck.html', {'data' : data, 'n2':n2, 'p1':p1})
 
 
 @login_required
