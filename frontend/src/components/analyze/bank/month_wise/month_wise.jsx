@@ -11,6 +11,7 @@ const AnalyzeBankMonthWise = (leadID) => {
   var [table1, settable1] = useState();
   var [optbank, setoptbank] = useState();
   const [acc_number, setacc_number] = useState();
+  const [popupData, setPopUpData] = useState();
 
   const tableheaders = [
     { value: "Account number", colSpan: "0" },
@@ -90,22 +91,85 @@ const AnalyzeBankMonthWise = (leadID) => {
         }
       );
       console.log(response);
+      setPopUpData(response);
     };
 
     getPopUpData();
 
     const newWindow = window.open("", "_blank");
-    const customElement = document.createElement("div");
 
-    // Create and style yourtype custom element here
-    customElement.style.backgroundColor = "lightblue";
-    customElement.style.width = "200px";
-    customElement.style.height = "200px";
-
-    // Render your custom element into the new window's document
-    newWindow.document.body.appendChild(customElement);
-    // ReactDOM.render(<h1>Hello, world!</h1>, customElement);
+    newWindow.document.write(
+      <html>
+        <head>
+          <title>Custom Element</title>
+        </head>
+        <body>
+          <div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Transaction Date</th>
+                  <th>Description</th>
+                  <th>Debit</th>
+                  <th>Credit</th>
+                  <th>Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {popupData[0].map((item, i) => {
+                  <tr key={i}>
+                    <td>{item.txn_date}</td>
+                    <td>{item.description}</td>
+                    <td>{item.debit}</td>
+                    <td>{item.credit}</td>
+                    <td>{item.balance}</td>
+                  </tr>;
+                })}
+              </tbody>
+            </table>
+          </div>
+        </body>
+      </html>
+    );
   }
+
+  const handleButtonClick = () => {
+    const newWindow = window.open("", "_blank");
+
+    newWindow.document.write(
+      <html>
+        <head>
+          <title>Custom Element</title>
+        </head>
+        <body>
+          <div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Transaction Date</th>
+                  <th>Description</th>
+                  <th>Debit</th>
+                  <th>Credit</th>
+                  <th>Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {popupData[0].map((item, i) => {
+                  <tr key={i}>
+                    <td>{item.txn_date}</td>
+                    <td>{item.description}</td>
+                    <td>{item.debit}</td>
+                    <td>{item.credit}</td>
+                    <td>{item.balance}</td>
+                  </tr>;
+                })}
+              </tbody>
+            </table>
+          </div>
+        </body>
+      </html>
+    );
+  };
 
   return (
     <div>
@@ -348,6 +412,7 @@ const AnalyzeBankMonthWise = (leadID) => {
                           className="button_monthwise"
                           onClick={() => {
                             openWindow("credit", item.Max_credit_Amount);
+                            // handleButtonClick();
                           }}
                         >
                           {item.Max_credit_Amount}
@@ -435,6 +500,31 @@ const AnalyzeBankMonthWise = (leadID) => {
           </span>
         </div>
       )}
+
+      {/* <div>
+          <table>
+            <thead>
+              <tr>
+                <th>Transaction Date</th>
+                <th>Description</th>
+                <th>Debit</th>
+                <th>Credit</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              {popupData[0].map((item, i) => {
+                <tr key={i}>
+                  <td>{item.txn_date}</td>
+                  <td>{item.description}</td>
+                  <td>{item.debit}</td>
+                  <td>{item.credit}</td>
+                  <td>{item.balance}</td>
+                </tr>;
+              })}
+            </tbody>
+          </table>
+        </div> */}
     </div>
   );
 };
