@@ -7,7 +7,43 @@ import "./month_wise.css";
 // import ReactDOM from "react-dom";
 import SELECTBANKCUSTOMER from "../../../../utilities/selectBankCustomer/selectBankCustomer";
 
-const AnalyzeBankMonthWise = (leadID) => {
+function NewComponent(props) {
+  const { data } = props;
+  // console.log(data);
+
+  return (
+    <div>
+      <div>
+        <table style={{ border: "2px" }}>
+          <thead>
+            <tr>
+              <th>Transaction Date</th>
+              <th>Description</th>
+              <th>Debit</th>
+              <th>Credit</th>
+              <th>Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((item, i) => {
+              return (
+                <tr key={i}>
+                  <td>{item.txn_date}</td>
+                  <td>{item.description}</td>
+                  <td>{item.debit}</td>
+                  <td>{item.credit}</td>
+                  <td>{item.balance}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+const AnalyzeBankMonthWise = (props) => {
   var [table1, settable1] = useState();
   var [optbank, setoptbank] = useState();
   const [acc_number, setacc_number] = useState();
@@ -97,79 +133,15 @@ const AnalyzeBankMonthWise = (leadID) => {
     getPopUpData();
 
     const newWindow = window.open("", "_blank");
+    newWindow.document.title = "New Window";
 
-    newWindow.document.write(
-      <html>
-        <head>
-          <title>Custom Element</title>
-        </head>
-        <body>
-          <div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Transaction Date</th>
-                  <th>Description</th>
-                  <th>Debit</th>
-                  <th>Credit</th>
-                  <th>Balance</th>
-                </tr>
-              </thead>
-              <tbody>
-                {popupData[0].map((item, i) => {
-                  <tr key={i}>
-                    <td>{item.txn_date}</td>
-                    <td>{item.description}</td>
-                    <td>{item.debit}</td>
-                    <td>{item.credit}</td>
-                    <td>{item.balance}</td>
-                  </tr>;
-                })}
-              </tbody>
-            </table>
-          </div>
-        </body>
-      </html>
-    );
+    // Create a new element to render the NewComponent in
+    const newElement = document.createElement("div");
+    newWindow.document.body.appendChild(newElement);
+
+    // Render the NewComponent with the data in the new element
+    ReactDOM.render(<NewComponent data={popupData[0]} />, newElement);
   }
-
-  const handleButtonClick = () => {
-    const newWindow = window.open("", "_blank");
-
-    newWindow.document.write(
-      <html>
-        <head>
-          <title>Custom Element</title>
-        </head>
-        <body>
-          <div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Transaction Date</th>
-                  <th>Description</th>
-                  <th>Debit</th>
-                  <th>Credit</th>
-                  <th>Balance</th>
-                </tr>
-              </thead>
-              <tbody>
-                {popupData[0].map((item, i) => {
-                  <tr key={i}>
-                    <td>{item.txn_date}</td>
-                    <td>{item.description}</td>
-                    <td>{item.debit}</td>
-                    <td>{item.credit}</td>
-                    <td>{item.balance}</td>
-                  </tr>;
-                })}
-              </tbody>
-            </table>
-          </div>
-        </body>
-      </html>
-    );
-  };
 
   return (
     <div>
@@ -431,7 +403,13 @@ const AnalyzeBankMonthWise = (leadID) => {
                   if (item) {
                     return (
                       <td>
-                        <button className="button_monthwise">
+                        <button
+                          className="button_monthwise"
+                          onClick={() => {
+                            openWindow("debit", item.Max_debit_Amount);
+                            // handleButtonClick();
+                          }}
+                        >
                           {item.Max_debit_Amount}
                         </button>
                       </td>

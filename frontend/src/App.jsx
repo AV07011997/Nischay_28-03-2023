@@ -10,6 +10,7 @@ import { createBrowserHistory } from "history";
 import { useState } from "react";
 import AnalyzeBankSummary from "./components/analyze/bank/summary/summary";
 import AnalyzeBankMonthWise from "./components/analyze/bank/month_wise/month_wise";
+
 function App() {
   const history = createBrowserHistory();
 
@@ -45,6 +46,11 @@ function App() {
           {/* <Route path="/download/:radiovalue" element={<Downloadpage />} /> */}
           <Route path="/bureau/:radiovalue" element={<Bureau info={info} />} />
           <Route path="/analyzeMonthWise" element={<AnalyzeBankMonthWise />} />
+          <Route
+            exact
+            path="/newComponent"
+            render={(props) => <NewComponent data={window.opener.data} />}
+          />
         </Routes>
       </Router>
     </div>

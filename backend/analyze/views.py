@@ -81,12 +81,12 @@ def loan_kpi(request):
 
 def bank_customer_month_kpi(request):
     try:
-        os.remove('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
+        os.remove('/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
     except:
         pass
 
     try:
-        os.remove('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
+        os.remove('/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
     except:
         pass
     # try:
@@ -2057,7 +2057,7 @@ def bck_popup(request):
 
             data = pd.DataFrame(data)
             # filtered_data = data[data['account_number'] == accno]
-            filtered_data = data[data['credit'] == amount]
+            filtered_data = data[data['debit'] == amount]
 
     if type == 'negative_balance':
         with connection.cursor() as cursor:

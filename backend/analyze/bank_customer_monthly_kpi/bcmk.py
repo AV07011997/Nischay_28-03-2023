@@ -16,9 +16,6 @@ import datetime as dt
 
 
 def KPIs(data):
-    plt.ion()
-
-    plt.switch_backend('Agg') 
     try:
         #input_path="D:\\User DATA\\Documents\\A3\\KPI\\bank.csv"
         final=data

@@ -169,7 +169,7 @@ def bcmk_charts(data):
     plt.grid(True)
     # plt.show()
     # plt.savefig(settings.STATICFILES_DIRS[0] + '/assets/images/bcmk_fig.png')
-    plt.savefig('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
+    plt.savefig('/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
 
     ##############################
     df3 = cd3.copy()
@@ -196,4 +196,4 @@ def bcmk_charts(data):
 
     # plt.show()
     # plt.savefig(settings.STATICFILES_DIRS[0] + '/assets/images/bcmk_fig_1.png')
-    plt.savefig('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
+    plt.savefig('/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
