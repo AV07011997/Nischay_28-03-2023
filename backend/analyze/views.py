@@ -619,13 +619,13 @@ def bank_customer_kpi(request):
                     # KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x : round(x))
                     # KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
                     # KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: str(x).split('.')[0])
-
+                    KPI['Maximum_Balance']=KPI['Maximum_Balance'].astype(float)
                     KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
                     KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: round(x))
                     KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
                     KPI['Maximum_Balance'] = KPI['Maximum_Balance'].apply(lambda x: str(x).split('.')[0])
 
-
+                    KPI['Minimum_Balance']=KPI['Minimum_Balance'].astype(float)
                     KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
                     KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: round(x))
                     KPI['Minimum_Balance'] = KPI['Minimum_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
@@ -644,7 +644,7 @@ def bank_customer_kpi(request):
                     # KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x : round(x))
                     # KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
                     # KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: str(x).split('.')[0]) 
-
+                    KPI4['Opening_Balance']=KPI4['Opening_Balance'].astype(float)
                     KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
                     KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: round(x))
                     KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
@@ -654,7 +654,7 @@ def bank_customer_kpi(request):
                     # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x : round(x))
                     # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN')) 
                     # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: str(x).split('.')[0]) 
-
+                    KPI4['Closing_Balance']=KPI4['Closing_Balance'].astype(float)     
                     KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
                     KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: round(x))
                     KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
@@ -706,10 +706,10 @@ def bank_customer_kpi(request):
                     data5['End_Date'] = pd.to_datetime(data5['End_Date'], format = "%Y-%m-%d").strftime('%d/%m/%Y')
                     print(data4)
                     E_Z_N_B = data4.get('Entries_Zero_Neg_Bal')
-                    finaldata = pd.DataFrame(list([data, data1,data2,data3,data4,data5,n2, p1,E_Z_N_B]))
+                    finaldata = pd.DataFrame(list([data, data1,data2,data3,data4,data5,n2, p1,str(E_Z_N_B)]))
                     finaldata = finaldata.to_dict('split')
                     pydict = json.dumps([finaldata])
-                    return HttpResponse(json.dumps(pydict))
+                    return HttpResponse(json.dumps({'data' : data,'data1' : data1,'data2' : data2, 'data3' : data3, 'data4' : data4, 'data5' : data5, 'n2':n2, 'p1':p1,'EZNB':E_Z_N_B}))
                     
                     # return HttpResponse( {'data' : data,'data1' : data1,'data2' : data2, 'data3' : data3, 'data4' : data4, 'data5' : data5, 'n2':n2, 'p1':p1,'EZNB':E_Z_N_B})
 
