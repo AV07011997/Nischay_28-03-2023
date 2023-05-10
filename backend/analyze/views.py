@@ -37,7 +37,7 @@ import chart_studio.plotly as py
 import chart_studio.tools as tls
 from mysite.models import bank_bank
 from django.core import serializers
-from CONSTANT import path_static_files,path_pdf_files_folder,path_digitized_folder
+
 
 
 def dictfetchall(cursor):
@@ -82,12 +82,12 @@ def loan_kpi(request):
 
 def bank_customer_month_kpi(request):
     try:
-        os.remove('/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
+        os.remove('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
     except:
         pass
 
     try:
-        os.remove('/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
+        os.remove('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
     except:
         pass
     # try:

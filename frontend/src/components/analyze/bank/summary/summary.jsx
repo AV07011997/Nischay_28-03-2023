@@ -31,6 +31,7 @@ const AnalyzeBankSummary = (leadID) => {
       optbank: accountNumber,
     }).then((res) => {
       console.log(res);
+      setInfo(res);
     });
   };
 

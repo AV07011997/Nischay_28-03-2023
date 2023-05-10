@@ -11,10 +11,7 @@ def bck(data):
   df = data
   df['txn_date'] = pd.to_datetime(df['txn_date'], format='%Y-%m-%d')
   df['month_year'] = df['txn_date'].dt.month.astype(str)+'-'+df['txn_date'].dt.year.astype(str)
-  # df['debit'] = [float(str(i).replace(',','')) for i in df['debit']]
   df.debit = df.debit.replace(0,np.nan)
-  # df['credit'] = [float(str(i).replace(',','')) for i in df['credit']]
-  # df['balance'] = [float(str(i).replace(',','')) for i in df['balance']]
   df.credit = df.credit.replace(0,np.nan)
   df.sort_values('txn_date', ascending=True, inplace=True)
   print('output from python code')
@@ -38,17 +35,17 @@ def bck(data):
   df2 = df2[df2['balance'].notna()]
   df2['balance'].fillna(method='ffill', inplace=True)
   df2['month_year'] = df2['date'].dt.month.astype(str)+'-'+df2['date'].dt.year.astype(str)
-  # df['balance']=df['balance'].astype(float)
-  df2['balance'] = df2['balance'].astype(float)
+  df2['balance']=df2['balance'].astype(float)
+  
   a = df2.groupby('month_year')['balance'].mean()
-  df['debit'] = df['debit'].astype(float)
+
   avg_mthly_bal = a.sum()/a.shape[0]
 
-  df['credit'] = df['credit'].astype(float)
+  df['debit']=df['debit'].astype(float)
   a=df.loc[df.debit.notnull(),:].groupby('month_year').debit.mean()
   avg_mthly_debit = (a.sum()/a.shape[0])
 
-
+  df['credit']=df['credit'].astype(float)
   a=df.loc[df.credit.notnull(),:].groupby('month_year').credit.mean()
   avg_mthly_credit = (a.sum()/a.shape[0])
 
@@ -94,7 +91,7 @@ def bck(data):
   df2.drop_duplicates(['date'], keep='last', inplace=True)
   df2.reset_index(drop=True, inplace=True)
   days_with_bal_0_neg = df2.loc[df2.balance<=0,:].shape[0]
-  df['balance'] = df['balance'].astype(float)
+  df['balance']=df['balance'].astype(float)
   entries_0_neg_bal = df.loc[df['balance']<=0].shape[0]
 
 
@@ -156,9 +153,8 @@ def bck(data):
   plt.ylabel('Closing Balance', fontsize=14)
   plt.grid(True)
   #plt.show()
-  # plt.savefig(settings.STATICFILES_DIRS[0] + '/assets/images/saved_figure.png')
-  plt.savefig(
-    "/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/closing-balance-trend.png")
+  plt.savefig("/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/closing-balance-trend.png")
+
 
   debit_cash = df.loc[(df.debit.notnull()) & (df['mode'].str.lower().str.strip()=='cash'),:].shape[0]
   credit_cash = df.loc[(df.credit.notnull()) & (df['mode'].str.lower().str.strip()=='cash'),:].shape[0]
@@ -175,8 +171,8 @@ def bck(data):
   df10.plot.barh(figsize=(12,6))
   plt.title('Frequency & Mode of Transactions')
   #plt.show()
-  # plt.savefig(settings.STATICFILES_DIRS[0] + '/assets/images/saved_figure_1.png')
-  plt.savefig('/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/feq-mode-txn.png')
+  plt.savefig('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/feq-mode-txn.png')
+
     
 
   df['flag2'] = ['Cash' if str(i).lower()=='cash' else 'Non-Cash' for i in df['mode']]
@@ -195,6 +191,6 @@ def bck(data):
   plt.title('Inflow & Outflow',fontsize=18)
   plt.axis('off')
   #plt.show()
-  # plt.savefig(settings.STATICFILES_DIRS[0] + '/assets/images/saved_figure_2.png')
-  plt.savefig('/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/in-outflow.png')
+  plt.savefig('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/in-outflow.png')
+
   return table,table1,table2,table3,table4
