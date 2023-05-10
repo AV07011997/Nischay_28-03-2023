@@ -151,6 +151,7 @@ def bcmk_charts(data):
     y = df3['Month_End_Balance']
     y2 = df3['Net_Inflow_Amount']
     y3 = df3['EMI']
+    plt.switch_backend('Agg')
     fig, ax = plt.subplots(figsize=(12, 6))
     a, = plt.plot(x, y, marker='o')
     b, = plt.plot(x, y2, marker='o')

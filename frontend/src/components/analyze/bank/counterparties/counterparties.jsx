@@ -5,7 +5,6 @@ import NavBar from "../../../../utilities/navbar/navbar";
 import { APIADDRESS } from "../../../../constants/constants";
 import SELECTBANKCUSTOMER from "../../../../utilities/selectBankCustomer/selectBankCustomer";
 import "./counterparties.css";
-import usestate from "usestate";
 
 const ANALYZECOUNTERPARTIES = () => {
   var [optbank, setoptbank] = useState();
