@@ -1,0 +1,40 @@
+.headingCounterPartiesTable {
+  text-align: center;
+  /* border: 1px solid #575757; */
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  /* background-color: #575757; */
+  color: black;
+}
+.div_table1_counterparties {
+  align-items: center;
+}
+.table1_counterparties {
+  border: 1px solid #575757;
+  margin-left: auto;
+  margin-right: auto;
+  width: 95%;
+  text-align: center;
+  font-size: medium;
+}
+.table2_headers_counterparties {
+  background-color: black;
+  color: white;
+}
+.filterButton_counterparties {
+  background: black;
+  color: white;
+  position: sticky;
+  top: 0;
+}
+.sticky-main_header {
+  position: sticky;
+  top: 0;
+  background-color: black;
+}
+.sticky-sub_header {
+  position: sticky;
+  top: 48.5px;
+  background-color: black;
+}

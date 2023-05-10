@@ -13,7 +13,6 @@ export const postApi = async (address, data, content_type, process_data) => {
     processData: process_data,
     success: function (res) {
       // console.log(res);
-      // console.log(res);
       response = JSON.parse(res);
     },
   });

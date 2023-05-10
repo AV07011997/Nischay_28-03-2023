@@ -12,7 +12,6 @@ const AnalyzeBankSummary = (leadID) => {
   const keyArrays = (object) => {
     return Object.keys(object);
   };
-
   useEffect(() => {
     var statementsArray = [];
     postApi("analyze/" + APIADDRESS.ANALYZEBANKSUMMARY, {
@@ -34,7 +33,6 @@ const AnalyzeBankSummary = (leadID) => {
       leadID: localStorage.getItem("leadID"),
       optbank: accountNumber,
     }).then((res) => {
-      setInfo(res);
       console.log(res);
     });
   };
