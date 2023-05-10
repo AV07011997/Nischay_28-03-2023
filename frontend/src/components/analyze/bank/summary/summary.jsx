@@ -9,10 +9,6 @@ const AnalyzeBankSummary = (leadID) => {
   var [table, setTable] = useState();
   var [info, setInfo] = useState();
 
-  const keyArrays = (object) => {
-    return Object.keys(object);
-  };
-
   useEffect(() => {
     var statementsArray = [];
     postApi("analyze/" + APIADDRESS.ANALYZEBANKSUMMARY, {
@@ -157,8 +153,8 @@ const AnalyzeBankSummary = (leadID) => {
             ></img>
           </div>
         </div>
-        <div>
-          <table style={{ marginTop: "4em" }}>
+        <div style={{ color: "black" }}>
+          <table style={{ marginTop: "4em", width: "100%" }}>
             {info && (
               <tbody>
                 <tr>
@@ -220,7 +216,7 @@ const AnalyzeBankSummary = (leadID) => {
             )}
           </table>
 
-          <table style={{ marginTop: "4em" }}>
+          <table style={{ marginTop: "4em", width: "100%" }}>
             {info && (
               <tbody>
                 <tr>
@@ -230,7 +226,7 @@ const AnalyzeBankSummary = (leadID) => {
                       height: "3em",
                     }}
                   >
-                    Ratio_Debit_Credit
+                    Ratio Debit Credit
                   </td>
                   <td>{info.data3.Ratio_Debit_Credit}</td>
                 </tr>
@@ -241,7 +237,7 @@ const AnalyzeBankSummary = (leadID) => {
                       height: "3em",
                     }}
                   >
-                    Ratio_Cash_Total_Credit
+                    Ratio Cash Total Credit
                   </td>
                   <td>{info.data3.Ratio_Cash_Total_Credit} </td>
                 </tr>
@@ -252,7 +248,7 @@ const AnalyzeBankSummary = (leadID) => {
                       height: "3em",
                     }}
                   >
-                    ALowest_Debit_Amount
+                    Lowest Debit Amount
                   </td>
                   <td>{info.data3.Lowest_Debit_Amount} </td>
                 </tr>
@@ -263,7 +259,7 @@ const AnalyzeBankSummary = (leadID) => {
                       height: "3em",
                     }}
                   >
-                    Highest_Credit_Amount
+                    Highest Credit Amount
                   </td>
                   <td>{info.data3.Highest_Credit_Amount} </td>
                 </tr>
@@ -274,7 +270,7 @@ const AnalyzeBankSummary = (leadID) => {
                       height: "3em",
                     }}
                   >
-                    Lowest_Debit_Amount_Org
+                    Lowest Debit Amount
                   </td>
                   <td>{info.data3.Lowest_Debit_Amount_Org} </td>
                 </tr>
@@ -282,7 +278,7 @@ const AnalyzeBankSummary = (leadID) => {
             )}
           </table>
 
-          <table style={{ marginTop: "4em" }}>
+          <table style={{ marginTop: "4em", width: "100%" }}>
             {info && (
               <tbody>
                 <tr>
@@ -292,7 +288,7 @@ const AnalyzeBankSummary = (leadID) => {
                       height: "3em",
                     }}
                   >
-                    Num_Chq_Bounce
+                    Number of Cheque Bounce
                   </td>
                   <td>{info.data4.Num_Chq_Bounce}</td>
                 </tr>
@@ -303,7 +299,7 @@ const AnalyzeBankSummary = (leadID) => {
                       height: "3em",
                     }}
                   >
-                    Min_Amt_Chq_Bounce
+                    Minimum Amount Cheque Bounce
                   </td>
                   <td>{info.data4.Min_Amt_Chq_Bounce} </td>
                 </tr>
@@ -314,7 +310,7 @@ const AnalyzeBankSummary = (leadID) => {
                       height: "3em",
                     }}
                   >
-                    Latest_Chq_Bounce
+                    Latest Cheque Bounce
                   </td>
                   <td>{info.data4.Latest_Chq_Bounce} </td>
                 </tr>
@@ -325,7 +321,7 @@ const AnalyzeBankSummary = (leadID) => {
                       height: "3em",
                     }}
                   >
-                    Entries_Zero_Neg_Bal
+                    Entries with Zero or Negative Balance
                   </td>
                   <td>{info.data4.Entries_Zero_Neg_Bal} </td>
                 </tr>
@@ -336,7 +332,7 @@ const AnalyzeBankSummary = (leadID) => {
                       height: "3em",
                     }}
                   >
-                    Days_with_bal_0_neg
+                    Days with balance 0 or negative.
                   </td>
                   <td>{info.data4.Days_with_bal_0_neg} </td>
                 </tr>
@@ -347,7 +343,7 @@ const AnalyzeBankSummary = (leadID) => {
                       height: "3em",
                     }}
                   >
-                    Num_Charges_Levied
+                    Number of Charges Levied
                   </td>
                   <td>
                     {info.data4.Num_Charges_Levied
@@ -359,7 +355,7 @@ const AnalyzeBankSummary = (leadID) => {
             )}
           </table>
 
-          <table style={{ marginTop: "4em" }}>
+          {/* <table style={{ marginTop: "4em", width: "100%" }}>
             {info && (
               <tbody>
                 <tr>
@@ -386,7 +382,7 @@ const AnalyzeBankSummary = (leadID) => {
                 </tr>
               </tbody>
             )}
-          </table>
+          </table> */}
         </div>
       </div>
     </div>
