@@ -37,6 +37,7 @@ import chart_studio.plotly as py
 import chart_studio.tools as tls
 from mysite.models import bank_bank
 from django.core import serializers
+from CONSTANT import path_static_files,path_pdf_files_folder,path_digitized_folder
 
 
 def dictfetchall(cursor):
