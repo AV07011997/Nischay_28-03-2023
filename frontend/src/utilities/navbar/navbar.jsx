@@ -113,7 +113,13 @@ const NavBar = (props) => {
                         </a>
                       </Dropdown.Item>
                       <Dropdown.Item>
-                        <a onClick={() => {}}>Counterparties</a>
+                        <a
+                          onClick={() => {
+                            navigate("/analyzeCounterparties");
+                          }}
+                        >
+                          Counterparties
+                        </a>
                       </Dropdown.Item>
                       <Dropdown.Item>
                         <a

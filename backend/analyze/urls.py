@@ -18,6 +18,7 @@ urlpatterns = [
     path('bank_customer_month_kpi/<date>/<maxcredit>/<accno>/', analyze_views.maxcredit, name="maxcredit"),
     path('bureau_customer_kpi/', analyze_views.bureau_customer_kpi, name="bureau_customer_kpi"),
     path('bureau_customer_month_kpi/', analyze_views.bureau_customer_month_kpi, name="bureau_customer_month_kpi"),
+    path('bank_entity_kpi/', analyze_views.bank_entity_kpi, name="bank_entity_kpi"),
     path('itr/', analyze_views.itr, name="itr"),
     path('fishy/', analyze_views.fishy, name="fishy"),
     path('statement/', analyze_views.statement, name="statement"),

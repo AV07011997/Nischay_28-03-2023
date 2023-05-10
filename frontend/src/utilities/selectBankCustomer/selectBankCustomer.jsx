@@ -12,6 +12,25 @@ const SELECTBANKCUSTOMER = (props) => {
 
   const api_address = props.apiaddress;
 
+  const headers_select_customer = props.headers;
+  // console.log(headers_select_customer);
+
+  var headers = [];
+  if (headers_select_customer) {
+    headers = [
+      { header: "Account Number", rowspan: "2", colSpan: "1" },
+      { header: "Bank Name", rowspan: "2", colSpan: "1" },
+      { header: "Transactions", rowspan: "1", colSpan: "2" },
+      { header: headers_select_customer, rowspan: "2", colSpan: "1" },
+    ];
+  } else {
+    headers = [
+      { header: "Account Number", rowspan: "2", colSpan: "1" },
+      { header: "Bank Name", rowspan: "2", colSpan: "1" },
+      { header: "Transactions", rowspan: "1", colSpan: "2" },
+    ];
+  }
+
   useEffect(() => {
     const getTable = async () => {
       const response = await postApi("analyze/" + api_address, {
@@ -28,13 +47,10 @@ const SELECTBANKCUSTOMER = (props) => {
     setacc_number(optbank);
     console.log("called");
     const getTable = async () => {
-      const response = await postApi(
-        "analyze/" + APIADDRESS.ANALYZEBANKMONTHWISE,
-        {
-          leadID: localStorage.getItem("leadID"),
-          optbank: optbank,
-        }
-      );
+      const response = await postApi("analyze/" + api_address, {
+        leadID: localStorage.getItem("leadID"),
+        optbank: optbank,
+      });
       console.log(response);
       setoptbank(response[0]["data"][1]);
     };
@@ -58,6 +74,7 @@ const SELECTBANKCUSTOMER = (props) => {
               <th rowSpan={2}>Account Number</th>
               <th rowSpan={2}>Bank Name number</th>
               <th colSpan="2">Transactions</th>
+              {headers_select_customer && <th rowSpan={2}>Counterparties</th>}
             </tr>
             <tr>
               <></>
@@ -92,6 +109,7 @@ const SELECTBANKCUSTOMER = (props) => {
                       <td>{item.bank_name}</td>
                       <td>{item.from_date}</td>
                       <td>{item.to_date}</td>
+                      {headers_select_customer && <td>{item.num_entities}</td>}
                     </tr>
                   );
                 }

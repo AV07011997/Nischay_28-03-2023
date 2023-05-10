@@ -3,7 +3,7 @@ import numpy as np
 import datetime
 
 def bek(data):
-  
+
   df=data
 
   df['debit'] = df['debit'].replace(0, np.nan)
@@ -20,12 +20,16 @@ def bek(data):
   tot_entities = df.entity.nunique() #count of entities transacted with
 
   df2 = df.copy()
+  df2['debit'] = df['debit'].astype(float)
+  df2['credit'] = df['debit'].astype(float)
   df2['entity'].fillna('Other Transactions', inplace=True)
   a = df2.groupby('entity', as_index=False)
 
   v1 = a.debit.count().rename(columns={'debit':'debits'}) #count debits
   v2 = a.credit.count().rename(columns={'credit':'credits'}) #count credits
-  v3 = a.debit.sum().rename(columns={'debit':'debited_amt_total'}) #total debit (sum)
+
+  # v3 = a.debit.sum().rename(columns={'debit':'debited_amt_total'}) #total debit (sum)
+  v3 = df2.groupby('entity', as_index=False)['debit'].sum().rename(columns={'debit': 'debited_amt_total'})
   v4 = a.credit.sum().rename(columns={'credit':'credited_amt_total'}) #total credit (sum)
   v5 = a.debit.max().rename(columns={'debit':'max_debit'}) #maximum debit
   v6 = a.credit.max().rename(columns={'credit':'max_credit'}) #maximum credit
@@ -66,5 +70,5 @@ def bek(data):
 
   dfout.loc[dfout.months_with_debit.notnull(),'debited_amt_mthly'] = dfout.debited_amt_total/dfout.months_with_debit #debited amount (monthly)
   dfout.loc[dfout.months_with_credit.notnull(),'credited_amt_mthly'] = dfout.credited_amt_total/dfout.months_with_credit #credited amount (monthly)
-  
+
   return dfout

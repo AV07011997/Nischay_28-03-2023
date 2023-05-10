@@ -10,7 +10,6 @@ import { createBrowserHistory } from "history";
 import { useState } from "react";
 import AnalyzeBankSummary from "./components/analyze/bank/summary/summary";
 import AnalyzeBankMonthWise from "./components/analyze/bank/month_wise/month_wise";
-import AnalyzeStatement from "./components/analyze/bank/statement/statement";
 
 function App() {
   const history = createBrowserHistory();
@@ -49,8 +48,8 @@ function App() {
           <Route path="/analyzeMonthWise" element={<AnalyzeBankMonthWise />} />
           <Route
             exact
-            path="/newComponent"
-            render={(props) => <NewComponent data={window.opener.data} />}
+            path="/analyzeCounterparties"
+            element={<ANALYZECOUNTERPARTIES />}
           />
           <Route
             path="/analyzestatement"

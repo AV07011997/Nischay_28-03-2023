@@ -30,7 +30,6 @@ const AnalyzeBankSummary = (leadID) => {
       leadID: localStorage.getItem("leadID"),
       optbank: accountNumber,
     }).then((res) => {
-      setInfo(res);
       console.log(res);
     });
   };
