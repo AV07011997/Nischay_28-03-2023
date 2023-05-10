@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import datetime as dt
 import os
+from CONSTANT import path_pdf_files_folder,path_digitized_folder,path_static_files
 from django.conf import settings
 
 def bcmk_charts(data):
@@ -170,7 +171,9 @@ def bcmk_charts(data):
     plt.grid(True)
     # plt.show()
     # plt.savefig(settings.STATICFILES_DIRS[0] + '/assets/images/bcmk_fig.png')
-    plt.savefig('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/bcmk_fig.png')
+    path = os.path.join(path_static_files, 'bcmk_fig.png')
+
+    plt.savefig(path)
 
     ##############################
     df3 = cd3.copy()
@@ -197,4 +200,6 @@ def bcmk_charts(data):
 
     # plt.show()
     # plt.savefig(settings.STATICFILES_DIRS[0] + '/assets/images/bcmk_fig_1.png')
-    plt.savefig('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/bcmk_fig_1.png')
+    path = os.path.join(path_static_files, 'bcmk_fig_1.png')
+
+    plt.savefig(path)

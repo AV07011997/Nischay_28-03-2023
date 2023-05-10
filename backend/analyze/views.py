@@ -37,6 +37,7 @@ import chart_studio.plotly as py
 import chart_studio.tools as tls
 from mysite.models import bank_bank
 from django.core import serializers
+from CONSTANT import path_digitized_folder,path_pdf_files_folder,path_static_files
 
 
 
@@ -82,12 +83,15 @@ def loan_kpi(request):
 
 def bank_customer_month_kpi(request):
     try:
-        os.remove('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
+        path=os.path.join(path_static_files,'bcmk_fig.png')
+        os.remove(path)
     except:
         pass
 
     try:
-        os.remove('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles')
+        path=os.path.join(path_static_files,'bcmk_fig_1.png')
+
+        os.remove(path)
     except:
         pass
     # try:
@@ -534,16 +538,19 @@ def bank_customer_month_kpi(request):
 def bank_customer_kpi(request):
 
     try:
-        os.remove(settings.STATICFILES_DIRS[0] + '/assets/images/saved_figure_1.png')
+        path=os.path.join(path_static_files,'closing-balance-trend.png')
+        os.remove(path)
     except:
         pass
 
     try:
-        os.remove(settings.STATICFILES_DIRS[0] + '/assets/images/saved_figure.png')
+        path=os.path.join(path_static_files,'feq-mode-txn.png')
+        os.remove(path)
     except:
         pass
     try:
-        os.remove(settings.STATICFILES_DIRS[0] + '/assets/images/saved_figure_2.png')
+        path=os.path.join(path_static_files,'in-outflow.png')
+        os.remove(path)
     except:
         pass
     status = {}

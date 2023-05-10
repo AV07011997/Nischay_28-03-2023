@@ -6,6 +6,7 @@ import os
 import squarify
 from django.conf import settings
 from babel.numbers import format_currency
+from CONSTANT import path_digitized_folder,path_pdf_files_folder,path_static_files
 
 def bck(data):
   df = data
@@ -153,7 +154,9 @@ def bck(data):
   plt.ylabel('Closing Balance', fontsize=14)
   plt.grid(True)
   #plt.show()
-  plt.savefig("/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/closing-balance-trend.png")
+  path = os.path.join(path_static_files, 'closing-balance-trend.png')
+
+  plt.savefig(path)
 
 
   debit_cash = df.loc[(df.debit.notnull()) & (df['mode'].str.lower().str.strip()=='cash'),:].shape[0]
@@ -171,7 +174,9 @@ def bck(data):
   df10.plot.barh(figsize=(12,6))
   plt.title('Frequency & Mode of Transactions')
   #plt.show()
-  plt.savefig('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/feq-mode-txn.png')
+  path = os.path.join(path_static_files, 'feq-mode-txn.png')
+
+  plt.savefig(path)
 
     
 
@@ -191,6 +196,8 @@ def bck(data):
   plt.title('Inflow & Outflow',fontsize=18)
   plt.axis('off')
   #plt.show()
-  plt.savefig('/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/in-outflow.png')
+  path = os.path.join(path_static_files, 'in-outflow.png')
+
+  plt.savefig(path)
 
   return table,table1,table2,table3,table4

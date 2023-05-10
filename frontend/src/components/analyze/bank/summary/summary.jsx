@@ -138,19 +138,23 @@ const AnalyzeBankSummary = (leadID) => {
               width: "100%",
             }}
           >
-            <img
-              className="graph_monthwise"
-              src="./staticfiles/closing-balance-trend.png"
-              alt="graph1"
-              style={{ width: "100%" }}
-            ></img>
+            {info && (
+              <div>
+                <img
+                  className="graph_monthwise"
+                  src="./staticfiles/closing-balance-trend.png"
+                  alt="graph1"
+                  style={{ width: "100%" }}
+                ></img>
 
-            <img
-              className="graph_monthwise"
-              src="./staticfiles/feq-mode-txn.png"
-              alt="graph1"
-              style={{ width: "100%" }}
-            ></img>
+                <img
+                  className="graph_monthwise"
+                  src="./staticfiles/feq-mode-txn.png"
+                  alt="graph1"
+                  style={{ width: "100%" }}
+                ></img>
+              </div>
+            )}
           </div>
         </div>
         <div style={{ color: "black" }}>

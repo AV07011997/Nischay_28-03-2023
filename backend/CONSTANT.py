@@ -18,3 +18,11 @@ PASSWORD = "Knowlvers@555"
 ## analyze -> views
 LOC1 = r"/Users/Abhishek/Desktop/a3_kit/templates/test1.html"
 LOC2 = r"/Users/Abhishek/Desktop/a3_kit/templates/test2.html"
+
+path_static_files='/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/'
+path_digitized_folder='C:/Users/Abhishek/Desktop/digitized_files/'
+path_pdf_files_folder='C:/Users/Abhishek/Desktop/pdf_files'
+
+# path_static_files='/Users/HardikBharadwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/'
+# path_digitized_folder='C:/Users/HardikBharadwaj/Desktop/digitized_files/'
+# path_pdf_files_folder='C:/Users/HardikBharadwaj/Desktop/pdf_files'
