@@ -14,8 +14,8 @@ function NewComponent(props) {
   return (
     <div>
       <div>
-        <table style={{ border: "2px" }}>
-          <thead>
+        <table style={{ border: "2px solid black" }}>
+          <thead style={{ border: "2px solid black" }}>
             <tr>
               <th>Transaction Date</th>
               <th>Description</th>
@@ -24,7 +24,7 @@ function NewComponent(props) {
               <th>Balance</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody style={{ border: "2px solid black" }}>
             {data.map((item, i) => {
               return (
                 <tr key={i}>
@@ -48,6 +48,7 @@ const AnalyzeBankMonthWise = (props) => {
   var [optbank, setoptbank] = useState();
   const [acc_number, setacc_number] = useState();
   const [popupData, setPopUpData] = useState();
+  const [buttonClicked, setbuttonClicked] = useState("closed");
 
   const tableheaders = [
     { value: "Account number", colSpan: "0" },
@@ -128,20 +129,46 @@ const AnalyzeBankMonthWise = (props) => {
       );
       console.log(response);
       setPopUpData(response);
+      // if (response) {
+      // const newWindow = window.open("", "_blank");
+      // newWindow.document.title = "New Window";
+
+      // // Create a new element to render the NewComponent in
+      // const newElement = document.createElement("div");
+      // newWindow.document.body.appendChild(newElement);
+
+      // // Render the NewComponent with the data in the new element
+      // ReactDOM.render(<NewComponent data={popupData[0]} />, newElement);
+      // }
     };
 
     getPopUpData();
+    // if (popupData) {
+    //   const newWindow = window.open("", "_blank");
+    //   newWindow.document.title = "New Window";
 
-    const newWindow = window.open("", "_blank");
-    newWindow.document.title = "New Window";
+    //   // Create a new element to render the NewComponent in
+    //   const newElement = document.createElement("div");
+    //   newWindow.document.body.appendChild(newElement);
 
-    // Create a new element to render the NewComponent in
-    const newElement = document.createElement("div");
-    newWindow.document.body.appendChild(newElement);
-
-    // Render the NewComponent with the data in the new element
-    ReactDOM.render(<NewComponent data={popupData[0]} />, newElement);
+    //   // Render the NewComponent with the data in the new element
+    //   ReactDOM.render(<NewComponent data={popupData[0]} />, newElement);
+    // }
   }
+  useEffect(() => {
+    if (popupData && buttonClicked === "open") {
+      const newWindow = window.open("", "_blank");
+      newWindow.document.title = "New Window";
+
+      // Create a new element to render the NewComponent in
+      const newElement = document.createElement("div");
+      newWindow.document.body.appendChild(newElement);
+
+      // Render the NewComponent with the data in the new element
+      ReactDOM.render(<NewComponent data={popupData[0]} />, newElement);
+      setbuttonClicked("closed");
+    }
+  }, [popupData]);
 
   return (
     <div>
@@ -383,6 +410,7 @@ const AnalyzeBankMonthWise = (props) => {
                         <button
                           className="button_monthwise"
                           onClick={() => {
+                            setbuttonClicked("open");
                             openWindow("credit", item.Max_credit_Amount);
                             // handleButtonClick();
                           }}
@@ -406,6 +434,8 @@ const AnalyzeBankMonthWise = (props) => {
                         <button
                           className="button_monthwise"
                           onClick={() => {
+                            setbuttonClicked("open");
+
                             openWindow("debit", item.Max_debit_Amount);
                             // handleButtonClick();
                           }}
