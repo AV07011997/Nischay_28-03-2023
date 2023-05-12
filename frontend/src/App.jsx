@@ -10,8 +10,8 @@ import { createBrowserHistory } from "history";
 import { useState } from "react";
 import AnalyzeBankSummary from "./components/analyze/bank/summary/summary";
 import AnalyzeBankMonthWise from "./components/analyze/bank/month_wise/month_wise";
-import ANALYZECOUNTERPARTIES from "./components/analyze/bank/counterparties/counterparties";
 import AnalyzeStatement from "./components/analyze/bank/statement/statement";
+import ANALYZECOUNTERPARTIES from "./components/analyze/bank/counterParties/counterparties";
 
 function App() {
   const history = createBrowserHistory();

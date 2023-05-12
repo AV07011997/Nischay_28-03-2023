@@ -5,13 +5,72 @@ import NavBar from "../../../../utilities/navbar/navbar";
 import { APIADDRESS } from "../../../../constants/constants";
 import SELECTBANKCUSTOMER from "../../../../utilities/selectBankCustomer/selectBankCustomer";
 import "./counterparties.css";
+import { postApi } from "../../../../callapi";
 
-const ANALYZECOUNTERPARTIES = () => {
+function PopUpComponent(props) {
+  const { data } = props;
+  console.log(data);
+  const headers = [
+    "Transaction Date",
+    "Description",
+    "Debit",
+    "Credit",
+    "Balance",
+    "Cheque no",
+    "Entity",
+  ];
+  // console.log(data);
+
+  return (
+    <div>
+      <div>
+        <table style={{ border: "2px solid black" }}>
+          <thead>
+            <tr>
+              {headers.map((item, i) => {
+                return (
+                  <th
+                    style={{
+                      border: "2px solid black",
+                      background: "black",
+                      color: "white",
+                    }}
+                  >
+                    {item}
+                  </th>
+                );
+              })}
+            </tr>
+          </thead>
+          <tbody style={{ border: "2px solid black" }}>
+            {data.map((item, i) => {
+              return (
+                <tr key={i}>
+                  <td style={{ padding: "10px" }}>{item.txn_date}</td>
+                  <td style={{ padding: "10px" }}>{item.description}</td>
+                  <td style={{ padding: "10px" }}>{item.debit}</td>
+                  <td style={{ padding: "10px" }}>{item.credit}</td>
+                  <td style={{ padding: "10px" }}>{item.balance}</td>
+                  <td style={{ padding: "10px" }}>{item.cheque_number}</td>
+                  <td style={{ padding: "10px" }}>{item.entity}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+const ANALYZECOUNTERPARTIES = (props) => {
   var [optbank, setoptbank] = useState();
   var [optbank2, setoptbank2] = useState();
   const [pagestate, setpagestate] = useState(0);
+  const [buttonClicked, setbuttonClicked] = useState("closed");
 
   const [acc_number, setacc_number] = useState();
+  const [popupData, setPopUpData] = useState();
   const [sortKey, setSortKey] = useState();
 
   function handledata(data, acc_number) {
@@ -156,6 +215,43 @@ const ANALYZECOUNTERPARTIES = () => {
     setpagestate(pagestate + 1);
   };
 
+  function openWindow(entity) {
+    const getPopUpData = async () => {
+      console.log("hello");
+      const response = await postApi(
+        "analyze/" + APIADDRESS.ANALYZECOUNTERPARTIESPOPUP,
+        {
+          entity: entity,
+          leadID: localStorage.getItem("leadID"),
+          account_number: acc_number,
+        }
+      );
+      console.log(response);
+      setPopUpData(response);
+    };
+
+    getPopUpData();
+  }
+
+  useEffect(() => {
+    console.log("called");
+    console.log(popupData);
+    console.log(buttonClicked);
+
+    if (popupData && buttonClicked === "open") {
+      const newWindow = window.open("", "_blank");
+      newWindow.document.title = "New Window";
+
+      // Create a new element to render the NewComponent in
+      const newElement = document.createElement("div");
+      newWindow.document.body.appendChild(newElement);
+
+      // Render the NewComponent with the data in the new element
+      ReactDOM.render(<PopUpComponent data={popupData[0]} />, newElement);
+      setbuttonClicked("closed");
+    }
+  }, [popupData]);
+
   return (
     <div>
       <NavBar></NavBar>
@@ -233,7 +329,14 @@ const ANALYZECOUNTERPARTIES = () => {
                 return (
                   <tr key={i}>
                     <td>
-                      <button className="button_monthwise">
+                      <button
+                        className="button_monthwise"
+                        onClick={() => {
+                          setbuttonClicked("open");
+
+                          openWindow(item.entity);
+                        }}
+                      >
                         {item.entity}
                       </button>
                     </td>

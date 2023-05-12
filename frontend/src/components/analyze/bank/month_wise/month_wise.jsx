@@ -9,30 +9,45 @@ import SELECTBANKCUSTOMER from "../../../../utilities/selectBankCustomer/selectB
 
 function NewComponent(props) {
   const { data } = props;
+  const headers = [
+    "Transaction Date",
+    "Description",
+    "Debit",
+    "Credit",
+    "Balance",
+  ];
   // console.log(data);
 
   return (
     <div>
       <div>
         <table style={{ border: "2px solid black" }}>
-          <thead style={{ border: "2px solid black" }}>
+          <thead>
             <tr>
-              <th>Transaction Date</th>
-              <th>Description</th>
-              <th>Debit</th>
-              <th>Credit</th>
-              <th>Balance</th>
+              {headers.map((item, i) => {
+                return (
+                  <th
+                    style={{
+                      border: "2px solid black",
+                      background: "black",
+                      color: "white",
+                    }}
+                  >
+                    {item}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody style={{ border: "2px solid black" }}>
             {data.map((item, i) => {
               return (
                 <tr key={i}>
-                  <td>{item.txn_date}</td>
-                  <td>{item.description}</td>
-                  <td>{item.debit}</td>
-                  <td>{item.credit}</td>
-                  <td>{item.balance}</td>
+                  <td style={{ padding: "10px" }}>{item.txn_date}</td>
+                  <td style={{ padding: "10px" }}>{item.description}</td>
+                  <td style={{ padding: "10px" }}>{item.debit}</td>
+                  <td style={{ padding: "10px" }}>{item.credit}</td>
+                  <td style={{ padding: "10px" }}>{item.balance}</td>
                 </tr>
               );
             })}
@@ -49,6 +64,7 @@ const AnalyzeBankMonthWise = (props) => {
   const [acc_number, setacc_number] = useState();
   const [popupData, setPopUpData] = useState();
   const [buttonClicked, setbuttonClicked] = useState("closed");
+  var Amount_pop_up = 0;
 
   const tableheaders = [
     { value: "Account number", colSpan: "0" },
@@ -69,47 +85,6 @@ const AnalyzeBankMonthWise = (props) => {
 
   console.log(localStorage.getItem("leadID"));
 
-  // First table api called *****************************************************************************
-
-  // useEffect(() => {
-  //   const getTable = async () => {
-  //     const response = await postApi(
-  //       "analyze/" + APIADDRESS.ANALYZEBANKMONTHWISE,
-  //       {
-  //         leadID: localStorage.getItem("leadID"),
-  //       }
-  //     );
-  //     console.log(response);
-  //     settable1(response[0]);
-  //   };
-
-  //   getTable(); // run it, run it
-  // }, []);
-
-  // *******************************************************************************************************
-
-  // second tabkle api call function after account number selection ****************************************
-  // const table2 = (optbank) => {
-  //   setacc_number(optbank);
-  //   console.log("called");
-  //   const getTable = async () => {
-  //     const response = await postApi(
-  //       "analyze/" + APIADDRESS.ANALYZEBANKMONTHWISE,
-  //       {
-  //         leadID: localStorage.getItem("leadID"),
-  //         optbank: optbank,
-  //       }
-  //     );
-  //     // console.log(response[0]["data"][1]);
-  //     setoptbank(response[0]["data"][1]);
-  //   };
-
-  //   getTable();
-  // };
-  // console.log(optbank);
-
-  // *********************************************************************************************************
-
   function handledata(data, acc_number) {
     console.log(acc_number);
     setacc_number(acc_number);
@@ -117,6 +92,7 @@ const AnalyzeBankMonthWise = (props) => {
   }
 
   function openWindow(type, amount) {
+    Amount_pop_up = amount;
     const getPopUpData = async () => {
       console.log("hello");
       const response = await postApi(
@@ -129,31 +105,9 @@ const AnalyzeBankMonthWise = (props) => {
       );
       console.log(response);
       setPopUpData(response);
-      // if (response) {
-      // const newWindow = window.open("", "_blank");
-      // newWindow.document.title = "New Window";
-
-      // // Create a new element to render the NewComponent in
-      // const newElement = document.createElement("div");
-      // newWindow.document.body.appendChild(newElement);
-
-      // // Render the NewComponent with the data in the new element
-      // ReactDOM.render(<NewComponent data={popupData[0]} />, newElement);
-      // }
     };
 
     getPopUpData();
-    // if (popupData) {
-    //   const newWindow = window.open("", "_blank");
-    //   newWindow.document.title = "New Window";
-
-    //   // Create a new element to render the NewComponent in
-    //   const newElement = document.createElement("div");
-    //   newWindow.document.body.appendChild(newElement);
-
-    //   // Render the NewComponent with the data in the new element
-    //   ReactDOM.render(<NewComponent data={popupData[0]} />, newElement);
-    // }
   }
   useEffect(() => {
     if (popupData && buttonClicked === "open") {
@@ -173,73 +127,11 @@ const AnalyzeBankMonthWise = (props) => {
   return (
     <div>
       <NavBar></NavBar>
-      {/* <SELECTBANKCUSTOMER
-        apiaddress={APIADDRESS.ANALYZEBANKMONTHWISE}
-      ></SELECTBANKCUSTOMER> */}
 
       <SELECTBANKCUSTOMER
         onData={handledata}
         apiaddress={APIADDRESS.ANALYZEBANKMONTHWISE}
       ></SELECTBANKCUSTOMER>
-
-      {/* <div className="div_table1_monthwise">
-        {table1 ? (
-          <table className="table1_monthwise">
-            <thead className="thead_table1_monthwise">
-              <tr>
-                <th rowSpan={2}>Account Number</th>
-                <th rowSpan={2}>Bank Name number</th>
-                <th colSpan="2">Transactions</th>
-              </tr>
-              <tr>
-                <></>
-                <></>
-                <th>From</th>
-                <th>To</th>
-              </tr>
-            </thead>
-            <tbody>
-              {table1["data"][0]?.map((item, i) => {
-                {
-                  if (item) {
-                    console.log(item);
-                    return (
-                      <tr key={i}>
-                        <td>
-                          <label>
-                            <input
-                              type="radio"
-                              id="radio_table"
-                              name="radio_table"
-                              value={item.account_number}
-                              onClick={() => {
-                                table2(item.account_number);
-                              }}
-                            />
-                            <span className="radiobuttongap">
-                              {item.account_number}
-                            </span>
-                          </label>
-                        </td>
-                        <td>{item.bank_name}</td>
-                        <td>{item.from_date}</td>
-                        <td>{item.to_date}</td>
-                      </tr>
-                    );
-                  }
-                }
-              })}
-            </tbody>
-          </table>
-        ) : (
-          <Loader
-            className="loader_landingpage"
-            center
-            size="lg"
-            content="loading..."
-          ></Loader>
-        )}
-      </div> */}
 
       {optbank && (
         <div className="div_table1_monthwise">
