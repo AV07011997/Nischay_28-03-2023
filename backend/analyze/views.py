@@ -2023,6 +2023,7 @@ def bck_popup(request):
             data = dictfetchall(cursor)
 
             data = pd.DataFrame(data)
+            data = data[data['account_number'] == accno]
             # filtered_data = data[data['account_number'] == accno]
             filtered_data = data[data['credit'] == amount]
 
@@ -2036,40 +2037,74 @@ def bck_popup(request):
             data = dictfetchall(cursor)
 
             data = pd.DataFrame(data)
+            data = data[data['account_number'] == accno]
             # filtered_data = data[data['account_number'] == accno]
             filtered_data = data[data['debit'] == amount]
 
     if type == 'negative_balance':
         with connection.cursor() as cursor:
             cursor.execute(
-                'SELECT txn_date, description, debit, credit, balance FROM a5_kit.mysite_bank_bank WHERE account_number like ' + accno + 'and balance <= 0 ;')
+                "SELECT * FROM a5_kit.mysite_bank_bank"
+            )
+
             data = dictfetchall(cursor)
 
             data = pd.DataFrame(data)
-            filtered_data=data
-            if not data.empty:
-                data['txn_date'] = pd.to_datetime(data['txn_date'], format='%Y-%m-%d')
-                data = data.sort_values(['txn_date'])
+            data = data[data['account_number'] == accno]
+            data['balance'] = data['balance'].astype(float)
+            filtered_data = data[data['balance'] <= 0]
 
+        # with connection.cursor() as cursor:
+        #     cursor.execute(
+        #         'SELECT txn_date, description, debit, credit, balance FROM a5_kit.mysite_bank_bank WHERE account_number like ' + accno + 'and balance <= 0 ;')
+        #     data = dictfetchall(cursor)
+        #
+        #     data = pd.DataFrame(data)
 
 
     if type == 'Bounced':
         with connection.cursor() as cursor:
             cursor.execute(
-                'SELECT txn_date, description, debit, credit, balance FROM a3_kit.bank_bank WHERE account_number like ' + accno + 'AND transaction_type =  "Bounced" ;')
+                "SELECT * FROM a5_kit.mysite_bank_bank"
+
+            )
             data = dictfetchall(cursor)
 
             data = pd.DataFrame(data)
-            filtered_data=data
+            data=data[data['account_number']==accno]
+
+            filtered_data = data[data['transaction_type'] == "Bounced"]
+            # filtered_data = filtered_data[filtered_data['account_number'] == accno]
+
+
+
+        # with connection.cursor() as cursor:
+        #     cursor.execute(
+        #         'SELECT txn_date, description, debit, credit, balance FROM a3_kit.bank_bank WHERE account_number like ' + accno + 'AND transaction_type =  "Bounced" ;')
+        #     data = dictfetchall(cursor)
+        #
+        #     data = pd.DataFrame(data)
+        #     filtered_data=data
 
     if type == 'charges':
         with connection.cursor() as cursor:
             cursor.execute(
-                'SELECT txn_date, description, debit, credit, balance FROM a3_kit.bank_bank WHERE account_number like ' + accno + 'AND transaction_type =  "charges" ;')
+                "SELECT * FROM a5_kit.mysite_bank_bank"
+
+            )
             data = dictfetchall(cursor)
 
             data = pd.DataFrame(data)
-            filtered_data=data
+            data=data[data['account_number']==accno]
+
+            filtered_data = data[data['transaction_type'] == "charges"]
+        # with connection.cursor() as cursor:
+        #     cursor.execute(
+        #         'SELECT txn_date, description, debit, credit, balance FROM a3_kit.bank_bank WHERE account_number like ' + accno + 'AND transaction_type =  "charges" ;')
+        #     data = dictfetchall(cursor)
+        #
+        #     data = pd.DataFrame(data)
+        #     filtered_data=data
 
     try:
         filtered_data['debit'] = filtered_data['debit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
