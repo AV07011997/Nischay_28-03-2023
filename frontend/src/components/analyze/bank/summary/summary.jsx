@@ -5,27 +5,85 @@ import NavBar from "../../../../utilities/navbar/navbar";
 import SELECTBANKCUSTOMER from "../../../../utilities/selectBankCustomer/selectBankCustomer";
 import { Loader } from "rsuite";
 
+function NewComponent(props) {
+  const { data } = props;
+  const headers = [
+    "Transaction Date",
+    "Description",
+    "Debit",
+    "Credit",
+    "Balance",
+  ];
+  // console.log(data);
+
+  return (
+    <div>
+      <div>
+        <table style={{ border: "2px solid black" }}>
+          <thead>
+            <tr>
+              {headers.map((item, i) => {
+                return (
+                  <th
+                    style={{
+                      border: "2px solid black",
+                      background: "black",
+                      color: "white",
+                    }}
+                  >
+                    {item}
+                  </th>
+                );
+              })}
+            </tr>
+          </thead>
+          <tbody style={{ border: "2px solid black" }}>
+            {data.map((item, i) => {
+              return (
+                <tr key={i}>
+                  <td style={{ padding: "10px" }}>{item.txn_date}</td>
+                  <td style={{ padding: "10px" }}>{item.description}</td>
+                  <td style={{ padding: "10px" }}>{item.debit}</td>
+                  <td style={{ padding: "10px" }}>{item.credit}</td>
+                  <td style={{ padding: "10px" }}>{item.balance}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 const AnalyzeBankSummary = (leadID) => {
   var [table, setTable] = useState();
   var [info, setInfo] = useState();
+  const [acc_number, setacc_number] = useState();
+  const [popupData, setPopUpData] = useState();
+  const [buttonClicked, setbuttonClicked] = useState("closed");
+  var Amount_pop_up = 0;
 
   useEffect(() => {
     var statementsArray = [];
     postApi("analyze/" + APIADDRESS.ANALYZEBANKSUMMARY, {
       leadID: localStorage.getItem("leadID"),
     }).then((res) => {
-      const temp = JSON.parse(res)[0].data;
-      //   console.log(temp);
-      temp.forEach((element) => {
-        if (element[0] != null) {
-          statementsArray.push(element[0]);
-        }
-      });
-      setTable(statementsArray);
+      console.log(res);
+      // const temp = JSON.parse(res)[0].data;
+      // //   console.log(temp);
+      // temp.forEach((element) => {
+      //   if (element[0] != null) {
+      //     statementsArray.push(element[0]);
+      //   }
+      // });
+      setTable(res[0]["data"][0]);
     });
   }, []);
+  console.log(table);
 
   const getData = (accountNumber) => {
+    setacc_number(accountNumber);
     postApi("analyze/" + APIADDRESS.ANALYZEBANKSUMMARY, {
       leadID: localStorage.getItem("leadID"),
       optbank: accountNumber,
@@ -34,6 +92,39 @@ const AnalyzeBankSummary = (leadID) => {
       setInfo(res);
     });
   };
+
+  function openWindow(type, amount) {
+    Amount_pop_up = amount;
+    const getPopUpData = async () => {
+      console.log("hello");
+      const response = await postApi(
+        "analyze/" + APIADDRESS.ANALYZEBANKMONTHWISEPOPUP,
+        {
+          type: type,
+          amount: amount,
+          account_number: acc_number,
+        }
+      );
+      console.log(response);
+      setPopUpData(response);
+    };
+
+    getPopUpData();
+  }
+  useEffect(() => {
+    if (popupData && buttonClicked === "open") {
+      const newWindow = window.open("", "_blank");
+      newWindow.document.title = "New Window";
+
+      // Create a new element to render the NewComponent in
+      const newElement = document.createElement("div");
+      newWindow.document.body.appendChild(newElement);
+
+      // Render the NewComponent with the data in the new element
+      ReactDOM.render(<NewComponent data={popupData[0]} />, newElement);
+      setbuttonClicked("closed");
+    }
+  }, [popupData]);
 
   return (
     <div>
@@ -265,7 +356,18 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Highest Credit Amount
                   </td>
-                  <td>{info.data3.Highest_Credit_Amount} </td>
+                  <td>
+                    <button
+                      className="button_monthwise"
+                      onClick={() => {
+                        setbuttonClicked("open");
+
+                        openWindow("credit", info.data3.Highest_Credit_Amount);
+                      }}
+                    >
+                      {info.data3.Highest_Credit_Amount}
+                    </button>
+                  </td>
                 </tr>
                 <tr>
                   <td
@@ -276,7 +378,18 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Lowest Debit Amount
                   </td>
-                  <td>{info.data3.Lowest_Debit_Amount_Org} </td>
+                  <td>
+                    <button
+                      className="button_monthwise"
+                      onClick={() => {
+                        setbuttonClicked("open");
+
+                        openWindow("debit", info.data3.Lowest_Debit_Amount_Org);
+                      }}
+                    >
+                      {info.data3.Lowest_Debit_Amount_Org}
+                    </button>
+                  </td>
                 </tr>
               </tbody>
             )}
@@ -294,7 +407,18 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Number of Cheque Bounce
                   </td>
-                  <td>{info.data4.Num_Chq_Bounce}</td>
+                  <td>
+                    <button
+                      className="button_monthwise"
+                      onClick={() => {
+                        setbuttonClicked("open");
+
+                        openWindow("Bounced", info.data4.Num_Chq_Bounce);
+                      }}
+                    >
+                      {info.data4.Num_Chq_Bounce}
+                    </button>
+                  </td>
                 </tr>
                 <tr>
                   <td
@@ -305,7 +429,12 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Minimum Amount Cheque Bounce
                   </td>
-                  <td>{info.data4.Min_Amt_Chq_Bounce} </td>
+                  <td>
+                    {/* {info.data4.Min_Amt_Chq_Bounce} */}
+                    {info.data4.Min_Amt_Chq_Bounce
+                      ? info.data4.Min_Amt_Chq_Bounce
+                      : "None"}{" "}
+                  </td>
                 </tr>
                 <tr>
                   <td
@@ -316,7 +445,12 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Latest Cheque Bounce
                   </td>
-                  <td>{info.data4.Latest_Chq_Bounce} </td>
+                  <td>
+                    {/* {info.data4.Latest_Chq_Bounce} */}
+                    {info.data4.Latest_Chq_Bounce
+                      ? info.data4.Latest_Chq_Bounce
+                      : "None"}{" "}
+                  </td>
                 </tr>
                 <tr>
                   <td
@@ -327,7 +461,21 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Entries with Zero or Negative Balance
                   </td>
-                  <td>{info.data4.Entries_Zero_Neg_Bal} </td>
+                  <td>
+                    <button
+                      className="button_monthwise"
+                      onClick={() => {
+                        setbuttonClicked("open");
+
+                        openWindow(
+                          "negative_balance",
+                          info.data4.Entries_Zero_Neg_Bal
+                        );
+                      }}
+                    >
+                      {info.data4.Entries_Zero_Neg_Bal}
+                    </button>
+                  </td>
                 </tr>
                 <tr>
                   <td
@@ -349,10 +497,20 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Number of Charges Levied
                   </td>
+
                   <td>
-                    {info.data4.Num_Charges_Levied
-                      ? info.data4.Num_Charges_Levied
-                      : "None"}{" "}
+                    <button
+                      className="button_monthwise"
+                      onClick={() => {
+                        setbuttonClicked("open");
+
+                        openWindow("charges", info.data4.Num_Charges_Levied);
+                      }}
+                    >
+                      {info.data4.Num_Charges_Levied
+                        ? info.data4.Num_Charges_Levied
+                        : "None"}{" "}
+                    </button>
                   </td>
                 </tr>
               </tbody>

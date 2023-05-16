@@ -76,26 +76,6 @@ def home_page(request):
     global customer_detail
     global cust
 
-    # def status_all():
-    #
-    #     digitized_file_status.objects.all().delete()
-    #
-    #     for obj in objects_files:
-    #         file_name = obj.key
-    #         lid = obj.key.split('_')[0]
-    #         if obj.key.split('_')[-1] == 'b.csv':
-    #             file_type = 'bank'
-    #         if obj.key.split('_')[-1] == 'i.csv':
-    #             file_type = 'itr'
-    #
-    #         if obj.key.split('_')[-1] != 'i.csv' and obj.key.split('_')[-1] != 'b.csv':
-    #             file_type = 'others'
-    #
-    #         p = digitized_file_status(lead_id=lid, file_name=file_name, type=file_type)
-    #         p.save()
-
-    # status_all()
-
     text = request.GET.get("search")
     request.session["stext"] = text
 
@@ -163,6 +143,7 @@ def home_page(request):
             grouped= bank_download_ready.groupby('lead_id')['file_name'].count().reset_index(name='failed_count')
 
             customer_detail = customer_detail.merge(grouped, on="lead_id", how="left")
+
 
 
         # if (bank_download_ready.empty == False):
@@ -265,9 +246,12 @@ def home_page(request):
     ##below lambda and loop statements need some bug fixing
     # customer_detail['bank_download_ready'] = customer_detail['bank_download_ready'].apply(
     #     lambda x: int(x) if pd.notnull(x) else 0)
-
-    customer_detail['bank_uploaded'] = customer_detail['bank_uploaded'].apply(lambda x: int(x) if pd.notnull(x) else 0)
-    customer_detail['bank_download'] = customer_detail['bank_download'].apply(lambda x: int(x) if pd.notnull(x) else 0)
+    if 'bank_uploaded' in customer_detail.columns:
+        customer_detail['bank_uploaded'] = customer_detail['bank_uploaded'].apply(
+            lambda x: int(x) if pd.notnull(x) else 0)
+    if 'bank_download' in customer_detail.columns:
+        customer_detail['bank_download'] = customer_detail['bank_download'].apply(
+            lambda x: int(x) if pd.notnull(x) else 0)
 
     customer_detail = customer_detail.sort_values(['creation_time'], ascending=[False])
     customer_detail['creation_time'] = customer_detail['creation_time'].dt.strftime('%B %d, %Y, %r')
@@ -287,8 +271,13 @@ def home_page(request):
 
     #######Adding to get correct time#######
     # customer_detail['creation_time'] = customer_detail['creation_time'] + timedelta(hours=5, minutes=30)
-
-    customer_detail = customer_detail.T.drop_duplicates().T
+    if 'failed_count' not in customer_detail:
+        customer_detail['failed_count']=0
+    if 'bank_download' not in customer_detail:
+        customer_detail['bank_download']=0
+    if 'bank_uploaded' not in customer_detail:
+        customer_detail['bank_uploaded']=0
+    customer_detail = customer_detail.drop_duplicates()
     json_records = customer_detail.to_json(orient='records')
     customer_detail = json.loads(json_records)
 

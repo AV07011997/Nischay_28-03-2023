@@ -564,8 +564,8 @@ def bank_customer_kpi(request):
         with connection.cursor() as cursor:
             cursor.execute("SELECT account_number, bank_name, min(txn_date) as from_date, max(txn_date) as to_date  FROM a5_kit.mysite_bank_bank WHERE lead_id = " + str(lead_id)  + " GROUP BY account_number" + ";")
             data = dictfetchall(cursor)
-            # print(data)
 
+            # print(data)
             for date in data:
 
                 date['from_date'] = date['from_date'].strftime('%d/%m/%Y')
@@ -573,10 +573,27 @@ def bank_customer_kpi(request):
 
 
             if request.POST.getlist('optbank'):
+
                 n=request.POST.get('optbank')
                 # print (n)
                 n2 = n      
                 if n is not None:
+                    try:
+                        path = os.path.join(path_static_files, 'closing-balance-trend.png')
+                        os.remove(path)
+                    except:
+                        pass
+
+                    try:
+                        path = os.path.join(path_static_files, 'feq-mode-txn.png')
+                        os.remove(path)
+                    except:
+                        pass
+                    try:
+                        path = os.path.join(path_static_files, 'in-outflow.png')
+                        os.remove(path)
+                    except:
+                        pass
                     n = "'%" + n[1:-1] + "%'"
                     # print(n)
                     p1 = 'q'       
@@ -725,10 +742,15 @@ def bank_customer_kpi(request):
                     # return HttpResponse( {'data' : data,'data1' : data1,'data2' : data2, 'data3' : data3, 'data4' : data4, 'data5' : data5, 'n2':n2, 'p1':p1,'EZNB':E_Z_N_B})
 
 
-    finaldata = pd.DataFrame(list([data, n2, p1]))
-    finaldata = finaldata.to_dict('split')
-    pydict = json.dumps([finaldata])
-    return HttpResponse(json.dumps(pydict))
+    # finaldata = pd.DataFrame(list([data]))
+    # finaldata = finaldata.to_dict('split')
+    # pydict = json.dumps([finaldata])
+    # return HttpResponse(json.dumps(pydict))
+    data3 = pd.DataFrame(list([data]))
+    data3 = data3.to_dict('split')
+    pydict = json.dumps([data3])
+    return HttpResponse(pydict)
+
 
 
 @login_required
@@ -1984,8 +2006,10 @@ def bck_popup(request):
     amount = ''.join(e for e in amount if e.isalnum() or e.isspace())
     # accno = accno[1:-1]
     # accno = "'%" + accno + "%'"
-    amount=float(amount)
-    amount=str(amount)
+    if not amount=='':
+        amount = float(amount)
+        amount = str(amount)
+
 
     if type == 'credit':
         with connection.cursor() as cursor:
@@ -2018,21 +2042,25 @@ def bck_popup(request):
     if type == 'negative_balance':
         with connection.cursor() as cursor:
             cursor.execute(
-                'SELECT txn_date, description, debit, credit, balance FROM a3_kit.bank_bank WHERE account_number like ' + accno + 'and balance <= 0 ;')
+                'SELECT txn_date, description, debit, credit, balance FROM a5_kit.mysite_bank_bank WHERE account_number like ' + accno + 'and balance <= 0 ;')
             data = dictfetchall(cursor)
 
             data = pd.DataFrame(data)
+            filtered_data=data
+            if not data.empty:
+                data['txn_date'] = pd.to_datetime(data['txn_date'], format='%Y-%m-%d')
+                data = data.sort_values(['txn_date'])
 
-            data['txn_date'] = pd.to_datetime(data['txn_date'], format='%Y-%m-%d')
-            data = data.sort_values(['txn_date'])
 
-    if type == 'bounce':
+
+    if type == 'Bounced':
         with connection.cursor() as cursor:
             cursor.execute(
                 'SELECT txn_date, description, debit, credit, balance FROM a3_kit.bank_bank WHERE account_number like ' + accno + 'AND transaction_type =  "Bounced" ;')
             data = dictfetchall(cursor)
 
             data = pd.DataFrame(data)
+            filtered_data=data
 
     if type == 'charges':
         with connection.cursor() as cursor:
@@ -2041,6 +2069,7 @@ def bck_popup(request):
             data = dictfetchall(cursor)
 
             data = pd.DataFrame(data)
+            filtered_data=data
 
     try:
         filtered_data['debit'] = filtered_data['debit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))

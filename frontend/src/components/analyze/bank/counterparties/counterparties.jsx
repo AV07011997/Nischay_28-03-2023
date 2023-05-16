@@ -337,7 +337,7 @@ const ANALYZECOUNTERPARTIES = (props) => {
                           openWindow(item.entity);
                         }}
                       >
-                        {item.entity}
+                        {item?.entity}
                       </button>
                     </td>
                     <td>{item.latest_txn}</td>

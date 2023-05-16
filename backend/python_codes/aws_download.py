@@ -16,6 +16,8 @@ import shutil
 from pdfimage import pdf_image
 from textract_python_table_parser import append_files
 from hdfc import hdfc_digitization
+from django.db import connection
+
 from kotak import kotak_digitization
 from sbi import sbi_digitization
 from icici import icici_digitization
@@ -45,22 +47,6 @@ import csv
 
 
 
-# bucket = 'a3bank'  ###define bucket name
-# bucket1 = 'a3itr'  ###define bucket name
-# bucket2 = 'digitizedfiles'
-#
-# s3 = boto3.resource('s3')
-
-# file_path = r'C:\Users\Abhishek\Desktop\pdf_files'  ## Here the pdf is stored after uploading it into the web
-# csv_path = r'C:\Users\Abhishek\Desktop\digitized_files'  ##  Here we will store the csv after digitisation
-#
-# # objects_bank = s3.Bucket(bucket).objects.all()   ###get all objects in the bucket
-# # objects_itr = s3.Bucket(bucket1).objects.all()   ###get all objects in the bucket
-#
-# objects_bank = glob.glob(file_path + '*.pdf')  # manual testing
-
-
-# objects_itr = glob.glob(r'D:\s3_itr\\*')       # manual testing
 
 def job():
     print('Digitization')
@@ -104,14 +90,14 @@ def job():
     #
     #             tables = tabula.read_pdf(file, pages='all', password=passcode)
     #
-    #         except:
-    #
-    #             passcode = ''
-    #             tables = tabula.read_pdf(file, pages='all', password=passcode)
-    #
     #         if len(tables) == 0:
     #             scanned_flag = 1
-    #             file_path2 = pdf_image(file_path + '{}'.format(obj.key))
+    #             file_path2 = pdf_image(file_path + '{}'.for
+    #             tables = tabula.read_pdf(file, pages='all', password=passcode)
+    #
+    #         except:
+    #
+    #             passcode = ''mat(obj.key))
     #             append_files(file_path2, 'bank')
     #
     #         else:
@@ -178,47 +164,11 @@ def job():
     # Retrieve the name field from all rows in the Person model
     names = bank_bank.objects.values('txn_date','description','cheque_number','debit','credit','balance','account_name','account_number','mode','entity','source_of_trans','sub_mode','transaction_type','bank_name','lead_id','creation_time')
     values=pd.DataFrame(names)
-    qs = bank_bank.objects.filter(lead_id=238032).values('account_number', 'bank_name').annotate(from_date=Min('txn_date'), to_date=Max('txn_date'))
+    # qs = bank_bank.objects.filter(lead_id=238032).values('account_number', 'bank_name').annotate(from_date=Min('txn_date'), to_date=Max('txn_date'))
 
     # Iterate through the QuerySet to access individual values
-    for name in names:
-        print(name)
-
-    for filename in os.listdir(csv_path):
-        lead_id = filename.split("\\")[0][:6]
-        if filename.endswith('.csv'):
-            with open(os.path.join(csv_path, filename), 'r') as csvfile:
-                # Create a CSV reader object
-                csvreader = csv.reader(csvfile)
-                # Loop through each row in the CSV file
-                next(csvreader)
-                #start after header in a csv
-
-                for row in csvreader:
-
-                    datetime_object = datetime.strptime(row[0], '%d/%m/%Y')
-                    new_date = datetime_object.strftime('%Y-%m-%d')
-
-                    timestamp=datetime.now()
-                    timestamp.strftime('%Y-%m-%d')
-                    print(row[0])
-
-
-                    u = bank_bank(txn_date=new_date, description=row[1], cheque_number=row[2], debit=row[3], credit=row[4], balance=row[5], account_name=row[6], account_number=row[7], mode=row[8], entity=row[9], source_of_trans=row[10], sub_mode=row[11], transaction_type=row[12], bank_name=row[13], lead_id=lead_id,creation_time=timestamp)
-                    u.save()
-
-                    # Combine the file path and name
-
-            file_location = os.path.join('C:/Users/Abhishek/Desktop/digitized_files/',filename)
-            os.remove(file_location)
-
-
-
-
-
-
-
-
+    # for name in names:
+    #     print(name)
 
 
     files = glob.glob(r"C:\Users\Abhishek\Desktop\pdf_files\*.pdf")
@@ -311,7 +261,40 @@ def job():
         #     # # response = s3.Bucket(bucket2).upload_file(file_path, Key=os.path.basename(file_path))
         #     # os.remove(files[i])
 
-schedule.every(0.1).minutes.do(job)  ### frequency of code execution
+        for filename in os.listdir(csv_path):
+            lead_id = filename.split("\\")[0][:6]
+            if filename.endswith('.csv'):
+                with open(os.path.join(csv_path, filename), 'r') as csvfile:
+                    # Create a CSV reader object
+                    csvreader = csv.reader(csvfile)
+                    # Loop through each row in the CSV file
+                    next(csvreader)
+                    # start after header in a csv
+
+                    for row in csvreader:
+                        datetime_object = datetime.strptime(row[0], '%d/%m/%Y')
+                        new_date = datetime_object.strftime('%Y-%m-%d')
+
+                        timestamp = datetime.now()
+                        timestamp.strftime('%Y-%m-%d')
+                        print(row[0])
+
+                        u = bank_bank(txn_date=new_date, description=row[1], cheque_number=row[2], debit=row[3],
+                                      credit=row[4], balance=row[5], account_name=row[6], account_number=row[7],
+                                      mode=row[8], entity=row[9], source_of_trans=row[10], sub_mode=row[11],
+                                      transaction_type=row[12], bank_name=row[13], lead_id=lead_id,
+                                      creation_time=timestamp)
+
+                        u.save()
+
+
+                        # Combine the file path and name
+
+                file_location = os.path.join('C:/Users/Abhishek/Desktop/digitized_files/', filename)
+                os.remove(file_location)
+
+
+schedule.every(1).minutes.do(job)  ### frequency of code execution
 
 while True:
     schedule.run_pending()

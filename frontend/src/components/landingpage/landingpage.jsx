@@ -151,6 +151,7 @@ const LandingPage = ({ setinfo }) => {
     },
   }));
 
+  console.log(table);
   return (
     <div>
       <NavBar
@@ -263,7 +264,7 @@ const LandingPage = ({ setinfo }) => {
                                 ></FaWindowClose>
                               </td>
                             )}
-                            <td>{item.bureau_creation_time}</td>
+                            {/* <td>{item.bureau_creation_time}</td> */}
                           </tr>
                         );
                       }

@@ -120,7 +120,7 @@ def uploadBankStatments(request):
     lead_id = request.POST.get('lead_id')
     lead_name = request.POST.get('name')
     bank_count = request.POST.get('lead_id__count')
-    if str(bank_count) == 'null' or str(bank_count) == 'None':
+    if str(bank_count) == 'undefined' or str(bank_count) == 'None':
         bank_count = 0
     result = ''
     result_count = ''
