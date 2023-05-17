@@ -51,9 +51,9 @@ def bck(data):
   avg_mthly_credit = (a.sum()/a.shape[0])
 
 
-  max_bal = df.balance.max()
+  max_bal = df2.balance.max()
 
-  min_bal = df.balance.min()
+  min_bal = df2.balance.min()
 
   table = pd.DataFrame({'Average_Monthly_Balance':[avg_mthly_bal],'Average_Monthly_Debit':[avg_mthly_debit],'Average_Monthly_Credit':[avg_mthly_credit],'Maximum_Balance':[max_bal],'Minimum_Balance':[min_bal]})
 

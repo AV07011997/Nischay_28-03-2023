@@ -1,8 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../../../../utilities/navbar/navbar";
 import { postApi } from "../../../../callapi";
+import { Loader } from "rsuite";
+import { APIADDRESS } from "../../../../constants/constants";
 
 const AnalyzeStatement = (leadID) => {
+  const [table, setTable] = useState();
+
   useEffect(() => {
     var statementsArray = [];
     postApi("analyze/" + APIADDRESS.ANALYZEBANKSUMMARY, {
@@ -17,6 +21,17 @@ const AnalyzeStatement = (leadID) => {
       setTable(statementsArray);
     });
   }, []);
+
+  var getData = (bankAccount) => {
+    console.log(bankAccount);
+    console.log("Hello");
+    postApi("analyze/" + APIADDRESS.STATEMENTS, {
+      leadID: localStorage.getItem("leadID"),
+    }).then((res) => {
+      console.log(res);
+    });
+  };
+
   return (
     <div>
       <NavBar></NavBar>
@@ -42,7 +57,6 @@ const AnalyzeStatement = (leadID) => {
                 {table?.map((item, i) => {
                   {
                     if (item) {
-                      console.log(item);
                       return (
                         <tr key={i}>
                           <td>
@@ -53,6 +67,7 @@ const AnalyzeStatement = (leadID) => {
                                 name="radio_table"
                                 value={item.account_number}
                                 onClick={() => {
+                                  console.log("Hello");
                                   getData(item.account_number);
                                 }}
                               />
