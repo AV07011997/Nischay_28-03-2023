@@ -28,6 +28,5 @@ urlpatterns = [
     path('statement/lead/statement1', analyze_views.statement1, name="statement1"),
     path('bureau_customer_kpi/<cust_id>/',analyze_views.alladress,name="alladress"),
     path('bureau_customer_kpi/age/<cust_id>/',analyze_views.age,name="age"),
-    path('statements/',analyze_views.statements,name='statements')
 
 ]
