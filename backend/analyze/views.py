@@ -2039,7 +2039,9 @@ def bck_popup(request):
             data = pd.DataFrame(data)
             data = data[data['account_number'] == accno]
             # filtered_data = data[data['account_number'] == accno]
-            filtered_data = data[data['debit'] == amount]
+            filtered_data=data
+            filtered_data=filtered_data[filtered_data['debit']==amount]
+            # filtered_data = data[data['debit'] == amount]
 
     if type == 'negative_balance':
         with connection.cursor() as cursor:
@@ -2066,7 +2068,6 @@ def bck_popup(request):
         with connection.cursor() as cursor:
             cursor.execute(
                 "SELECT * FROM a5_kit.mysite_bank_bank"
-
             )
             data = dictfetchall(cursor)
 
@@ -2074,6 +2075,69 @@ def bck_popup(request):
             data=data[data['account_number']==accno]
 
             filtered_data = data[data['transaction_type'] == "Bounced"]
+            # filtered_data = filtered_data[filtered_data['account_number'] == accno]
+
+
+
+        # with connection.cursor() as cursor:
+        #     cursor.execute(
+        #         'SELECT txn_date, description, debit, credit, balance FROM a3_kit.bank_bank WHERE account_number like ' + accno + 'AND transaction_type =  "Bounced" ;')
+        #     data = dictfetchall(cursor)
+        #
+        #     data = pd.DataFrame(data)
+        #     filtered_data=data
+
+
+
+    if type == 'min_amt_chq_bounce':
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM a5_kit.mysite_bank_bank"
+            )
+            data = dictfetchall(cursor)
+
+            data = pd.DataFrame(data)
+            data=data[data['account_number']==accno]
+
+            data = data[data['transaction_type'] == "Bounced"]
+            data['debit'] = data['debit'].astype(float)
+
+            data=data[data['debit']>0]
+            minimum_value=data['debit'].min()
+            if not np.isnan(minimum_value):
+                minimum_value.astype(float)
+            filtered_data=data[data['debit']==minimum_value]
+
+            # filtered_data = filtered_data[filtered_data['account_number'] == accno]
+
+
+
+        # with connection.cursor() as cursor:
+        #     cursor.execute(
+        #         'SELECT txn_date, description, debit, credit, balance FROM a3_kit.bank_bank WHERE account_number like ' + accno + 'AND transaction_type =  "Bounced" ;')
+        #     data = dictfetchall(cursor)
+        #
+        #     data = pd.DataFrame(data)
+        #     filtered_data=data
+
+    if type == 'latest_chq_bounce':
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM a5_kit.mysite_bank_bank"
+            )
+            data = dictfetchall(cursor)
+
+            data = pd.DataFrame(data)
+            data=data[data['account_number']==accno]
+
+            data = data[data['transaction_type'] == "Bounced"]
+            # data['debit'] = data['debit'].astype(float)
+
+            # data=data[data['debit']>0]
+            latest_date=data['txn_date'].max()
+            # minimum_value.astype(float)
+            filtered_data=data[data['txn_date']==latest_date]
+
             # filtered_data = filtered_data[filtered_data['account_number'] == accno]
 
 

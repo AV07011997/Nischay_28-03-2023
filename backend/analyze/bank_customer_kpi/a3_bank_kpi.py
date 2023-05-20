@@ -86,8 +86,14 @@ def bck(data):
   
   number_cheque_bounce = int(df[df['transaction_type'] == 'Bounced']['transaction_type'].count()/2)
   
-  min_amt_cheque_bounce = np.nan
-  latest_cheque_bounce = np.nan
+  min_amt_cheque_bounce = df[df['transaction_type']=='Bounced']
+  min_amt_cheque_bounce=min_amt_cheque_bounce[min_amt_cheque_bounce['debit']>0]
+  min_amt_cheque_bounce_greater_than_zero=min_amt_cheque_bounce
+  min_amt_cheque_bounce=min_amt_cheque_bounce['debit'].min()
+  latest_cheque_bounce_date= min_amt_cheque_bounce_greater_than_zero['txn_date'].max()
+  latest_cheque_bounce=min_amt_cheque_bounce_greater_than_zero[min_amt_cheque_bounce_greater_than_zero['txn_date']==latest_cheque_bounce_date]
+  latest_cheque_bounce=latest_cheque_bounce['debit']
+
   df2.sort_values(['date','balance'], ascending=[True,False], inplace=True)
   df2.drop_duplicates(['date'], keep='last', inplace=True)
   df2.reset_index(drop=True, inplace=True)

@@ -340,18 +340,18 @@ const ANALYZECOUNTERPARTIES = (props) => {
                         {item?.entity}
                       </button>
                     </td>
-                    <td>{item.latest_txn}</td>
-                    <td>{item.oldest_txn}</td>
-                    <td>{item.debits}</td>
-                    <td>{item.credits}</td>
-                    <td>{item.debited_amt_total}</td>
-                    <td>{item.debited_amt_mthly}</td>
-                    <td>{item.min_debit}</td>
-                    <td>{item.max_debit}</td>
-                    <td>{item.credited_amt_total}</td>
-                    <td>{item.credited_amt_mthly}</td>
-                    <td>{item.min_credit}</td>
-                    <td>{item.max_credit}</td>
+                    <td>{item?.latest_txn}</td>
+                    <td>{item?.oldest_txn}</td>
+                    <td>{item?.debits}</td>
+                    <td>{item?.credits}</td>
+                    <td>{item?.debited_amt_total}</td>
+                    <td>{item?.debited_amt_mthly}</td>
+                    <td>{item?.min_debit}</td>
+                    <td>{item?.max_debit}</td>
+                    <td>{item?.credited_amt_total}</td>
+                    <td>{item?.credited_amt_mthly}</td>
+                    <td>{item?.min_credit}</td>
+                    <td>{item?.max_credit}</td>
                   </tr>
                 );
               })}

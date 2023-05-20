@@ -62,6 +62,7 @@ const AnalyzeBankSummary = (leadID) => {
   const [acc_number, setacc_number] = useState();
   const [popupData, setPopUpData] = useState();
   const [buttonClicked, setbuttonClicked] = useState("closed");
+  const [pagestate, setpagestate] = useState();
   var Amount_pop_up = 0;
 
   useEffect(() => {
@@ -91,6 +92,7 @@ const AnalyzeBankSummary = (leadID) => {
       console.log(res);
       setInfo(res);
     });
+    setpagestate("0");
   };
 
   function openWindow(type, amount) {
@@ -125,6 +127,7 @@ const AnalyzeBankSummary = (leadID) => {
       setbuttonClicked("closed");
     }
   }, [popupData]);
+  console.log(info);
 
   return (
     <div>
@@ -430,10 +433,21 @@ const AnalyzeBankSummary = (leadID) => {
                     Minimum Amount Cheque Bounce
                   </td>
                   <td>
-                    {/* {info.data4.Min_Amt_Chq_Bounce} */}
-                    {info.data4.Min_Amt_Chq_Bounce
-                      ? info.data4.Min_Amt_Chq_Bounce
-                      : "None"}{" "}
+                    <button
+                      className="button_monthwise"
+                      onClick={() => {
+                        setbuttonClicked("open");
+
+                        openWindow(
+                          "min_amt_chq_bounce",
+                          info.data4.Min_Amt_Chq_Bounce
+                        );
+                      }}
+                    >
+                      {info.data4.Min_Amt_Chq_Bounce
+                        ? info.data4.Min_Amt_Chq_Bounce
+                        : "None"}{" "}
+                    </button>
                   </td>
                 </tr>
                 <tr>
@@ -446,10 +460,21 @@ const AnalyzeBankSummary = (leadID) => {
                     Latest Cheque Bounce
                   </td>
                   <td>
-                    {/* {info.data4.Latest_Chq_Bounce} */}
-                    {info.data4.Latest_Chq_Bounce
-                      ? info.data4.Latest_Chq_Bounce
-                      : "None"}{" "}
+                    <button
+                      className="button_monthwise"
+                      onClick={() => {
+                        setbuttonClicked("open");
+
+                        openWindow(
+                          "latest_chq_bounce",
+                          info.data4.Latest_Chq_Bounce
+                        );
+                      }}
+                    >
+                      {info.data4.Latest_Chq_Bounce.length > 0
+                        ? info.data4.Latest_Chq_Bounce
+                        : "None"}{" "}
+                    </button>
                   </td>
                 </tr>
                 <tr>

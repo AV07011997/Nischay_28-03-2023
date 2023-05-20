@@ -23,9 +23,11 @@ def KPIs(data):
         #final.info()
         final["mode"].unique()
         final["sub_mode"].unique()
-        #Converting string date into datetime 
-        final.debit = final.debit.replace(0,np.nan)
-        final.credit = final.credit.replace(0,np.nan)
+        #Converting string date into datetime
+        final['debit']=final['debit'].astype(float)
+        final['credit']=final['credit'].astype(float)
+        final['debit'] = final['debit'].replace(0.0,np.nan)
+        final['credit'] = final['credit'].replace(0.0,np.nan)
         final["txn_date"]=pd.to_datetime(final["txn_date"], format = '%Y-%m-%d')
         #final["txn_date"]=pd.to_datetime(final["txn_date"], format = '%d-%m-%Y')
 
