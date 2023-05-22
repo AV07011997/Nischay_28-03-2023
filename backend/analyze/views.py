@@ -3274,3 +3274,27 @@ def age(request, cust_id):
             for date in DOB:
                 date['DATE_OF_BIRTH'] = date['DATE_OF_BIRTH'].strftime('%d/%m/%Y')
     return render(request, "bureauAge.html", {'DOB': DOB})
+
+
+def statements(request):
+
+    lead_id = ''
+    lead_id = lead_id.join(request.POST.getlist('leadID'))
+    lead_id = lead_id.rstrip()
+
+    accountNo = ''
+    accountNo = accountNo.join(request.POST.getlist('accountNo'))
+    accountNo = accountNo.rstrip('')
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+                            "SELECT txn_date,description,cheque_number,debit,credit,balance FROM mysite_bank_bank where  lead_id = " + lead_id +   ";")
+        data = dictfetchall(cursor)
+        data=pd.DataFrame(data)
+        json_records = data.to_json(orient='records')
+        data = json.loads(json_records)
+        pydict = json.dumps([data])
+        return HttpResponse(pydict)
+    
+    
+   

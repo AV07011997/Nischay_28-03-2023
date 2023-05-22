@@ -1,25 +1,18 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../../../../utilities/navbar/navbar";
 import { postApi } from "../../../../callapi";
-import { Loader } from "rsuite";
 import "./statement.css";
-
+import { APIADDRESS } from "../../../../constants/constants";
+import { Loader } from "rsuite";
 const AnalyzeStatement = (leadID) => {
   const [table, setTable] = useState();
-  // useEffect(() => {
-  //   var statementsArray = [];
-  //   postApi("analyze/" + APIADDRESS.ANALYZEBANKSUMMARY, {
-  //     leadID: localStorage.getItem("leadID"),
-  //   }).then((res) => {
-  //     const temp = JSON.parse(res)[0].data;
-  //     temp.forEach((element) => {
-  //       if (element[0] != null) {
-  //         statementsArray.push(element[0]);
-  //       }
-  //     });
-  //     setTable(statementsArray);
-  //   });
-  // }, []);
+  useEffect(() => {
+    postApi("analyze/" + APIADDRESS.ANALYZEBANKSUMMARY, {
+      leadID: localStorage.getItem("leadID"),
+    }).then((res) => {
+      setTable(res[0]["data"][0]);
+    });
+  }, []);
 
   const fetchvariables = () => {
     console.log("called");
@@ -39,11 +32,13 @@ const AnalyzeStatement = (leadID) => {
     console.log(txn_from);
   };
 
+  const getData = (accountNumber) => {};
+
   return (
     <div>
       <NavBar></NavBar>
 
-      {/* <div>
+      <div>
         <div className="div_table1_monthwise">
           {table ? (
             <table className="table1_monthwise">
@@ -64,7 +59,6 @@ const AnalyzeStatement = (leadID) => {
                 {table?.map((item, i) => {
                   {
                     if (item) {
-                      console.log(item);
                       return (
                         <tr key={i}>
                           <td>
@@ -102,7 +96,7 @@ const AnalyzeStatement = (leadID) => {
             ></Loader>
           )}
         </div>
-      </div> */}
+      </div>
       <div className="filter_element_div_block">
         <div className="filter_element">
           <h6>Transaction Date</h6>

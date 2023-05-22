@@ -71,17 +71,9 @@ const AnalyzeBankSummary = (leadID) => {
       leadID: localStorage.getItem("leadID"),
     }).then((res) => {
       console.log(res);
-      // const temp = JSON.parse(res)[0].data;
-      // //   console.log(temp);
-      // temp.forEach((element) => {
-      //   if (element[0] != null) {
-      //     statementsArray.push(element[0]);
-      //   }
-      // });
       setTable(res[0]["data"][0]);
     });
   }, []);
-  console.log(table);
 
   const getData = (accountNumber) => {
     setacc_number(accountNumber);
