@@ -1,6 +1,8 @@
 .filter_element_div_block {
   border: 1px solid #575757;
   padding: 10px;
+  width: 90%;
+  margin-left: 5%;
 }
 
 .filter_element {

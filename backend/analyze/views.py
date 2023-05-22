@@ -3283,7 +3283,7 @@ def statements(request):
     lead_id = lead_id.rstrip()
 
     accountNo = ''
-    accountNo = accountNo.join(request.POST.getlist('accountNo'))
+    accountNo = accountNo.join(request.POST.getlist('account_number'))
     accountNo = accountNo.rstrip('')
 
     with connection.cursor() as cursor:
@@ -3291,10 +3291,14 @@ def statements(request):
                             "SELECT txn_date,description,cheque_number,debit,credit,balance FROM mysite_bank_bank where  lead_id = " + lead_id +   ";")
         data = dictfetchall(cursor)
         data=pd.DataFrame(data)
+        data['txn_date'] = data['txn_date'].apply(lambda x: x.strftime('%d/%m/%Y'))
+
         json_records = data.to_json(orient='records')
         data = json.loads(json_records)
         pydict = json.dumps([data])
         return HttpResponse(pydict)
+
+
     
     
    

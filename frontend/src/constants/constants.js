@@ -16,5 +16,5 @@ export const APIADDRESS = {
   ANALYZEBANKMONTHWISEPOPUP: "bank_customer_kpi_popup/",
   ANALYZECOUNTERPARTIES: "bank_entity_kpi/",
   ANALYZECOUNTERPARTIESPOPUP: "bank_entity_kpi_pop_up/",
-  STATEMENTS: "statements/",
+  ANALYZESTATEMENTS: "statements/",
 };

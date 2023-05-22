@@ -6,6 +6,7 @@ import { APIADDRESS } from "../../../../constants/constants";
 import { Loader } from "rsuite";
 const AnalyzeStatement = (leadID) => {
   const [table, setTable] = useState();
+  const [table1, settable1] = useState();
   useEffect(() => {
     postApi("analyze/" + APIADDRESS.ANALYZEBANKSUMMARY, {
       leadID: localStorage.getItem("leadID"),
@@ -32,7 +33,16 @@ const AnalyzeStatement = (leadID) => {
     console.log(txn_from);
   };
 
-  const getData = (accountNumber) => {};
+  const getData = (accountNumber) => {
+    console.log("called");
+    postApi("analyze/" + APIADDRESS.ANALYZESTATEMENTS, {
+      leadID: localStorage.getItem("leadID"),
+      account_number: accountNumber,
+    }).then((res) => {
+      console.log(res);
+      settable1(res);
+    });
+  };
 
   return (
     <div>
@@ -140,6 +150,40 @@ const AnalyzeStatement = (leadID) => {
           </button>
         </div>
       </div>
+      {table1 && (
+        <div className="div_table1_monthwise">
+          <table className="table1_monthwise">
+            <thead className="thead_table1_monthwise">
+              <tr>
+                <th>Transaction Date</th>
+                <th>Description</th>
+                <th>Cheque number</th>
+                <th>Credit</th>
+                <th>Debit</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              {table1 && (
+                <>
+                  {table1[0]?.map((item, i) => {
+                    return (
+                      <tr key={i}>
+                        <td>{item.txn_date}</td>
+                        <td>{item.description}</td>
+                        <td>{item.cheque_number}</td>
+                        <td>{item.credit}</td>
+                        <td>{item.debit}</td>
+                        <td>{item.balance}</td>
+                      </tr>
+                    );
+                  })}
+                </>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
