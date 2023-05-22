@@ -1,4 +1,5 @@
 .filter_element_div_block {
+  margin-top: 20px;
   border: 1px solid #575757;
   padding: 10px;
   width: 90%;
@@ -11,6 +12,7 @@
   box-sizing: border-box;
   padding: 10px;
   text-align: center;
+  color: black;
 }
 .submit_statement {
   align-items: center;

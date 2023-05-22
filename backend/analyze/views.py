@@ -3288,9 +3288,10 @@ def statements(request):
 
     with connection.cursor() as cursor:
         cursor.execute(
-                            "SELECT txn_date,description,cheque_number,debit,credit,balance FROM mysite_bank_bank where  lead_id = " + lead_id +   ";")
+                            "SELECT txn_date,description,account_number,cheque_number,debit,credit,balance FROM mysite_bank_bank where  lead_id = " + lead_id +   ";")
         data = dictfetchall(cursor)
         data=pd.DataFrame(data)
+        data=data[data['account_number']==accountNo]
         data['txn_date'] = data['txn_date'].apply(lambda x: x.strftime('%d/%m/%Y'))
 
         json_records = data.to_json(orient='records')
