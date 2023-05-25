@@ -25,7 +25,6 @@ const AnalyzeStatement = (leadID) => {
       const convertedDate = `${year}-${month}-${day}`;
       return { ...item, txn_date: convertedDate };
     });
-    // console.log(convertedData);
     const txn_from = document?.getElementById("txn_date_from").value;
     const txn_to = document?.getElementById("txn_date_to").value;
     const debit_from = document?.getElementById("debit_amount_from").value;
@@ -42,8 +41,8 @@ const AnalyzeStatement = (leadID) => {
     const parts_from = txn_from.split("/");
 
     const parts_to = txn_to.split("/");
-    console.log(parts_to[0]);
-    console.log(parts_from[0]);
+    // console.log(parts_to[0]);
+    // console.log(parts_from[0]);
 
     const filteredData = [];
 
@@ -55,7 +54,7 @@ const AnalyzeStatement = (leadID) => {
           filteredData.push(item);
         }
       }
-      console.log(filteredData);
+      //   console.log(filteredData);
       const convertedDataFinal = filteredData.map((item) => {
         const [year, month, day] = item.txn_date.split("-");
         const convertedDate = `${day}/${month}/${year}`;
@@ -64,6 +63,60 @@ const AnalyzeStatement = (leadID) => {
       console.log(convertedDataFinal);
       settable1(convertedDataFinal);
     }
+    filterOnBalance(closing_bal_from, closing_bal_to);
+    filterOnDebit(debit_from, debit_to);
+    filterOnCredit(credit_from, credit_to);
+  };
+
+  const filterOnCredit = (credit_from, credit_to) => {
+    const finalData = [];
+    const from = parseFloat(credit_from);
+    const to = parseFloat(credit_to);
+    const tempData = table2;
+    // console.log(tempData);
+
+    tempData.forEach((element) => {
+      if (
+        parseFloat(element.credit) > from &&
+        parseFloat(element.credit) < to
+      ) {
+        finalData.push(element);
+      }
+    });
+    settable1(finalData);
+  };
+
+  const filterOnDebit = (debitFrom, debitTo) => {
+    const finalData = [];
+    const from = parseFloat(debitFrom);
+    const to = parseFloat(debitTo);
+    const tempData = table2;
+    // console.log(tempData);
+
+    tempData.forEach((element) => {
+      if (parseFloat(element.debit) > from && parseFloat(element.debit) < to) {
+        finalData.push(element);
+      }
+    });
+    settable1(finalData);
+  };
+
+  const filterOnBalance = async (balance_from, balance_to) => {
+    const finalData = [];
+    const from = parseFloat(balance_from);
+    const to = parseFloat(balance_to);
+    const tempData = table2;
+    console.log(tempData);
+
+    tempData.forEach((element) => {
+      if (
+        parseFloat(element.balance) > from &&
+        parseFloat(element.balance) < to
+      ) {
+        finalData.push(element);
+      }
+    });
+    settable1(finalData);
   };
 
   const getData = (accountNumber) => {
@@ -72,7 +125,6 @@ const AnalyzeStatement = (leadID) => {
       leadID: localStorage.getItem("leadID"),
       account_number: accountNumber,
     }).then((res) => {
-      console.log(res);
       settable1(res[0]);
       settable2(res[0]);
     });
