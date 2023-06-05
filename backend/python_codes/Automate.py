@@ -13,9 +13,15 @@ import pymysql
 import numpy_financial as npf
 #######################################basic table#########################################################
 # conn = pymysql.connect(host = '192.xxx.110.xx', port = 3306, user = 'xxxxxxxxxx', passwd = 'xxxxxxxxxx', charset = 'utf8', db='14july2020')
-input=input("Please enter the DEAL_ID and CUSTOMER_ID with COMMA Seperator!")
-did=input.split(',')[0]
-cid = input.split(',')[1]
+
+# needs to be uncommented ________________________________________________________________________________________________________
+
+# input=input("Please enter the DEAL_ID and CUSTOMER_ID with COMMA Seperator!")
+# did=input.split(',')[0]
+# cid = input.split(',')[1]
+
+#______________________________________________________________________________________________________________________________________
+
 conn = pymysql.connect(host = 'localhost', port = 3306, user = 'root', passwd = 'Knowlvers@555', charset = 'utf8', db='a3_kit')
 
 sql1 = "SELECT e.DEAL_ID AS deal_id, e.CUSTOMER_ID AS cust_id, e.BUREAU_ID AS report_id, e.BUREAU_DATE AS date_issued, e.DATE_OF_BIRTH AS DOB, e.NAME AS name, " \
@@ -56,7 +62,7 @@ data_loan_raw['ownership']=data_loan_raw['ownership'].astype(str).map({"1":"Indi
          "2":"Supl Card Holder","3":"Guarantor","4":"Joint"})
 
 ##########################3account type
-data_loan_raw['account_type'] = data_loan_raw['account_type'].apply(lambda x: ('0'+str(x)) if(len(x)==1) else x)
+# data_loan_raw['account_type'] = data_loan_raw['account_type'].apply(lambda x: ('0'+str(x)) if(len(x)==1) else x)
 data_loan_raw['account_type']=data_loan_raw['account_type'].astype(str).map({"01": "Auto Loan (Personal)",
 "02":"Housing Loan",
 "03":"Property Loan",
@@ -174,7 +180,11 @@ data_address=data_address.merge(data_basic[['deal_id','cust_id','date_issued','s
 ##############################################filtering single customer(Replace deal_id and cust_id with session deal_id and session customer_id)
 
 # sql1=pysqldf("SELECT * FROM data_loan WHERE deal_id=1114 AND cust_id=116")
-sql1=pysqldf("SELECT * FROM data_loan WHERE cust_id="+cid+" AND (deal_id="+did+" OR deal_id is NULL)")
+cid='5'
+
+# sql1=pysqldf("SELECT * FROM data_loan WHERE cust_id="+cid+" AND (deal_id="+did+" OR deal_id is NULL)")
+sql1=pysqldf("SELECT * FROM data_loan WHERE cust_id="+cid+"")
+
 data_loan = sql1
 print("data_loan  ",data_loan)
 # data_loan = pd.read_sql(sql1, conn)
@@ -247,7 +257,9 @@ data_loan=data_loan_final.copy()
 
 ###################################written-off(Replace deal_id and cust_id with session deal_id and session customer_id)
 # sql1=pysqldf("SELECT * FROM data_dpd_final WHERE deal_id=1114 AND cust_id=116")
-sql1=pysqldf("SELECT * FROM data_dpd_final WHERE cust_id="+cid+" AND deal_id="+did+"")
+# sql1=pysqldf("SELECT * FROM data_dpd_final WHERE cust_id="+cid+" AND deal_id="+did+"")
+sql1=pysqldf("SELECT * FROM data_dpd_final WHERE cust_id="+cid+"")
+
 data_dpd_final = sql1
 # data_dpd_final = pd.read_sql(sql1, conn)
 
@@ -283,18 +295,39 @@ data_loan=temp.copy()
 
 #########################################last dpd
 
-data_dpd_final=data_dpd_final.merge(data_basic[['deal_id','cust_id','date_issued','source','report_id']],on=['source','report_id','cust_id','deal_id'],how='left')
+# data_dpd_final=data_dpd_final.merge(data_basic[['deal_id','cust_id','date_issued','source','report_id']],on=['source','report_id','cust_id','deal_id'],how='left')
+column_types1 = data_dpd_final.dtypes
+column_types2 = data_basic.dtypes
+
+data_dpd_final = data_dpd_final.astype(str)
+data_basic = data_basic.astype(str)
+
+
+data_dpd_final = data_dpd_final.merge(
+    data_basic[['deal_id', 'cust_id', 'date_issued', 'source', 'report_id']],
+    # on=['source', 'report_id', 'cust_id', 'deal_id'],
+    on=['source', 'report_id', 'cust_id'],
+    how='left'
+)
+
+
 data_dpd_final['date_issued'] = pd.to_datetime(data_dpd_final['date_issued'], errors='coerce')
 data_dpd_final['DPD_month'] = pd.to_datetime(data_dpd_final['DPD_month'], errors='coerce')
 data_dpd_final['month_since_dpd']=(data_dpd_final['date_issued']-data_dpd_final['DPD_month'])/np.timedelta64(1,"M")
 temp=data_dpd_final[~data_dpd_final['DPD'].isin(["XXX","STD","000"])]
 
 #df.loc[df.groupby('A')['C'].idxmin()]
-temp=temp.loc[temp.groupby(['deal_id', 'cust_id', 'source', 'report_id', 'loan_id'])['month_since_dpd'].idxmin()]
-temp=temp[['deal_id', 'cust_id', 'source', 'report_id', 'loan_id','DPD', 'DPD_month']]
+# temp=temp.loc[temp.groupby(['deal_id', 'cust_id', 'source', 'report_id', 'loan_id'])['month_since_dpd'].idxmin()]
+# temp=temp.loc[temp.groupby(['cust_id', 'source', 'report_id', 'loan_id'])['month_since_dpd'].idxmin()]
+
+temp=temp[[ 'cust_id', 'source', 'report_id', 'loan_id','DPD', 'DPD_month']]
 temp['DPD_month_new']=temp['DPD_month']
 temp['DPD_month_new']=temp['DPD_month_new'].apply(lambda x:x.strftime("%b %Y"))
-data_loan=data_loan.merge(temp,on=['deal_id', 'cust_id', 'source', 'report_id', 'loan_id'],how='left')
+
+temp = temp.astype(str)
+data_loan = data_loan.astype(str)
+
+data_loan=data_loan.merge(temp,on=[ 'cust_id', 'source', 'report_id', 'loan_id'],how='left')
 
 #############################################identifying duplicate loans
 
@@ -321,23 +354,57 @@ data_loan['disbursed_amount']=np.where(data_loan['acc_type_new'].isin(["corporat
 
 
 ##############################imputing tenure
-data_loan['interest_rate']=data_loan['interest_rate'].astype(float)
-data_loan['interest_rate_1']=data_loan['interest_rate']/(12*100)
-data_loan['emi']=data_loan['emi'].replace(to_replace=[None], value=0)
-data_loan['emi']=data_loan['emi'].astype(float)
-data_loan['disbursed_amount']=data_loan['disbursed_amount'].replace(to_replace=[None], value=0)
+try:
+    data_loan['interest_rate'] = data_loan['interest_rate'].astype(float)
+    data_loan['interest_rate_1'] = data_loan['interest_rate'] / (12 * 100)
+except:
+    pass
+
+try:
+    data_loan['emi'] = data_loan['emi'].replace(to_replace=[None], value=0)
+    data_loan['emi'] = data_loan['emi'].astype(float)
+except:
+    pass
+
+try:
+    data_loan['disbursed_amount'] = data_loan['disbursed_amount'].replace(to_replace=['None'], value=0)
+    data_loan['disbursed_amount'] = data_loan['disbursed_amount'].astype(float)
+except:
+    pass
+
+
+try:
+    data_loan['emi'] = data_loan['emi'].replace(to_replace=['None'], value=0)
+    data_loan['emi'] = data_loan['emi'].astype(float)
+except:
+    pass
+
+column_data_types = data_loan.dtypes
 data_loan['disbursed_amount']=data_loan['disbursed_amount'].astype(float)
+data_loan['emi']=data_loan['emi'].astype(float)
+
+
+
 
 ###########################################imputing tenure by formula
-conditions=[((data_loan['disbursed_amount']>0) & (data_loan['interest_rate_1']>0) & (data_loan['emi']>0) & ((data_loan['tenure'].isna()) | (data_loan['tenure']==0)))]
+try:
+    conditions=[((data_loan['disbursed_amount']>0) & (data_loan['interest_rate_1']>0) & (data_loan['emi']>0) & ((data_loan['tenure'].isna()) | (data_loan['tenure']==0)))]
+except:
+    pass
 #choices=[(np.log2(data_loan['emi']/(data_loan['emi']-(data_loan['disbursed_amount']*data_loan['interest_rate_1'])))/np.log2(data_loan['interest_rate_1']+1))]
-choices=[npf.nper(data_loan['interest_rate']/1200, data_loan['emi'], data_loan['disbursed_amount'])]
+try:
+    choices=[npf.nper(data_loan['interest_rate']/1200, data_loan['emi'], data_loan['disbursed_amount'])]
+except:
+    pass
 
 data_loan['tenure_new']=np.select(conditions,choices,default=data_loan['tenure'])
 print('tenure_new=',data_loan['tenure_new'])
 ##################################### imputing tenure max of same group
+try:
+    data_loan['tenure']=data_loan['tenure'].replace(0,np.nan).replace('',np.nan).astype('float64')
+except:
+    pass
 
-data_loan['tenure']=data_loan['tenure'].replace(0,np.nan).replace('',np.nan).astype('float64')
 data_loan['tenure_temp'] = data_loan['tenure'].fillna(data_loan.groupby('id')['tenure'].transform('max'))
 data_loan['tenure_new']=np.where(((data_loan['tenure_new'].isna()) | (data_loan['tenure_new']==0)),data_loan['tenure_temp'],data_loan['tenure_new'])
 print('tenure_new=',data_loan['tenure_new'])
@@ -345,9 +412,15 @@ print('tenure_new=',data_loan['tenure_new'])
 ###########################################imputing interest rate
 ###########################################imputing tenure by formula
 print(data_loan.dtypes)
-conditions=[((data_loan['disbursed_amount']>0) & (data_loan['tenure']>0) & (data_loan['emi']>0) & ((data_loan['interest_rate'].isna()) | (data_loan['interest_rate']==0)))]
+try:
+    conditions=[((data_loan['disbursed_amount']>0) & (data_loan['tenure']>0) & (data_loan['emi']>0) & ((data_loan['interest_rate'].isna()) | (data_loan['interest_rate']==0)))]
+except:
+    pass
 
-choices=[npf.rate(data_loan['tenure'], data_loan['emi'], -data_loan['disbursed_amount'], 0)*1200]
+try:
+    choices=[npf.rate(data_loan['tenure'], data_loan['emi'], -data_loan['disbursed_amount'], 0)*1200]
+except:
+    pass
 
 data_loan['interest_rate_new']=np.select(conditions,choices,default=data_loan['interest_rate'])
 # print('interest_rate_new =',data_loan['interest_rate_new'])
@@ -360,10 +433,10 @@ data_loan['interest_rate_new']=np.where(((data_loan['interest_rate_new'].isna())
 
 
 ######################################################imputation by aavas method
-tenure_by_acc_type_loan_amt=pd.read_excel("/Users/hardikbhardwaj/Downloads/tenure_by_acc_type_loan_amt_revised.xlsx")
-tenure_by_acc_type_for_missing=pd.read_excel("/Users/hardikbhardwaj/Downloads/tenure_by_acc_type_for_missing.xlsx")
-loan_amt_bins_for_tenure=pd.read_excel("/Users/hardikbhardwaj/Downloads/loan_amt_bins_for_tenure_revised.xlsx")
-ROI_for_EMI_impute=pd.read_excel("/Users/hardikbhardwaj/Downloads/ROI_calculation.xlsx",sheet_name="Sheet_ROI")
+tenure_by_acc_type_loan_amt=pd.read_excel("/Users/Abhishek/Downloads/tenure_by_acc_type_loan_amt_revised.xlsx")
+tenure_by_acc_type_for_missing=pd.read_excel("/Users/Abhishek/Downloads/tenure_by_acc_type_for_missing.xlsx")
+loan_amt_bins_for_tenure=pd.read_excel("/Users/Abhishek/Downloads/loan_amt_bins_for_tenure_revised.xlsx")
+ROI_for_EMI_impute=pd.read_excel("/Users/Abhishek/Downloads/ROI_calculation.xlsx",sheet_name="Sheet_ROI")
 
 crif_cibil_dedup=data_loan.copy()
 
@@ -404,52 +477,114 @@ crif_cibil_dedup_t['loan_amt_bins']=np.select(conditions,choices,default="NA")
 crif_cibil_dedup_1=pd.merge(crif_cibil_dedup_t,tenure_by_acc_type_loan_amt.iloc[:,1:],on=['acc_type_new',"loan_amt_bins"],how='left')
 crif_cibil_dedup_1=pd.merge(crif_cibil_dedup_1,tenure_by_acc_type_for_missing.iloc[:,1:],on='acc_type_new',how='left')
 
-crif_cibil_dedup_1['tenure_new']= crif_cibil_dedup_1['tenure_new'].replace(0,np.nan).replace('',np.nan).astype('float64')
+try:
+    crif_cibil_dedup_1['tenure_new']= crif_cibil_dedup_1['tenure_new'].replace(0,np.nan).replace('',np.nan).astype('float64')
+except:
+    pass
 # print(crif_cibil_dedup_1['tenure_new'],crif_cibil_dedup_1['tenure_new'].dtypes)
-conditions=[((crif_cibil_dedup_1['tenure_new'].isna()) | ((crif_cibil_dedup_1['tenure_new']<=0) & (crif_cibil_dedup_1['mode_tenure_acct_type'].isna()))),
- ((crif_cibil_dedup_1['mode_tenure_acct_type'].notna()) & ((crif_cibil_dedup_1['tenure_new']<=0) | (crif_cibil_dedup_1['tenure_new'].isna()))),
-crif_cibil_dedup_1['tenure_new']>0]
-choices=[crif_cibil_dedup_1['mode_tenure'],crif_cibil_dedup_1['mode_tenure_acct_type'],crif_cibil_dedup_1['tenure_new']]
-crif_cibil_dedup_1['tenure_new']=np.select(conditions,choices,default=np.nan)
+try:
+    conditions = [((crif_cibil_dedup_1['tenure_new'].isna()) | (
+                (crif_cibil_dedup_1['tenure_new'] <= 0) & (crif_cibil_dedup_1['mode_tenure_acct_type'].isna()))),
+                  ((crif_cibil_dedup_1['mode_tenure_acct_type'].notna()) & (
+                              (crif_cibil_dedup_1['tenure_new'] <= 0) | (crif_cibil_dedup_1['tenure_new'].isna()))),
+                  crif_cibil_dedup_1['tenure_new'] > 0]
+except:
+    pass
+try:
+    choices=[crif_cibil_dedup_1['mode_tenure'],crif_cibil_dedup_1['mode_tenure_acct_type'],crif_cibil_dedup_1['tenure_new']]
+except:
+    pass
+
+try:
+    crif_cibil_dedup_1['tenure_new']=np.select(conditions,choices,default=np.nan)
+except:
+    pass
+
 
 print('tenure_new=',crif_cibil_dedup_1['tenure_new'])
+
+
 
 
 #########################################################ROI
 
 crif_cibil_dedup_1['acc_type_new']=np.where(((~crif_cibil_dedup_1['acc_type_new'].isin(["corporatecreditcard","creditcard","fleetcard","kisancreditcard","loanagainstcard","loanoncreditcard","securedcreditcard","overdraft", "primeministerjaandhanyojanaoverdraft","telcolandline","telcowireless","telcobroadband", "autooverdraft"])) & (~crif_cibil_dedup_1['acc_type_new'].isin(ROI_for_EMI_impute['acc_type_new'].unique().tolist()))), "personalloan",crif_cibil_dedup_1['acc_type_new'])
 
-crif_cibil_dedup_2=pd.merge(crif_cibil_dedup_1, ROI_for_EMI_impute.iloc[:,1:],
+try:
+    crif_cibil_dedup_2=pd.merge(crif_cibil_dedup_1, ROI_for_EMI_impute.iloc[:,1:],
                           on=["acc_type_new", "last_payment_date_som_new"], how='left')
+except:
+    pass
 
-crif_cibil_dedup_3=pd.merge(crif_cibil_dedup_2, ROI_for_EMI_impute_201604[["acc_type_new","ROI_201604"]],
+try:
+    crif_cibil_dedup_3 = pd.merge(crif_cibil_dedup_2, ROI_for_EMI_impute_201604[["acc_type_new", "ROI_201604"]],
+                                  on="acc_type_new", how='left')
+except:
+    pass
+
+
+try:
+    crif_cibil_dedup_3=pd.merge(crif_cibil_dedup_3, ROI_for_EMI_impute_latest[["acc_type_new","ROI_latest","Latest_ROI_date"]],
                           on="acc_type_new", how='left')
+except:
+    pass
 
-crif_cibil_dedup_3=pd.merge(crif_cibil_dedup_3, ROI_for_EMI_impute_latest[["acc_type_new","ROI_latest","Latest_ROI_date"]],
-                          on="acc_type_new", how='left')
 
+try:
+    crif_cibil_dedup_4=crif_cibil_dedup_3.copy()
+except:
+    pass
 
-crif_cibil_dedup_4=crif_cibil_dedup_3.copy()
+try:
+    conditions=[((crif_cibil_dedup_4['last_payment_date_som_new']<pd.to_datetime("2016-04-01")) & ((crif_cibil_dedup_4['interest_rate_new'].isna()) | (crif_cibil_dedup_4['interest_rate_new']==0))), ((crif_cibil_dedup_4['last_payment_date_som_new']>crif_cibil_dedup_4['Latest_ROI_date']) & ((crif_cibil_dedup_4['interest_rate_new'].isna()) | (crif_cibil_dedup_4['interest_rate_new']==0))),((crif_cibil_dedup_4['interest_rate_new'].isna()) | (crif_cibil_dedup_4['interest_rate_new']==0))]
+except:
+    pass
 
-conditions=[((crif_cibil_dedup_4['last_payment_date_som_new']<pd.to_datetime("2016-04-01")) & ((crif_cibil_dedup_4['interest_rate_new'].isna()) | (crif_cibil_dedup_4['interest_rate_new']==0))), ((crif_cibil_dedup_4['last_payment_date_som_new']>crif_cibil_dedup_4['Latest_ROI_date']) & ((crif_cibil_dedup_4['interest_rate_new'].isna()) | (crif_cibil_dedup_4['interest_rate_new']==0))),((crif_cibil_dedup_4['interest_rate_new'].isna()) | (crif_cibil_dedup_4['interest_rate_new']==0))]
+try:
+    choices=[crif_cibil_dedup_4['ROI_201604'], crif_cibil_dedup_4['ROI_latest'],crif_cibil_dedup_4['ROI_1']]
 
-choices=[crif_cibil_dedup_4['ROI_201604'], crif_cibil_dedup_4['ROI_latest'],crif_cibil_dedup_4['ROI_1']]
-crif_cibil_dedup_4['interest_rate_new']=np.select(conditions,choices,default=crif_cibil_dedup_4['interest_rate_new'])
+except:
+    pass
+
+try:
+    crif_cibil_dedup_4['interest_rate_new'] = np.select(conditions, choices,
+                                                        default=crif_cibil_dedup_4['interest_rate_new'])
+except:
+    pass
 
 # print('interest_rate_new =',crif_cibil_dedup_4['interest_rate_new'])
 ######################################################################emi
+try:
+    crif_cibil_dedup_4['r']=crif_cibil_dedup_4['interest_rate_new']/(12*100)
+except:
+    pass
+try:
+    crif_cibil_dedup_4['r']=crif_cibil_dedup_4['r'].astype(float)
+except:
+    pass
+try:
+    crif_cibil_dedup_4['tenure_new']=crif_cibil_dedup_4['tenure_new'].astype(float)
+except:
+    pass
+try:
+    crif_cibil_dedup_4['t']=(1+crif_cibil_dedup_4['r'])**(crif_cibil_dedup_4['tenure_new'])
+except:
+    pass
+try:
+    crif_cibil_dedup_4['emi_temp']=(crif_cibil_dedup_4['disbursed_amount']*crif_cibil_dedup_4['r']*crif_cibil_dedup_4['t'])/(crif_cibil_dedup_4['t']-1)
+except:
+    pass
 
-crif_cibil_dedup_4['r']=crif_cibil_dedup_4['interest_rate_new']/(12*100)
-crif_cibil_dedup_4['r']=crif_cibil_dedup_4['r'].astype(float)
-crif_cibil_dedup_4['tenure_new']=crif_cibil_dedup_4['tenure_new'].astype(float)
-crif_cibil_dedup_4['t']=(1+crif_cibil_dedup_4['r'])**(crif_cibil_dedup_4['tenure_new'])
-crif_cibil_dedup_4['emi_temp']=(crif_cibil_dedup_4['disbursed_amount']*crif_cibil_dedup_4['r']*crif_cibil_dedup_4['t'])/(crif_cibil_dedup_4['t']-1)
+try:
+    crif_cibil_dedup_4['emi_new']=np.where(((crif_cibil_dedup_4['emi'].isna()) | (crif_cibil_dedup_4['emi']==0)),crif_cibil_dedup_4['emi_temp'],crif_cibil_dedup_4['emi'])
+except:
+    pass
+try:
+    data_loan=crif_cibil_dedup_4.copy()
+except:
+    pass
 
-
-crif_cibil_dedup_4['emi_new']=np.where(((crif_cibil_dedup_4['emi'].isna()) | (crif_cibil_dedup_4['emi']==0)),crif_cibil_dedup_4['emi_temp'],crif_cibil_dedup_4['emi'])
-data_loan=crif_cibil_dedup_4.copy()
-
-print('emi_new=',data_loan['emi_new'])
+# print('emi_new=',data_loan['emi_new'])
 #################################################################duplicate loan yes or no
 
 
@@ -584,13 +719,19 @@ final_data['Disbursed_amount'].fillna(value=0,inplace=True)
 final_data['EMI'].fillna(value=0,inplace=True)
 
 cols = ['Tenure','Tenure_new','ROI','ROI_new','ROI_edited','EMI_new','EMI_edited','DPD','DPD_month_new']
-final_data[cols]=final_data[cols].fillna("NULL")
+try:
+    final_data[cols]=final_data[cols].fillna("NULL")
+except:
+    pass
 # print('interest_rate_new =',data_loan['interest_rate_new'])
 # print('emi_new=',final_data['emi_new '])
 
-final_data=final_data[['index','Loan_Selection','Loan_Selection_edited','Loan_Selection_user_edited','Customer_Id','Date_reported','Loan_type','Loan_status','Disbursed_amount','Disbursed_amount_edited','Disbursed_amount_user_edited','Disbursal_date','Tenure','Tenure_new','Tenure_edited','Tenure_user_edited',
-                      'ROI','ROI_new','ROI_edited','ROI_user_edited', 'EMI','EMI_new','EMI_edited','EMI_user_edited','Current Balance','DPD','DPD_month_new','Overdue amount','Source','lead_id','final_selected']]
 
+try:
+    final_data=final_data[['index','Loan_Selection','Loan_Selection_edited','Loan_Selection_user_edited','Customer_Id','Date_reported','Loan_type','Loan_status','Disbursed_amount','Disbursed_amount_edited','Disbursed_amount_user_edited','Disbursal_date','Tenure','Tenure_new','Tenure_edited','Tenure_user_edited',
+                      'ROI','ROI_new','ROI_edited','ROI_user_edited', 'EMI','EMI_new','EMI_edited','EMI_user_edited','Current Balance','DPD','DPD_month_new','Overdue amount','Source','lead_id','final_selected']]
+except:
+    pass
 final_data['Loan_type']=final_data['Loan_type'].astype('string')
 final_data['Disbursed_amount']=final_data['Disbursed_amount'].astype(float)
 
