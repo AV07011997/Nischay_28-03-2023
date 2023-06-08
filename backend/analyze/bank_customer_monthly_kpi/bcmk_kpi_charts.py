@@ -158,7 +158,7 @@ def bcmk_charts(data):
     b, = plt.plot(x, y2, marker='o')
     c, = plt.plot(x, y3, marker='o')
     ax.set_yticklabels([])
-    plt.title('Bank Transaction Summary')
+    plt.title('Bank Transaction Summary',fontdict={'fontsize': 20, 'fontweight': 'bold'})
     for xitem, yitem in np.nditer([x, y], flags=(["refs_ok"]), op_flags=["readwrite"]):
         ax.text(xitem, yitem, int(yitem), dict(size=9, color='blue'), ha="left")
     for xitem, y2item in np.nditer([x, y2], flags=(["refs_ok"]), op_flags=["readwrite"]):
@@ -182,7 +182,7 @@ def bcmk_charts(data):
     y1 = df3['Cash_credits_Value']
     y2 = df3['Cash_debits_Value']
     a, = plt.plot(x1, y1, color='#ee8a11', marker='o', linewidth=3)
-    plt.title('Bank Transaction Summary')
+    plt.title('Bank Transaction Summary',fontdict={'fontsize': 20, 'fontweight': 'bold'})
     # plt.xlabel('Month-Year', fontsize=14)
     # plt.ylabel('Closing Balance', fontsize=14)
     b, = plt.plot(x1, y2, color='#3776ab', marker='o', linewidth=3)
