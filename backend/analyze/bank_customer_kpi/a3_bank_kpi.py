@@ -155,7 +155,7 @@ def bck(data):
   ax.set_yticklabels([])
   # ax.get_yaxis().get_major_formatter().set_scientific(False)
   annotate_plot(df3, 'Closing Balance', 'Closing Balance')
-  plt.title('Closing Balance Monthly Trend')
+  plt.title('Closing Balance Monthly Trend',fontdict={'fontsize': 20, 'fontweight': 'bold'})
   plt.xlabel('Month-Year', fontsize=14)
   plt.ylabel('Closing Balance', fontsize=14)
   plt.grid(True)
@@ -178,7 +178,7 @@ def bck(data):
   df10 = pd.DataFrame(data,columns=['debit','credit'], index = ['Cheque', 'Cash', 'Net Banking'])
   print(df10)
   df10.plot.barh(figsize=(12,6))
-  plt.title('Frequency & Mode of Transactions')
+  plt.title('Frequency & Mode of Transactions',fontdict={'fontsize': 20, 'fontweight': 'bold'})
   #plt.show()
   path = os.path.join(path_static_files, 'feq-mode-txn.png')
 

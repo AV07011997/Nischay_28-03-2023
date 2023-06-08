@@ -21,7 +21,7 @@ function NewComponent(props) {
   return (
     <div>
       <div>
-        <table style={{ border: "2px solid black" }}>
+        <table>
           <thead>
             <tr>
               {headers.map((item, i) => {
@@ -39,15 +39,25 @@ function NewComponent(props) {
               })}
             </tr>
           </thead>
-          <tbody style={{ border: "2px solid black" }}>
+          <tbody>
             {data.map((item, i) => {
               return (
                 <tr key={i}>
-                  <td style={{ padding: "10px" }}>{item.txn_date}</td>
-                  <td style={{ padding: "10px" }}>{item.description}</td>
-                  <td style={{ padding: "10px" }}>{item.debit}</td>
-                  <td style={{ padding: "10px" }}>{item.credit}</td>
-                  <td style={{ padding: "10px" }}>{item.balance}</td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.txn_date}
+                  </td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.description}
+                  </td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.debit}
+                  </td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.credit}
+                  </td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.balance}
+                  </td>
                 </tr>
               );
             })}
@@ -149,11 +159,11 @@ const AnalyzeBankMonthWise = (props) => {
             <tbody>
               <tr>
                 <td className="highlighted_headers" rowSpan={10}>
-                  Inflows
+                  Credits
                 </td>
               </tr>
               <tr>
-                <td rowSpan={3}>Non Cash Credits</td>
+                <td rowSpan={3}>Non Cash </td>
               </tr>
               <tr>
                 <td>Count</td>
@@ -172,7 +182,7 @@ const AnalyzeBankMonthWise = (props) => {
                 })}
               </tr>
               <tr>
-                <td rowSpan={3}> Cash Credits</td>
+                <td rowSpan={3}> Cash </td>
               </tr>
               <tr>
                 <td>Count</td>
@@ -191,7 +201,7 @@ const AnalyzeBankMonthWise = (props) => {
                 })}
               </tr>
               <tr>
-                <td rowSpan={3}>Total Credits</td>
+                <td rowSpan={3}>Total </td>
               </tr>
               <tr>
                 <td>Count</td>
@@ -212,11 +222,11 @@ const AnalyzeBankMonthWise = (props) => {
               <tr>
                 <td className="highlighted_headers" rowSpan={13}>
                   {" "}
-                  Outflows
+                  Debits
                 </td>
               </tr>
               <tr>
-                <td rowSpan={3}>Non Cash Debits</td>
+                <td rowSpan={3}>Non Cash </td>
               </tr>
               <tr>
                 <td>Count</td>
@@ -235,7 +245,7 @@ const AnalyzeBankMonthWise = (props) => {
                 })}
               </tr>
               <tr>
-                <td rowSpan={3}>Cash Debits</td>
+                <td rowSpan={3}>Cash </td>
               </tr>
               <tr>
                 <td>Count</td>
@@ -254,7 +264,7 @@ const AnalyzeBankMonthWise = (props) => {
                 })}
               </tr>
               <tr>
-                <td rowSpan={3}>Total Debits</td>
+                <td rowSpan={3}>Total</td>
               </tr>
               <tr>
                 <td>Count</td>
@@ -273,7 +283,7 @@ const AnalyzeBankMonthWise = (props) => {
                 })}
               </tr>
               <tr>
-                <td rowSpan={3}>Auto Debits</td>
+                <td rowSpan={3}>Auto </td>
               </tr>
               <tr>
                 <td>Count</td>

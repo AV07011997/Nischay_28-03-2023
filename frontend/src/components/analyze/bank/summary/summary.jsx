@@ -5,6 +5,28 @@ import NavBar from "../../../../utilities/navbar/navbar";
 import SELECTBANKCUSTOMER from "../../../../utilities/selectBankCustomer/selectBankCustomer";
 import { Loader } from "rsuite";
 
+const addSpaceAfterRupee = (data) => {
+  const modifiedData = {};
+
+  for (let key in data) {
+    if (data.hasOwnProperty(key)) {
+      const value = data[key];
+      let modifiedValue = value;
+
+      if (typeof value === "string" && value.includes("₹")) {
+        modifiedValue = value.replace(/₹(\d+)/g, "₹ $1");
+        if (modifiedValue === "₹ 0") {
+          modifiedValue = "0";
+        }
+      }
+
+      modifiedData[key] = modifiedValue;
+    }
+  }
+
+  return modifiedData;
+};
+
 function NewComponent(props) {
   const { data } = props;
   const headers = [
@@ -19,7 +41,7 @@ function NewComponent(props) {
   return (
     <div>
       <div>
-        <table style={{ border: "2px solid black" }}>
+        <table>
           <thead>
             <tr>
               {headers.map((item, i) => {
@@ -41,11 +63,21 @@ function NewComponent(props) {
             {data.map((item, i) => {
               return (
                 <tr key={i}>
-                  <td style={{ padding: "10px" }}>{item.txn_date}</td>
-                  <td style={{ padding: "10px" }}>{item.description}</td>
-                  <td style={{ padding: "10px" }}>{item.debit}</td>
-                  <td style={{ padding: "10px" }}>{item.credit}</td>
-                  <td style={{ padding: "10px" }}>{item.balance}</td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.txn_date}
+                  </td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.description}
+                  </td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.debit}
+                  </td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.credit}
+                  </td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.balance}
+                  </td>
                 </tr>
               );
             })}
@@ -63,6 +95,7 @@ const AnalyzeBankSummary = (leadID) => {
   const [popupData, setPopUpData] = useState();
   const [buttonClicked, setbuttonClicked] = useState("closed");
   const [pagestate, setpagestate] = useState();
+  const [src, setSrc] = useState();
   var Amount_pop_up = 0;
 
   useEffect(() => {
@@ -83,6 +116,7 @@ const AnalyzeBankSummary = (leadID) => {
     }).then((res) => {
       console.log(res);
       setInfo(res);
+      setSrc("./staticfiles/closing-balance-trend.png");
     });
     setpagestate("0");
   };
@@ -120,6 +154,21 @@ const AnalyzeBankSummary = (leadID) => {
     }
   }, [popupData]);
   console.log(info);
+  console.log(table);
+
+  //function to put space after rupee symbol
+
+  if (info) {
+    const data1_modified1 = addSpaceAfterRupee(info.data1);
+    info.data1 = data1_modified1;
+    const data1_modified2 = addSpaceAfterRupee(info.data3);
+    info.data3 = data1_modified2;
+    const data1_modified5 = addSpaceAfterRupee(info.data5);
+    info.data5 = data1_modified5;
+    // const data1_modified3 = addSpaceAfterRupee(info.data4);
+
+    console.log(data1_modified1);
+  }
 
   return (
     <div>
@@ -191,26 +240,30 @@ const AnalyzeBankSummary = (leadID) => {
             backgroundColor: "#f0f0f0",
             padding: "2px",
             display: "flex",
-            justifyContent: "space-evenly",
+            color: "black",
+            justifyContent: "space-between",
           }}
         >
           <span>Statement Duration</span>
 
           <span>{info?.data[0].from_date}</span>
-          <span>TO</span>
+          <span>To</span>
           <span>{info?.data[0].to_date}</span>
         </div>
         <div
           style={{
             backgroundColor: "#e0e0e0",
-            padding: "2px",
+            padding: "1px",
             display: "flex",
-            justifyContent: "space-evenly",
+            color: "black",
+            justifyContent: "space-between",
           }}
         >
           <span>Opening Balance</span>
-          <span>{info?.data5.Opening_Balance}</span>
-          <span>-</span>
+          <span style={{ marginLeft: "3px" }}>
+            {info?.data5.Opening_Balance}
+          </span>
+          <span style={{ marginLeft: "18px" }}>-</span>
           <span>{info?.data5.Closing_Balance}</span>
         </div>
       </div>
@@ -228,7 +281,7 @@ const AnalyzeBankSummary = (leadID) => {
               <div>
                 <img
                   className="graph_monthwise"
-                  src="./staticfiles/closing-balance-trend.png"
+                  src={src}
                   alt="graph1"
                   style={{ width: "100%" }}
                 ></img>
@@ -256,7 +309,9 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Average Monthly Balance
                   </td>
-                  <td>{info.data1.Average_Monthly_Balance}</td>
+                  <td style={{ textAlign: "right" }}>
+                    {info.data1.Average_Monthly_Balance}
+                  </td>
                 </tr>
                 <tr>
                   <td
@@ -267,7 +322,9 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Average Monthly Debit
                   </td>
-                  <td>{info.data1.Average_Monthly_Debit} </td>
+                  <td style={{ textAlign: "right" }}>
+                    {info.data1.Average_Monthly_Debit}{" "}
+                  </td>
                 </tr>
                 <tr>
                   <td
@@ -278,7 +335,9 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Average Monthly Credit
                   </td>
-                  <td>{info.data1.Average_Monthly_Credit} </td>
+                  <td style={{ textAlign: "right" }}>
+                    {info.data1.Average_Monthly_Credit}{" "}
+                  </td>
                 </tr>
                 <tr>
                   <td
@@ -289,7 +348,9 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Maximum Balance
                   </td>
-                  <td>{info.data1.Maximum_Balance} </td>
+                  <td style={{ textAlign: "right" }}>
+                    {info.data1.Maximum_Balance}{" "}
+                  </td>
                 </tr>
                 <tr>
                   <td
@@ -300,7 +361,9 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Minimum Balance
                   </td>
-                  <td>{info.data1.Minimum_Balance} </td>
+                  <td style={{ textAlign: "right" }}>
+                    {info.data1.Minimum_Balance}{" "}
+                  </td>
                 </tr>
               </tbody>
             )}
@@ -318,7 +381,9 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Ratio Debit Credit
                   </td>
-                  <td>{info.data3.Ratio_Debit_Credit}</td>
+                  <td style={{ textAlign: "right" }}>
+                    {info.data3.Ratio_Debit_Credit}
+                  </td>
                 </tr>
                 <tr>
                   <td
@@ -329,7 +394,9 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Ratio Cash Total Credit
                   </td>
-                  <td>{info.data3.Ratio_Cash_Total_Credit} </td>
+                  <td style={{ textAlign: "right" }}>
+                    {info.data3.Ratio_Cash_Total_Credit}{" "}
+                  </td>
                 </tr>
                 <tr>
                   <td
@@ -340,7 +407,9 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Lowest Debit Amount
                   </td>
-                  <td>{info.data3.Lowest_Debit_Amount} </td>
+                  <td style={{ textAlign: "right" }}>
+                    {info.data3.Lowest_Debit_Amount}{" "}
+                  </td>
                 </tr>
                 <tr>
                   <td
@@ -351,8 +420,15 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Highest Credit Amount
                   </td>
-                  <td>
+                  <td style={{ textAlign: "right" }}>
                     <button
+                      style={{
+                        color: "blue",
+                        background: "transparent",
+                        border: "none",
+                        padding: "0",
+                        margin: "0",
+                      }}
                       className="button_monthwise"
                       onClick={() => {
                         setbuttonClicked("open");
@@ -373,9 +449,15 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Lowest Debit Amount
                   </td>
-                  <td>
+                  <td style={{ textAlign: "right" }}>
                     <button
-                      className="button_monthwise"
+                      style={{
+                        color: "blue",
+                        background: "transparent",
+                        border: "none",
+                        padding: "0",
+                        margin: "0",
+                      }}
                       onClick={() => {
                         setbuttonClicked("open");
 
@@ -402,8 +484,15 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Number of Cheque Bounce
                   </td>
-                  <td>
+                  <td style={{ textAlign: "right" }}>
                     <button
+                      style={{
+                        color: "blue",
+                        background: "transparent",
+                        border: "none",
+                        padding: "0",
+                        margin: "0",
+                      }}
                       className="button_monthwise"
                       onClick={() => {
                         setbuttonClicked("open");
@@ -424,8 +513,15 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Minimum Amount Cheque Bounce
                   </td>
-                  <td>
+                  <td style={{ textAlign: "right" }}>
                     <button
+                      style={{
+                        color: "blue",
+                        background: "transparent",
+                        border: "none",
+                        padding: "0",
+                        margin: "0",
+                      }}
                       className="button_monthwise"
                       onClick={() => {
                         setbuttonClicked("open");
@@ -438,7 +534,7 @@ const AnalyzeBankSummary = (leadID) => {
                     >
                       {info.data4.Min_Amt_Chq_Bounce
                         ? info.data4.Min_Amt_Chq_Bounce
-                        : "None"}{" "}
+                        : "N/A"}{" "}
                     </button>
                   </td>
                 </tr>
@@ -451,8 +547,15 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Latest Cheque Bounce
                   </td>
-                  <td>
+                  <td style={{ textAlign: "right" }}>
                     <button
+                      style={{
+                        color: "blue",
+                        background: "transparent",
+                        border: "none",
+                        padding: "0",
+                        margin: "0",
+                      }}
                       className="button_monthwise"
                       onClick={() => {
                         setbuttonClicked("open");
@@ -465,7 +568,7 @@ const AnalyzeBankSummary = (leadID) => {
                     >
                       {info.data4.Latest_Chq_Bounce.length > 0
                         ? info.data4.Latest_Chq_Bounce
-                        : "None"}{" "}
+                        : "N/A"}{" "}
                     </button>
                   </td>
                 </tr>
@@ -478,8 +581,15 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Entries with Zero or Negative Balance
                   </td>
-                  <td>
+                  <td style={{ textAlign: "right" }}>
                     <button
+                      style={{
+                        color: "blue",
+                        background: "transparent",
+                        border: "none",
+                        padding: "0",
+                        margin: "0",
+                      }}
                       className="button_monthwise"
                       onClick={() => {
                         setbuttonClicked("open");
@@ -503,7 +613,9 @@ const AnalyzeBankSummary = (leadID) => {
                   >
                     Days with balance 0 or negative.
                   </td>
-                  <td>{info.data4.Days_with_bal_0_neg} </td>
+                  <td style={{ textAlign: "right" }}>
+                    {info.data4.Days_with_bal_0_neg}{" "}
+                  </td>
                 </tr>
                 <tr>
                   <td
@@ -515,8 +627,15 @@ const AnalyzeBankSummary = (leadID) => {
                     Number of Charges Levied
                   </td>
 
-                  <td>
+                  <td style={{ textAlign: "right" }}>
                     <button
+                      style={{
+                        color: "blue",
+                        background: "transparent",
+                        border: "none",
+                        padding: "0",
+                        margin: "0",
+                      }}
                       className="button_monthwise"
                       onClick={() => {
                         setbuttonClicked("open");

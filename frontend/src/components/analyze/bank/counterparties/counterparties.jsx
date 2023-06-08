@@ -24,7 +24,7 @@ function PopUpComponent(props) {
   return (
     <div>
       <div>
-        <table style={{ border: "2px solid black" }}>
+        <table>
           <thead>
             <tr>
               {headers.map((item, i) => {
@@ -42,17 +42,31 @@ function PopUpComponent(props) {
               })}
             </tr>
           </thead>
-          <tbody style={{ border: "2px solid black" }}>
+          <tbody>
             {data.map((item, i) => {
               return (
                 <tr key={i}>
-                  <td style={{ padding: "10px" }}>{item.txn_date}</td>
-                  <td style={{ padding: "10px" }}>{item.description}</td>
-                  <td style={{ padding: "10px" }}>{item.debit}</td>
-                  <td style={{ padding: "10px" }}>{item.credit}</td>
-                  <td style={{ padding: "10px" }}>{item.balance}</td>
-                  <td style={{ padding: "10px" }}>{item.cheque_number}</td>
-                  <td style={{ padding: "10px" }}>{item.entity}</td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.txn_date}
+                  </td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.description}
+                  </td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.debit}
+                  </td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.credit}
+                  </td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.balance}
+                  </td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.cheque_number}
+                  </td>
+                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                    {item.entity}
+                  </td>
                 </tr>
               );
             })}
