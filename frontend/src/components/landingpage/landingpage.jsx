@@ -244,7 +244,15 @@ const LandingPage = ({ setinfo }) => {
                                     }
                                   >
                                     <Button className="hover_button">
-                                      <FiInfo></FiInfo>
+                                      {item.failed_count === 0 ? (
+                                        <FiInfo></FiInfo>
+                                      ) : (
+                                        <FiInfo
+                                          style={{
+                                            color: "red",
+                                          }}
+                                        ></FiInfo>
+                                      )}
                                     </Button>
                                   </HtmlTooltip>
                                 )}

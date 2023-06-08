@@ -4,7 +4,7 @@ import numpy as np
 from datetime import timedelta, datetime
 import CONSTANT
 import os
-
+from django.db import connection
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 
@@ -284,6 +284,27 @@ def home_page(request):
     pydict = json.dumps({'customer_detail': customer_detail})
     print(pydict)
     return HttpResponse(pydict)
+
+def dictfetchall(cursor):
+    "Return all rows from a cursor as a dict"
+    columns = [col[0] for col in cursor.description]
+    all_data = []
+    for row in cursor.fetchall():
+        data_row = dict(zip(columns, row))
+        all_data.append(data_row)
+
+    return all_data
+
+# def get_bureau_data():
+#     with connection.cursor() as cursor:
+#         cursor.execute(
+#             "SELECT *  FROM `a5_kit`.`mysite_bureau_table_data`")
+#         data = dictfetchall(cursor)
+#         data = pd.DataFrame(data)
+#     data3 = pd.DataFrame(list([data]))
+#     data3 = data3.to_dict('split')
+#     pydict = json.dumps([data3])
+#     return HttpResponse(pydict)
 
 
 @unauthenticated_users
@@ -732,25 +753,22 @@ def selected_bureau_data(request):
 
 # @login_required
 def get_bureau_data(request):
-    # print("Getting bureau data.")
-    if "deal_id" not in request.session or "customer_id" not in request.session:
-        # status["type"] = "deal"
-        # status["message"] = "Please select a deal first!"
-        return JsonResponse({"status": "failed"})
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM `a5_kit`.`mysite_bureau_table_data`")
+        data = dictfetchall(cursor)
 
-    else:
-        customer_id = request.session["customer_id"]
-        deal_id = request.session["deal_id"]
-        queryset = bureau.objects.all().filter(customer_id=customer_id)
-        data = pd.DataFrame(list(queryset))
-        for x in data:
-            x['Overdue_amount'] = x['Overdue amount']
+        data1 = pd.DataFrame(data)
+        data_types = data1.dtypes
+        data1 = data1.astype('str')
+        data_types = data1.dtypes
 
-            if (x['DPD'] == None):
-                x['DPD'] = 0
 
-        return HttpResponse(json.dumps(data), safe=False)
-        # return JsonResponse(data)
+    data3 = pd.DataFrame(list([data1]))
+    data3 = data3.to_dict('split')
+    pydict = json.dumps([data3])
+    return HttpResponse(pydict)
+
 
 
 @login_required

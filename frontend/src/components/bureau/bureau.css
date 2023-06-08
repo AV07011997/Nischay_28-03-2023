@@ -1,5 +1,12 @@
-.MuiPaper-root.MuiPaper-elevation2.MuiPaper-rounded {
-  margin: 1%;
-  position: absolute;
-  width: 98%;
+.table_bureau {
+  margin-bottom: auto;
+  margin-left: auto;
+  margin-top: 40px;
+  margin-right: auto;
+  width: 95%;
+}
+.table_bureau_thead {
+  background-color: black;
+  color: white;
+  height: 40px;
 }

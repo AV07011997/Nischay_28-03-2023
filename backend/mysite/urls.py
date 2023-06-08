@@ -21,7 +21,7 @@ from . import views as mysite_views
 
 # import mysite.views
 
-urlpatterns = [
+urlpatterns = {
     path('admin/', admin.site.urls),
     # path('', mysite_views.home_page, name="mysite_home"),
     path('login/', mysite_views.login_page, name="login_page"),
@@ -32,10 +32,8 @@ urlpatterns = [
     # path('bankstatements/', mysite_views.uploadBankStatments, name='bankstatements'),
     path('upload_file/', include('upload_files.urls')),
     path('analyze/', include('analyze.urls')),
-
-    # path('bureau/', include('bureau.urls'), name="bureau"),
+    # path('bureau/', include('bureau.urls')),
     ## Below are the urls for bureau
-
     path('', mysite_views.bureau_page, name="bureau"),
     path('get_bureau_data/', mysite_views.get_bureau_data, name="get_bureau_data"),
     path('update_bureau_data/', mysite_views.update_bureau_data, name="update_bureau_data"),
@@ -45,4 +43,4 @@ urlpatterns = [
     # path('update_bureau_tenure_dpd/', mysite_views.updateBureauAccountSegmentTl,
     #      name="update_bureau_account_segment_tl_Tenure and DPD"),
     path('bureau_data_by_condition/', mysite_views.bureau_data_by_condition, name="bureau_data_by_condition"),
-]
+}

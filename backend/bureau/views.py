@@ -11,6 +11,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from mysite.models import *
 import json
+from django.db import connection
+
+
 
 
 # Create your views here.
@@ -175,27 +178,52 @@ def selected_bureau_data(request):
     return JsonResponse({'result': result})
 
 
-@login_required
-def get_bureau_data(request):
+def dictfetchall(cursor):
+    "Return all rows from a cursor as a dict"
+    columns = [col[0] for col in cursor.description]
+    all_data = []
+    for row in cursor.fetchall():
+        data_row = dict(zip(columns, row))
+        all_data.append(data_row)
+
+    return all_data
+
+
+
+
+def get_bureau_data():
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT *  FROM `a5_kit`.`mysite_bureau_table_data`")
+        data = dictfetchall(cursor)
+        data = pd.DataFrame(data)
+    data3 = pd.DataFrame(list([data]))
+    data3 = data3.to_dict('split')
+    pydict = json.dumps([data3])
+    return HttpResponse(pydict)
+
+
+
     # print("Getting bureau data.")
-    if "deal_id" not in request.session or "customer_id" not in request.session:
-        status["type"] = "deal"
-        status["message"] = "Please select a deal first!"
-        return JsonResponse({"status": "failed"})
-
-    else:
-        customer_id = request.session["customer_id"]
-        deal_id = request.session["deal_id"]
-        queryset = bureau.objects.all().filter(customer_id=customer_id)
-        data = pd.DataFrame(list(queryset))
-        for x in data:
-            x['Overdue_amount'] = x['Overdue amount']
-
-            if (x['DPD'] == None):
-                x['DPD'] = 0
-
-        return JsonResponse(data, safe=False)
+    # if "deal_id" not in request.session or "customer_id" not in request.session:
+    #     status["type"] = "deal"
+    #     status["message"] = "Please select a deal first!"
+    #     return JsonResponse({"status": "failed"})
+    #
+    # else:
+    #     customer_id = request.session["customer_id"]
+    #     deal_id = request.session["deal_id"]
+    #     queryset = bureau.objects.all().filter(customer_id=customer_id)
+    #     data = pd.DataFrame(list(queryset))
+    #     for x in data:
+    #         x['Overdue_amount'] = x['Overdue amount']
+    #
+    #         if (x['DPD'] == None):
+    #             x['DPD'] = 0
+    #
+    #     return JsonResponse(data, safe=False)
         # return JsonResponse(data)
+
 
 
 @login_required

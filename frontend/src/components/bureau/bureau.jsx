@@ -5,11 +5,23 @@ import MaterialTable from "@material-table/core";
 import { useParams } from "react-router-dom";
 import { APIADDRESS } from "../../constants/constants";
 import { postApi } from "../../callapi";
+import { useState } from "react";
 
 const Bureau = ({ info }) => {
   console.log(info);
   const params = useParams();
+  const [tableData, setTableData] = useState();
   var { radiovalue } = params;
+
+  useEffect(() => {
+    postApi(APIADDRESS.BUREAUDATA, {
+      leadID: localStorage.getItem("leadID"),
+    }).then((res) => {
+      setTableData(res);
+      console.log(res);
+    });
+  }, []);
+
   const state = {
     columns: [
       { title: "Loan Selection", field: "loanSelection" },
@@ -29,24 +41,28 @@ const Bureau = ({ info }) => {
     ],
   };
 
-  useEffect(() => {
-    postApi(APIADDRESS.BUREAUDATA, info).then((response) => {
-      console.log(response);
-    });
-  }, []);
+  // useEffect(() => {
+  //   postApi(APIADDRESS.BUREAUDATA, info).then((response) => {
+  //     console.log(response);
+  //   });
+  // }, []);
+  console.log(state.columns);
 
   return (
     <div>
       <NavBar radiovalue={radiovalue}></NavBar>
 
       <div>
-        <div>
-          <MaterialTable
-            title="Bureau Table"
-            columns={state.columns}
-            options={{ filtering: true }}
-          ></MaterialTable>
-        </div>
+        <table className="table_bureau">
+          <thead className="table_bureau_thead">
+            <tr>
+              {state.columns.map((items, i) => {
+                return <th>{items.title}</th>;
+              })}
+            </tr>
+          </thead>
+          <tbody className="table_bureau_tbody"></tbody>
+        </table>
       </div>
     </div>
   );

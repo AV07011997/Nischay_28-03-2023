@@ -6,7 +6,7 @@ from . import views as bureau_views
 
 urlpatterns = [
     path('', bureau_views.bureau_page, name="bureau"),
-    path('get_bureau_data/', bureau_views.get_bureau_data, name="get_bureau_data"),
+    # path('get_bureau_data/', bureau_views.get_bureau_data, name="get_bureau_data"),
     path('update_bureau_data/', bureau_views.update_bureau_data, name="update_bureau_data"),
     path('reset_bureau_data/', bureau_views.reset_bureau_data, name="reset_bureau_data"),
     path('selected_bureau_data/', bureau_views.selected_bureau_data, name="selected_bureau_data"),
