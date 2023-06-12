@@ -12,8 +12,8 @@ def bck(data):
   df = data
   df['txn_date'] = pd.to_datetime(df['txn_date'], format='%Y-%m-%d')
   df['month_year'] = df['txn_date'].dt.month.astype(str)+'-'+df['txn_date'].dt.year.astype(str)
-  df.debit = df.debit.replace(0,np.nan)
-  df.credit = df.credit.replace(0,np.nan)
+  df.debit = df.debit.replace(0.0,np.nan)
+  df.credit = df.credit.replace(0.0,np.nan)
   df.sort_values('txn_date', ascending=True, inplace=True)
   print('output from python code')
   print(df['account_number'])
@@ -158,19 +158,29 @@ def bck(data):
   plt.title('Closing Balance Monthly Trend',fontdict={'fontsize': 20, 'fontweight': 'bold'})
   plt.xlabel('Month-Year', fontsize=14)
   plt.ylabel('Closing Balance', fontsize=14)
+  plt.xticks(fontsize=12)
+  plt.yticks(fontsize=12)
   plt.grid(True)
   #plt.show()
   path = os.path.join(path_static_files, 'closing-balance-trend.png')
 
   plt.savefig(path)
 
+  df = df.drop_duplicates()
 
-  debit_cash = df.loc[(df.debit.notnull()) & (df['mode'].str.lower().str.strip()=='cash'),:].shape[0]
-  credit_cash = df.loc[(df.credit.notnull()) & (df['mode'].str.lower().str.strip()=='cash'),:].shape[0]
-  debit_cheque = df.loc[(df.debit.notnull()) & (df['mode'].str.lower().str.strip()=='cheque'),:].shape[0]
-  credit_cheque = df.loc[(df.credit.notnull()) & (df['mode'].str.lower().str.strip()=='cheque'),:].shape[0]
-  debit_net = df.loc[(df.debit.notnull()) & (df['mode'].str.lower().str.strip().str.replace(' ', '')=='netbanking'),:].shape[0]
-  credit_net = df.loc[(df.credit.notnull()) & (df['mode'].str.lower().str.strip().str.replace(' ', '')=='netbanking'),:].shape[0]
+### @@@@@@@@@@@@@@@@@@       Main logic code credit-debit frequency distribution graph  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+  debit_cash=df[df['mode'].str.lower().str.strip() == 'cash'][df['credit'] == 0]['debit'].count()
+  credit_cash=df[(df['mode'].str.lower().str.strip() == 'cash') & (df['debit'] == 0)]['credit'].count()
+
+
+  debit_cheque=df[df['mode'].str.lower().str.strip() == 'cheque'][df['credit'] == 0]['debit'].count()
+  credit_cheque=df[df['mode'].str.lower().str.strip() == 'cheque'][df['debit'] == 0]['credit'].count()
+
+
+  debit_net=df[(df['mode'].str.lower().str.strip().str.replace(' ', '')=='netbanking') & (df['credit'] == 0)]['credit'].count()
+  credit_net=df[(df['mode'].str.lower().str.strip().str.replace(' ', '')=='netbanking') & (df['debit'] == 0)]['credit'].count()
 
   data = {'debit': [debit_cheque, debit_cash, debit_net],
           'credit': [credit_cheque, credit_cash, credit_net]
@@ -178,8 +188,20 @@ def bck(data):
   df10 = pd.DataFrame(data,columns=['debit','credit'], index = ['Cheque', 'Cash', 'Net Banking'])
   print(df10)
   df10.plot.barh(figsize=(12,6))
-  plt.title('Frequency & Mode of Transactions',fontdict={'fontsize': 20, 'fontweight': 'bold'})
-  #plt.show()
+  plt.xticks(fontsize=12)
+  plt.yticks(fontsize=12)
+  plt.title('Count of Transactions by Mode',fontdict={'fontsize': 20, 'fontweight': 'bold'})
+  plt.legend(['Debit', 'Credit'], loc='lower right')
+
+  for i, (debit, credit) in enumerate(zip(df10['debit'], df10['credit'])):
+    debit_label = f'{debit:,.0f}' if debit >= 1000 else f'{debit:.0f}'
+    credit_label = f'{credit:,.0f}' if credit >= 1000 else f'{credit:.0f}'
+    plt.text(debit+0.05, i-0.15, debit_label, fontsize=10,fontweight='bold')
+    plt.text(credit+0.05, i+0.1, credit_label, fontsize=10,fontweight='bold')
+
+
+
+
   path = os.path.join(path_static_files, 'feq-mode-txn.png')
 
   plt.savefig(path)
@@ -200,7 +222,9 @@ def bck(data):
 
   # squarify.plot(sizes=df1['value'], label=labels, color=['#1e90ff', '#1e90ff', '#ff6600', '#ff6700'], alpha=.8, bar_kwargs=dict(linewidth=2, edgecolor="#f2f0f0"),text_kwargs={'fontsize':14,'weight':'bold', 'color':'white','wrap':True})
   plt.title('Inflow & Outflow',fontsize=18)
+
   plt.axis('off')
+  #plt.show()
   #plt.show()
   path = os.path.join(path_static_files, 'in-outflow.png')
 

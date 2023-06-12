@@ -237,6 +237,8 @@ const AnalyzeBankSummary = (leadID) => {
       >
         <div
           style={{
+            marginLeft: "8%",
+            width: "80%",
             backgroundColor: "#f0f0f0",
             padding: "2px",
             display: "flex",
@@ -244,14 +246,16 @@ const AnalyzeBankSummary = (leadID) => {
             justifyContent: "space-between",
           }}
         >
-          <span>Statement Duration</span>
+          <span style={{ marginLeft: "10px" }}>Statement Duration</span>
 
           <span>{info?.data[0].from_date}</span>
           <span>To</span>
-          <span>{info?.data[0].to_date}</span>
+          <span style={{ marginRight: "10px" }}>{info?.data[0].to_date}</span>
         </div>
         <div
           style={{
+            marginLeft: "8%",
+            width: "80%",
             backgroundColor: "#e0e0e0",
             padding: "1px",
             display: "flex",
@@ -259,12 +263,14 @@ const AnalyzeBankSummary = (leadID) => {
             justifyContent: "space-between",
           }}
         >
-          <span>Opening Balance</span>
+          <span style={{ marginLeft: "10px" }}>Opening Balance</span>
           <span style={{ marginLeft: "3px" }}>
             {info?.data5.Opening_Balance}
           </span>
           <span style={{ marginLeft: "18px" }}>-</span>
-          <span>{info?.data5.Closing_Balance}</span>
+          <span style={{ marginRight: "10px" }}>
+            {info?.data5.Closing_Balance}
+          </span>
         </div>
       </div>
       <div style={{ display: "flex" }}>
