@@ -96,6 +96,9 @@ const AnalyzeBankMonthWise = (props) => {
   const [acc_number, setacc_number] = useState();
   const [popupData, setPopUpData] = useState();
   const [buttonClicked, setbuttonClicked] = useState("closed");
+  const [src, setSrc] = useState();
+  const [src2, setSrc2] = useState();
+
   var Amount_pop_up = 0;
 
   const tableheaders = [
@@ -122,6 +125,10 @@ const AnalyzeBankMonthWise = (props) => {
     setacc_number(acc_number);
     setoptbank(data);
   }
+  useEffect(() => {
+    setSrc("./staticfiles/" + String(acc_number) + "bcmk_fig.png");
+    setSrc2("./staticfiles/" + String(acc_number) + "bcmk_fig_1.png");
+  }, [optbank]);
 
   function openWindow(type, amount) {
     Amount_pop_up = amount;
@@ -434,16 +441,8 @@ const AnalyzeBankMonthWise = (props) => {
       {optbank && (
         <div>
           <span>
-            <img
-              className="graph_monthwise"
-              src="./staticfiles/bcmk_fig.png"
-              alt="graph1"
-            ></img>
-            <img
-              className="graph_monthwise"
-              src="./staticfiles/bcmk_fig_1.png"
-              alt="graph2"
-            ></img>
+            <img className="graph_monthwise" src={src} alt="graph1"></img>
+            <img className="graph_monthwise" src={src2} alt="graph2"></img>
           </span>
         </div>
       )}

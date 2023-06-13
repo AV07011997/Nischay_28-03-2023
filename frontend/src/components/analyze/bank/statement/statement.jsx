@@ -50,77 +50,120 @@ const AnalyzeStatement = (leadID) => {
       for (let item of convertedData) {
         // console.log(item);
         if (item.txn_date >= parts_from[0] && item.txn_date <= parts_to[0]) {
-          console.log("ok");
+          // console.log("ok");
           filteredData.push(item);
         }
       }
       //   console.log(filteredData);
-      const convertedDataFinal = filteredData.map((item) => {
+      var convertedDataFinal = filteredData.map((item) => {
         const [year, month, day] = item.txn_date.split("-");
         const convertedDate = `${day}/${month}/${year}`;
         return { ...item, txn_date: convertedDate };
       });
-      console.log(convertedDataFinal);
+      // console.log(convertedDataFinal);
+
+      if (closing_bal_from && closing_bal_to) {
+        const convertedDataFinalBalance = filterOnBalance(
+          closing_bal_from,
+          closing_bal_to,
+          convertedDataFinal
+        );
+        console.log(convertedDataFinalBalance);
+        convertedDataFinal = convertedDataFinalBalance;
+        console.log(convertedDataFinal);
+      }
+
+      if (debit_from && debit_to) {
+        const convertedDataFinalDebit = filterOnDebit(
+          debit_from,
+          debit_to,
+          convertedDataFinal
+        );
+        convertedDataFinal = convertedDataFinalDebit;
+      }
+      if (credit_from && credit_to) {
+        const convertedDataFinalCredit = filterOnCredit(
+          credit_from,
+          credit_to,
+          convertedDataFinal
+        );
+        convertedDataFinal = convertedDataFinalCredit;
+      }
+
       settable1(convertedDataFinal);
     }
-    filterOnBalance(closing_bal_from, closing_bal_to);
-    filterOnDebit(debit_from, debit_to);
-    filterOnCredit(credit_from, credit_to);
+    // console.log(table1);
+
+    // filterOnBalance(closing_bal_from, closing_bal_to);
+    // filterOnDebit(debit_from, debit_to);
+    // filterOnCredit(credit_from, credit_to);
   };
 
-  const filterOnCredit = (credit_from, credit_to) => {
+  const filterOnCredit = (credit_from, credit_to, data) => {
     const finalData = [];
     const from = parseFloat(credit_from);
     const to = parseFloat(credit_to);
-    const tempData = table2;
+    const tempData = data;
     // console.log(tempData);
 
     tempData.forEach((element) => {
       if (
-        parseFloat(element.credit) > from &&
-        parseFloat(element.credit) < to
+        (parseFloat(element.credit) >= from &&
+          parseFloat(element.credit) <= to) ||
+        element.debit > 0
       ) {
         finalData.push(element);
       }
     });
-    settable1(finalData);
+    // settable1(finalData);
+    return finalData;
   };
 
-  const filterOnDebit = (debitFrom, debitTo) => {
+  const filterOnDebit = (debitFrom, debitTo, data) => {
     const finalData = [];
     const from = parseFloat(debitFrom);
     const to = parseFloat(debitTo);
-    const tempData = table2;
+    const tempData = data;
     // console.log(tempData);
 
     tempData.forEach((element) => {
-      if (parseFloat(element.debit) > from && parseFloat(element.debit) < to) {
-        finalData.push(element);
-      }
-    });
-    settable1(finalData);
-  };
-
-  const filterOnBalance = async (balance_from, balance_to) => {
-    const finalData = [];
-    const from = parseFloat(balance_from);
-    const to = parseFloat(balance_to);
-    const tempData = table2;
-    console.log(tempData);
-
-    tempData.forEach((element) => {
       if (
-        parseFloat(element.balance) > from &&
-        parseFloat(element.balance) < to
+        (parseFloat(element.debit) >= from &&
+          parseFloat(element.debit) <= to) ||
+        parseFloat(element.credit) > 0
       ) {
         finalData.push(element);
       }
     });
-    settable1(finalData);
+    // settable1(finalData);
+    return finalData;
+  };
+
+  const filterOnBalance = (balance_from, balance_to, data) => {
+    // console.log(data);
+    // console.log(table1);
+
+    const finalData = [];
+    const from = parseFloat(balance_from);
+    const to = parseFloat(balance_to);
+    const tempData = data;
+    // console.log(tempData);
+
+    tempData.forEach((element) => {
+      if (
+        parseFloat(element.balance) >= from &&
+        parseFloat(element.balance) <= to
+      ) {
+        finalData.push(element);
+      }
+    });
+    // console.log(finalData);
+    // settable1(finalData);
+    return finalData;
   };
 
   const getData = (accountNumber) => {
-    console.log("called");
+    // console.log("called");
     postApi("analyze/" + APIADDRESS.ANALYZESTATEMENTS, {
       leadID: localStorage.getItem("leadID"),
       account_number: accountNumber,

@@ -96,6 +96,7 @@ const AnalyzeBankSummary = (leadID) => {
   const [buttonClicked, setbuttonClicked] = useState("closed");
   const [pagestate, setpagestate] = useState();
   const [src, setSrc] = useState();
+  const [src2, setSrc2] = useState();
   var Amount_pop_up = 0;
 
   useEffect(() => {
@@ -116,7 +117,10 @@ const AnalyzeBankSummary = (leadID) => {
     }).then((res) => {
       console.log(res);
       setInfo(res);
-      setSrc("./staticfiles/closing-balance-trend.png");
+      setSrc(
+        "./staticfiles/" + String(accountNumber) + "closing-balance-trend.png"
+      );
+      setSrc2("./staticfiles/" + String(accountNumber) + "feq-mode-txn.png");
     });
     setpagestate("0");
   };
@@ -294,7 +298,7 @@ const AnalyzeBankSummary = (leadID) => {
 
                 <img
                   className="graph_monthwise"
-                  src="./staticfiles/feq-mode-txn.png"
+                  src={src2}
                   alt="graph1"
                   style={{ width: "100%" }}
                 ></img>
@@ -411,10 +415,10 @@ const AnalyzeBankSummary = (leadID) => {
                       height: "3em",
                     }}
                   >
-                    Lowest Debit Amount
+                    Lowest Credit Amount
                   </td>
                   <td style={{ textAlign: "right" }}>
-                    {info.data3.Lowest_Debit_Amount}{" "}
+                    ₹ {info.data3.Lowest_Debit_Amount}{" "}
                   </td>
                 </tr>
                 <tr>
@@ -538,6 +542,7 @@ const AnalyzeBankSummary = (leadID) => {
                         );
                       }}
                     >
+                      ₹{" "}
                       {info.data4.Min_Amt_Chq_Bounce
                         ? info.data4.Min_Amt_Chq_Bounce
                         : "N/A"}{" "}
@@ -572,6 +577,7 @@ const AnalyzeBankSummary = (leadID) => {
                         );
                       }}
                     >
+                      ₹{" "}
                       {info.data4.Latest_Chq_Bounce.length > 0
                         ? info.data4.Latest_Chq_Bounce
                         : "N/A"}{" "}

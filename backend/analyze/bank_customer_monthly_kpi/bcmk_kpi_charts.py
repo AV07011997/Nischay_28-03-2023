@@ -20,7 +20,7 @@ from django.conf import settings
 def bcmk_charts(data):
     
     final = data
-
+    account_number=data['account_number'][0]
     #Converting string date into datetime 
     #final.info()
     # final["mode"].unique()
@@ -171,7 +171,7 @@ def bcmk_charts(data):
     plt.grid(True)
     # plt.show()
     # plt.savefig(settings.STATICFILES_DIRS[0] + '/assets/images/bcmk_fig.png')
-    path = os.path.join(path_static_files, 'bcmk_fig.png')
+    path = os.path.join(path_static_files, account_number+'bcmk_fig.png')
 
     plt.savefig(path)
 
@@ -200,6 +200,6 @@ def bcmk_charts(data):
 
     # plt.show()
     # plt.savefig(settings.STATICFILES_DIRS[0] + '/assets/images/bcmk_fig_1.png')
-    path = os.path.join(path_static_files, 'bcmk_fig_1.png')
+    path = os.path.join(path_static_files, account_number+'bcmk_fig_1.png')
 
     plt.savefig(path)

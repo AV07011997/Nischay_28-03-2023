@@ -17,6 +17,7 @@ def bck(data):
   df.sort_values('txn_date', ascending=True, inplace=True)
   print('output from python code')
   print(df['account_number'])
+  account_number=df['account_number'][0]
   start = df['txn_date'].min()
   end = df['txn_date'].max()
   start1 = start.date()
@@ -162,7 +163,7 @@ def bck(data):
   plt.yticks(fontsize=12)
   plt.grid(True)
   #plt.show()
-  path = os.path.join(path_static_files, 'closing-balance-trend.png')
+  path = os.path.join(path_static_files, account_number+'closing-balance-trend.png')
 
   plt.savefig(path)
 
@@ -202,7 +203,7 @@ def bck(data):
 
 
 
-  path = os.path.join(path_static_files, 'feq-mode-txn.png')
+  path = os.path.join(path_static_files, account_number+'feq-mode-txn.png')
 
   plt.savefig(path)
 
@@ -226,7 +227,7 @@ def bck(data):
   plt.axis('off')
   #plt.show()
   #plt.show()
-  path = os.path.join(path_static_files, 'in-outflow.png')
+  path = os.path.join(path_static_files, account_number+'in-outflow.png')
 
   plt.savefig(path)
 
