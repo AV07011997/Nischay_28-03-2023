@@ -8,6 +8,8 @@ const AnalyzeStatement = (leadID) => {
   const [table, setTable] = useState();
   const [table1, settable1] = useState();
   const [table2, settable2] = useState();
+  const [from, setfrom] = useState();
+  const [to, setto] = useState();
 
   useEffect(() => {
     postApi("analyze/" + APIADDRESS.ANALYZEBANKSUMMARY, {
@@ -19,30 +21,88 @@ const AnalyzeStatement = (leadID) => {
 
   const fetchvariables = () => {
     // console.log("called_submit");
+    // console.log(from, to);
+    var txn_from = from;
+    var txn_to = to;
+
+    // console.log(txn_from, txn_to);
+
     const dataDuplicate = table2;
-    const convertedData = dataDuplicate.map((item) => {
+    const convertedData = dataDuplicate?.map((item) => {
       const [day, month, year] = item.txn_date.split("/");
       const convertedDate = `${year}-${month}-${day}`;
       return { ...item, txn_date: convertedDate };
     });
-    const txn_from = document?.getElementById("txn_date_from").value;
-    const txn_to = document?.getElementById("txn_date_to").value;
-    const debit_from = document?.getElementById("debit_amount_from").value;
-    const debit_to = document?.getElementById("debit_amount_to").value;
-    const credit_from = document?.getElementById("credit_amount_from").value;
-    const credit_to = document?.getElementById("credit_amount_to").value;
-    const closing_bal_from = document?.getElementById(
-      "closing_balance_amount_from"
-    ).value;
-    const closing_bal_to = document?.getElementById(
-      "closing_balance_amount_to"
-    ).value;
+    if (document.getElementById("txn_date_from").value) {
+      txn_from = document.getElementById("txn_date_from").value;
+    }
+    if (document.getElementById("txn_date_to").value) {
+      txn_to = document.getElementById("txn_date_to").value;
+    }
+    // console.log(txn_from, txn_to);
+    // console.log(typeof document.getElementById("txn_date_to").value);
+
+    var debit_from = "0.0";
+    if (document?.getElementById("debit_amount_from").value) {
+      debit_from = document?.getElementById("debit_amount_from").value;
+    }
+
+    var debit_to = table2.reduce((max, obj) => {
+      const debitValue = parseFloat(obj.debit.replace(/,/g, ""));
+      return debitValue > max ? debitValue : max;
+    }, -Infinity);
+
+    if (document?.getElementById("debit_amount_to").value) {
+      debit_to = document?.getElementById("debit_amount_to").value;
+    }
+
+    var credit_from = "0.0";
+    if (document?.getElementById("credit_amount_from").value) {
+      credit_from = document?.getElementById("credit_amount_from").value;
+    }
+
+    var credit_to = table2.reduce((max, obj) => {
+      const creditValue = parseFloat(obj.credit.replace(/,/g, ""));
+      return creditValue > max ? creditValue : max;
+    }, -Infinity);
+
+    // console.log(credit_to);
+
+    if (document?.getElementById("credit_amount_to").value) {
+      credit_to = document?.getElementById("credit_amount_to").value;
+    }
+
+    var closing_bal_from = table2.reduce((min, obj) => {
+      const balanceValue = parseFloat(obj.balance.replace(/,/g, ""));
+      return balanceValue < min ? balanceValue : min;
+    }, Infinity);
+    if (document?.getElementById("closing_balance_amount_from").value) {
+      closing_bal_from = document?.getElementById(
+        "closing_balance_amount_from"
+      ).value;
+    }
+
+    var closing_bal_to = table2.reduce((max, obj) => {
+      const balanceValue = parseFloat(obj.balance.replace(/,/g, ""));
+      return balanceValue > max ? balanceValue : max;
+    }, -Infinity);
+    if (document?.getElementById("closing_balance_amount_to").value) {
+      closing_bal_to = document?.getElementById(
+        "closing_balance_amount_to"
+      ).value;
+    }
+    // console.log(debit_from, debit_to);
 
     const parts_from = txn_from.split("/");
 
     const parts_to = txn_to.split("/");
     // console.log(parts_to[0]);
     // console.log(parts_from[0]);
+
+    // console.log(debit_from, debit_to);
+    // console.log(credit_from, credit_to);
+    // console.log(txn_from, txn_to);
+    // console.log(closing_bal_from, closing_bal_to);
 
     const filteredData = [];
 
@@ -54,41 +114,117 @@ const AnalyzeStatement = (leadID) => {
           filteredData.push(item);
         }
       }
-      //   console.log(filteredData);
+      // console.log(filteredData);
       var convertedDataFinal = filteredData.map((item) => {
         const [year, month, day] = item.txn_date.split("-");
         const convertedDate = `${day}/${month}/${year}`;
         return { ...item, txn_date: convertedDate };
       });
       // console.log(convertedDataFinal);
-
-      if (closing_bal_from && closing_bal_to) {
-        const convertedDataFinalBalance = filterOnBalance(
+      if (
+        (document?.getElementById("debit_amount_from").value ||
+          document?.getElementById("debit_amount_to").value) &&
+        (document?.getElementById("credit_amount_from").value ||
+          document?.getElementById("credit_amount_to").value) &&
+        (document?.getElementById("closing_balance_amount_from").value ||
+          document?.getElementById("closing_balance_amount_to").value)
+      ) {
+        const convertedDataFinalCredit = filterOnALL(
+          debit_from,
+          debit_to,
+          credit_from,
+          credit_to,
           closing_bal_from,
           closing_bal_to,
           convertedDataFinal
         );
-        console.log(convertedDataFinalBalance);
-        convertedDataFinal = convertedDataFinalBalance;
-        console.log(convertedDataFinal);
-      }
+        convertedDataFinal = convertedDataFinalCredit;
+      } else if (
+        (document?.getElementById("debit_amount_from").value ||
+          document?.getElementById("debit_amount_to").value) &&
+        (document?.getElementById("credit_amount_from").value ||
+          document?.getElementById("credit_amount_to").value)
+      ) {
+        const convertedDataFinalCredit = filterCreditDebit(
+          debit_from,
+          debit_to,
+          credit_from,
+          credit_to,
+          convertedDataFinal
+        );
+        convertedDataFinal = convertedDataFinalCredit;
+      } else if (
+        (document?.getElementById("debit_amount_from").value ||
+          document?.getElementById("debit_amount_to").value) &&
+        (document?.getElementById("closing_balance_amount_from").value ||
+          document?.getElementById("closing_balance_amount_to").value)
+      ) {
+        const convertedDataFinalCredit = filterDebitBalance(
+          debit_from,
+          debit_to,
+          closing_bal_from,
+          closing_bal_to,
+          convertedDataFinal
+        );
+        convertedDataFinal = convertedDataFinalCredit;
+      } else if (
+        (document?.getElementById("credit_amount_from").value ||
+          document?.getElementById("credit_amount_to").value) &&
+        (document?.getElementById("closing_balance_amount_from").value ||
+          document?.getElementById("closing_balance_amount_to").value)
+      ) {
+        const convertedDataFinalCredit = filterCreditBalance(
+          credit_from,
+          credit_to,
+          closing_bal_from,
+          closing_bal_to,
+          convertedDataFinal
+        );
+        convertedDataFinal = convertedDataFinalCredit;
+      } else if (
+        document?.getElementById("debit_amount_from").value ||
+        document?.getElementById("debit_amount_to").value
+      ) {
+        console.log("called");
+        // console.log(convertedDataFinal);
+        // console.log(debit_from, debit_to);
 
-      if (debit_from && debit_to) {
         const convertedDataFinalDebit = filterOnDebit(
           debit_from,
           debit_to,
           convertedDataFinal
         );
         convertedDataFinal = convertedDataFinalDebit;
-      }
-      if (credit_from && credit_to) {
+      } else if (
+        document?.getElementById("credit_amount_from").value ||
+        document?.getElementById("credit_amount_to").value
+      ) {
         const convertedDataFinalCredit = filterOnCredit(
           credit_from,
           credit_to,
           convertedDataFinal
         );
         convertedDataFinal = convertedDataFinalCredit;
+      } else if (
+        document?.getElementById("closing_balance_amount_from").value ||
+        document?.getElementById("closing_balance_amount_to").value
+      ) {
+        // console.log("called");
+        const convertedDataFinalBalance = filterOnBalance(
+          closing_bal_from,
+          closing_bal_to,
+          convertedDataFinal
+        );
+        // console.log(convertedDataFinalBalance);
+        convertedDataFinal = convertedDataFinalBalance;
       }
+
+      // console.log(convertedDataFinal);
+      // console.log(debit_from, debit_to);
+
+      // console.log(credit_from, credit_to);
+
+      // console.log(convertedDataFinal);
 
       settable1(convertedDataFinal);
     }
@@ -99,23 +235,30 @@ const AnalyzeStatement = (leadID) => {
     // filterOnCredit(credit_from, credit_to);
   };
 
+  const setdate = (from, to) => {
+    setfrom(from);
+    setto(to);
+  };
+
   const filterOnCredit = (credit_from, credit_to, data) => {
     const finalData = [];
     const from = parseFloat(credit_from);
     const to = parseFloat(credit_to);
     const tempData = data;
-    // console.log(tempData);
+    console.log(from, to);
 
     tempData.forEach((element) => {
       if (
-        (parseFloat(element.credit) >= from &&
-          parseFloat(element.credit) <= to) ||
-        element.debit > 0
+        parseFloat(element.credit.replace(/,/g, "")) >= from &&
+        parseFloat(element.credit.replace(/,/g, "")) <= to
+        // ||
+        // parseFloat(element.debit.replace(/,/g, "")) > 0
       ) {
         finalData.push(element);
       }
     });
     // settable1(finalData);
+    // console.log(finalData);
     return finalData;
   };
 
@@ -123,22 +266,166 @@ const AnalyzeStatement = (leadID) => {
     const finalData = [];
     const from = parseFloat(debitFrom);
     const to = parseFloat(debitTo);
+    // console.log(from, to);
+    const tempData = data;
+    // console.log(tempData);
+    console.log(from, to);
+
+    tempData.forEach((element) => {
+      if (
+        parseFloat(element.debit.replace(/,/g, "")) >= from &&
+        parseFloat(element.debit.replace(/,/g, "")) <= to
+        // ||
+        // parseFloat(element.credit.replace(/,/g, "")) > 0
+      ) {
+        // console.log(element);
+        finalData.push(element);
+      }
+    });
+    // console.log(finalData);
+    // settable1(finalData);
+    return finalData;
+  };
+  const filterCreditDebit = (
+    debitFrom,
+    debitTo,
+    creditfrom,
+    creditto,
+    data
+  ) => {
+    const finalData = [];
+    const from = parseFloat(debitFrom);
+    const to = parseFloat(debitTo);
+    const from1 = parseFloat(creditfrom);
+    const to1 = parseFloat(creditto);
+    // console.log(from, to);
     const tempData = data;
     // console.log(tempData);
 
     tempData.forEach((element) => {
       if (
-        (parseFloat(element.debit) >= from &&
-          parseFloat(element.debit) <= to) ||
-        parseFloat(element.credit) > 0
+        (parseFloat(element.debit.replace(/,/g, "")) >= from &&
+          parseFloat(element.debit.replace(/,/g, "")) <= to) ||
+        (parseFloat(element.credit.replace(/,/g, "")) >= from1 &&
+          parseFloat(element.credit.replace(/,/g, "")) <= to1)
+        // ||
+        // parseFloat(element.credit.replace(/,/g, "")) > 0
       ) {
+        // console.log(element);
         finalData.push(element);
       }
     });
+    // console.log(finalData);
     // settable1(finalData);
     return finalData;
   };
 
+  const filterDebitBalance = (
+    debitFrom,
+    debitTo,
+    balancefrom,
+    balanceto,
+    data
+  ) => {
+    const finalData = [];
+    const from = parseFloat(debitFrom);
+    const to = parseFloat(debitTo);
+    const from1 = parseFloat(balancefrom);
+    const to1 = parseFloat(balanceto);
+    // console.log(from, to);
+    const tempData = data;
+    // console.log(tempData);
+
+    tempData.forEach((element) => {
+      if (
+        (parseFloat(element.debit.replace(/,/g, "")) >= from &&
+          parseFloat(element.debit.replace(/,/g, "")) <= to) ||
+        (parseFloat(element.balance.replace(/,/g, "")) >= from1 &&
+          parseFloat(element.balance.replace(/,/g, "")) <= to1)
+        // ||
+        // parseFloat(element.credit.replace(/,/g, "")) > 0
+      ) {
+        // console.log(element);
+        finalData.push(element);
+      }
+    });
+    // console.log(finalData);
+    // settable1(finalData);
+    return finalData;
+  };
+  const filterCreditBalance = (
+    CreditFrom,
+    CreditTo,
+    balancefrom,
+    balanceto,
+    data
+  ) => {
+    const finalData = [];
+    const from = parseFloat(CreditFrom);
+    const to = parseFloat(CreditTo);
+    const from1 = parseFloat(balancefrom);
+    const to1 = parseFloat(balanceto);
+    // console.log(from, to);
+    const tempData = data;
+    // console.log(tempData);
+
+    tempData.forEach((element) => {
+      if (
+        (parseFloat(element.credit.replace(/,/g, "")) >= from &&
+          parseFloat(element.credit.replace(/,/g, "")) <= to) ||
+        (parseFloat(element.balance.replace(/,/g, "")) >= from1 &&
+          parseFloat(element.balance.replace(/,/g, "")) <= to1)
+        // ||
+        // parseFloat(element.credit.replace(/,/g, "")) > 0
+      ) {
+        // console.log(element);
+        finalData.push(element);
+      }
+    });
+    // console.log(finalData);
+    // settable1(finalData);
+    return finalData;
+  };
+  const filterOnALL = (
+    debitFrom,
+    debitTo,
+    creditfrom,
+    creditto,
+    balfrom,
+    balto,
+    data
+  ) => {
+    const finalData = [];
+    const from = parseFloat(debitFrom);
+    const to = parseFloat(debitTo);
+    const from1 = parseFloat(creditfrom);
+    const to1 = parseFloat(creditto);
+    const from2 = parseFloat(balfrom);
+    const to2 = parseFloat(balto);
+    // console.log(from, to);
+    const tempData = data;
+    // console.log(tempData);
+
+    tempData.forEach((element) => {
+      if (
+        (parseFloat(element.debit.replace(/,/g, "")) >= from &&
+          parseFloat(element.debit.replace(/,/g, "")) <= to) ||
+        (parseFloat(element.credit.replace(/,/g, "")) >= from1 &&
+          parseFloat(element.credit.replace(/,/g, "")) <= to1) ||
+        (parseFloat(element.balance.replace(/,/g, "")) >= from2 &&
+          parseFloat(element.balance.replace(/,/g, "")) <= to2)
+
+        // ||
+        // parseFloat(element.credit.replace(/,/g, "")) > 0
+      ) {
+        // console.log(element);
+        finalData.push(element);
+      }
+    });
+    // console.log(finalData);
+    // settable1(finalData);
+    return finalData;
+  };
   const filterOnBalance = (balance_from, balance_to, data) => {
     // console.log(data);
     // console.log(table1);
@@ -151,8 +438,8 @@ const AnalyzeStatement = (leadID) => {
 
     tempData.forEach((element) => {
       if (
-        parseFloat(element.balance) >= from &&
-        parseFloat(element.balance) <= to
+        parseFloat(element.balance.replace(/,/g, "")) >= from &&
+        parseFloat(element.balance.replace(/,/g, "")) <= to
       ) {
         finalData.push(element);
       }
@@ -162,7 +449,7 @@ const AnalyzeStatement = (leadID) => {
     return finalData;
   };
 
-  const getData = (accountNumber) => {
+  const getData = (accountNumber, from, to) => {
     // console.log("called");
     postApi("analyze/" + APIADDRESS.ANALYZESTATEMENTS, {
       leadID: localStorage.getItem("leadID"),
@@ -172,7 +459,7 @@ const AnalyzeStatement = (leadID) => {
       settable2(res[0]);
     });
   };
-
+  // console.log(table1);
   return (
     <div>
       <NavBar></NavBar>
@@ -209,6 +496,7 @@ const AnalyzeStatement = (leadID) => {
                                 value={item.account_number}
                                 onClick={() => {
                                   getData(item.account_number);
+                                  setdate(item.from_date, item.to_date);
                                 }}
                               />
                               <span className="radiobuttongap">
@@ -240,33 +528,51 @@ const AnalyzeStatement = (leadID) => {
       {table1 && (
         <div className="filter_element_div_block">
           <div className="filter_element">
-            <h6>Transaction Date</h6>
-            <span>From</span>
-            <input type="date" id="txn_date_from"></input>
-            <span>To</span>
-            <input type="date" id="txn_date_to"></input>
+            <h6 style={{ marginLeft: "50px", marginBottom: "10px" }}>
+              Transaction Date
+            </h6>
+            <span>From&nbsp;&nbsp;&nbsp;</span>
+            <input
+              style={{ width: "25.5%" }}
+              type="date"
+              id="txn_date_from"
+            ></input>
+            <span>&nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;</span>
+            <input
+              style={{ width: "25.5%" }}
+              type="date"
+              id="txn_date_to"
+            ></input>
           </div>
           <div className="filter_element">
-            <h6>Debited Amount</h6>
-            <span>From</span>
+            <h6 style={{ marginLeft: "50px", marginBottom: "10px" }}>
+              {" "}
+              Debited Amount
+            </h6>
+            <span>From&nbsp;&nbsp;&nbsp;</span>
             <input type="text" id="debit_amount_from"></input>
-            <span>To</span>
+            <span>&nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;</span>
             <input type="text" id="debit_amount_to"></input>
           </div>
 
           <div className="filter_element">
-            <h6>Credited Amount</h6>
-            <span>From</span>
+            <h6 style={{ marginLeft: "50px", marginBottom: "10px" }}>
+              Credited Amount
+            </h6>
+            <span>From&nbsp;&nbsp;&nbsp;</span>
             <input type="text" id="credit_amount_from"></input>
-            <span>To</span>
+            <span>&nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;</span>
             <input type="text" id="credit_amount_to"></input>
           </div>
 
           <div className="filter_element">
-            <h6>Closing Balance Amount</h6>
-            <span>From</span>
+            <h6 style={{ marginLeft: "50px", marginBottom: "10px" }}>
+              {" "}
+              Closing Balance Amount
+            </h6>
+            <span>From&nbsp;&nbsp;&nbsp;</span>
             <input type="text" id="closing_balance_amount_from"></input>
-            <span>To</span>
+            <span>&nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;</span>
             <input type="text" id="closing_balance_amount_to"></input>
           </div>
           <br></br>
@@ -289,10 +595,10 @@ const AnalyzeStatement = (leadID) => {
               <tr>
                 <th>Transaction Date</th>
                 <th>Description</th>
-                <th>Cheque number</th>
-                <th>Credit</th>
-                <th>Debit</th>
-                <th>Balance</th>
+                <th>Cheque Number</th>
+                <th>Credit{" (₹)"}</th>
+                <th>Debit{" (₹)"}</th>
+                <th>Balance{" (₹)"}</th>
               </tr>
             </thead>
             <tbody>
@@ -302,11 +608,13 @@ const AnalyzeStatement = (leadID) => {
                     return (
                       <tr key={i}>
                         <td>{item.txn_date}</td>
-                        <td>{item.description}</td>
+                        <td style={{ textAlign: "left" }}>
+                          {item.description}
+                        </td>
                         <td>{item.cheque_number}</td>
-                        <td>{item.credit}</td>
-                        <td>{item.debit}</td>
-                        <td>{item.balance}</td>
+                        <td style={{ textAlign: "right" }}>{item.credit}</td>
+                        <td style={{ textAlign: "right" }}>{item.debit}</td>
+                        <td style={{ textAlign: "right" }}>{item.balance}</td>
                       </tr>
                     );
                   })}

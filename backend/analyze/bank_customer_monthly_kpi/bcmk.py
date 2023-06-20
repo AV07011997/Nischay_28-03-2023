@@ -58,8 +58,13 @@ def KPIs(data):
 
         ###########################Outflows
         #####Non Cash debits
-        Non_cash_debits=final[~(final["mode"]=='Cash')].groupby(['month_year']).agg(Non_cash_debits_Count=("debit","count"),Non_cash_debits_Value=("debit","sum")).reset_index()
+        # Non_cash_debits=final[~(final["mode"]=='Cash')].groupby(['month_year']).agg(Non_cash_debits_Count=("debit","count"),Non_cash_debits_Value=("debit","sum")).reset_index()
+        temp = final[~(final["mode"] == 'Cash')]
 
+        temp = temp[~(temp["mode"] == 'Loan')]
+
+        Non_cash_debits = temp.groupby(['month_year']).agg(Non_cash_debits_Count=("debit", "count"),
+                                                           Non_cash_debits_Value=("debit", "sum")).reset_index()
         #####Cash debits
         Cash_debits=final[(final["mode"]=='Cash')].groupby(['month_year']).agg(Cash_debits_Count=("debit","count"),Cash_debits_Value=("debit","sum")).reset_index()
 

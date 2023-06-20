@@ -21,6 +21,7 @@ class upload_file_details(models.Model):
     date = models.DateTimeField(null=True, default=' ')
     file_name = models.CharField(max_length=50, null=True, default=' ')
     type = models.CharField(max_length=20)
+    status = models.CharField(max_length=100)
 
     def __int__(self):
         return (self.lead_id)
@@ -127,6 +128,7 @@ class bank_bank(models.Model):
     sub_mode = models.CharField(max_length=30)
     transaction_type = models.CharField(max_length=30)
     lead_id=models.CharField(max_length=30)
+    file_name=models.CharField(max_length=100)
 
     def __str__(self):
         return (self.customer_id)

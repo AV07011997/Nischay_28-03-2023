@@ -26,6 +26,7 @@ urlpatterns = {
     # path('', mysite_views.home_page, name="mysite_home"),
     path('login/', mysite_views.login_page, name="login_page"),
     path('home/', mysite_views.home_page, name="home_page"),
+    path('update_upload_list/', mysite_views.update_upload_list, name="update_upload_list"),
     # path('upload_files/', include('upload_files.urls')),
     path('search/searchsession/<str:text>/', mysite_views.searchsession, name="search_session"),
     # path('shubham/<str:text>/', mysite_views.upload_statements, name="upload_statements"),

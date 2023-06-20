@@ -17,4 +17,6 @@ export const APIADDRESS = {
   ANALYZECOUNTERPARTIES: "bank_entity_kpi/",
   ANALYZECOUNTERPARTIESPOPUP: "bank_entity_kpi_pop_up/",
   ANALYZESTATEMENTS: "statements/",
+  UPLOADEDFILESDELETE: "delete_files/",
+  UPDATEUPLOADLIST: "update_upload_list/",
 };

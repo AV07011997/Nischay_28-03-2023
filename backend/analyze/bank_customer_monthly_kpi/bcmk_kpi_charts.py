@@ -159,12 +159,17 @@ def bcmk_charts(data):
     c, = plt.plot(x, y3, marker='o')
     ax.set_yticklabels([])
     plt.title('Bank Transaction Summary',fontdict={'fontsize': 20, 'fontweight': 'bold'})
+    # plt.xlabel('Month-Year', fontsize=14)
+    plt.ylabel('Amount', fontsize=14)
+    plt.xticks(fontsize=12)
+    plt.yticks(fontsize=12)
+    plt.axhline(0, color='black', linewidth=1)
     for xitem, yitem in np.nditer([x, y], flags=(["refs_ok"]), op_flags=["readwrite"]):
-        ax.text(xitem, yitem, int(yitem), dict(size=9, color='blue'), ha="left")
+        ax.text(xitem, yitem, int(yitem), dict(size=9, color='blue'), ha="left",fontsize=10,fontweight='bold')
     for xitem, y2item in np.nditer([x, y2], flags=(["refs_ok"]), op_flags=["readwrite"]):
-        ax.text(xitem, y2item, int(y2item), dict(size=9, color='orange'), ha="right")
+        ax.text(xitem, y2item, int(y2item), dict(size=9, color='orange'), ha="right",fontsize=10,fontweight='bold')
     for xitem, y3item in np.nditer([x, y3], flags=(["refs_ok"]), op_flags=["readwrite"]):
-        ax.text(xitem, y3item, int(y3item), dict(size=9, color='green'), ha="right")
+        ax.text(xitem, y3item, int(y3item), dict(size=9, color='green'), ha="right",fontsize=10,fontweight='bold')
     plt.legend([a, b, c], ['Month-End Balance', 'Net Inflows', 'EMI'], loc="lower center", mode="expand", ncol=3,
                bbox_to_anchor=(0.25, -0.15, 0.5, .102))
 
@@ -184,6 +189,12 @@ def bcmk_charts(data):
     a, = plt.plot(x1, y1, color='#ee8a11', marker='o', linewidth=3)
     plt.title('Bank Transaction Summary',fontdict={'fontsize': 20, 'fontweight': 'bold'})
     # plt.xlabel('Month-Year', fontsize=14)
+    plt.ylabel('Amount', fontsize=14)
+    plt.xticks(fontsize=12)
+    plt.yticks(fontsize=12)
+    plt.axhline(0, color='black', linewidth=1)
+
+    # plt.xlabel('Month-Year', fontsize=14)
     # plt.ylabel('Closing Balance', fontsize=14)
     b, = plt.plot(x1, y2, color='#3776ab', marker='o', linewidth=3)
     plt.grid(True)
@@ -191,12 +202,13 @@ def bcmk_charts(data):
     ax.set_yticklabels([])
 
     for xitem, yitem in np.nditer([x1, y1], flags=(["refs_ok"]), op_flags=["readwrite"]):
-        ax.text(xitem, yitem, int(yitem), dict(size=10, color='#ee8a11'), ha="left")
+        ax.text(xitem, yitem, int(yitem), dict(size=10, color='#ee8a11'), ha="left",fontsize=10,fontweight='bold')
     for xitem, y2item in np.nditer([x1, y2], flags=(["refs_ok"]), op_flags=["readwrite"]):
-        ax.text(xitem, y2item, int(y2item), dict(size=10, color='#3776ab'), ha="right")
+        ax.text(xitem, y2item, int(y2item), dict(size=10, color='#3776ab'), ha="right",fontsize=10,fontweight='bold')
 
     plt.legend([a, b], ['Cash Credits', 'Cash Debits'], loc="lower center", mode="expand", ncol=2,
                bbox_to_anchor=(0.25, -0.15, 0.5, .102))
+
 
     # plt.show()
     # plt.savefig(settings.STATICFILES_DIRS[0] + '/assets/images/bcmk_fig_1.png')

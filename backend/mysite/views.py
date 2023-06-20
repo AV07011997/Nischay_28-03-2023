@@ -9,6 +9,7 @@ from django.db import connection
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 
 import django
+import re
 
 django.setup()
 
@@ -827,3 +828,76 @@ def update_bureau_data(request):
     status["type"] = "success"
     status["message"] = "Data has been updated successfully."
     return HttpResponse(json.dumps({"bureau_page": True, "status": status}))
+
+
+def update_upload_list(request):
+    # with connection.cursor() as cursor:
+    #     query = """
+    #         UPDATE a5_kit.mysite_upload_file_details AS u
+    #         SET status = 'failed'
+    #         WHERE EXISTS (
+    #             SELECT 1
+    #             FROM a5_kit.mysite_failed_digitization AS f
+    #             WHERE u.file_name LIKE CONCAT('%', f.file_name, '%')
+    #         )
+    #     """
+    #     cursor.execute(query)
+
+    with connection.cursor() as cursor:
+        sql_query = "SELECT * FROM a5_kit.mysite_upload_file_details;"
+        cursor.execute(sql_query)
+        data1=dictfetchall(cursor)
+        data_upload=pd.DataFrame(data1)
+
+    with connection.cursor() as cursor:
+        sql_query = "SELECT * FROM `a5_kit`.`mysite_failed_digitization`;"
+        cursor.execute(sql_query)
+        data1 = dictfetchall(cursor)
+        data_failed = pd.DataFrame(data1)
+
+    # data_upload=data_upload.astype(str)
+    # data_failed = data_failed.astype(str)
+
+    with connection.cursor() as cursor:
+        sql_query = "SELECT * FROM a5_kit.mysite_downloaded_file_details;"
+        cursor.execute(sql_query)
+        data1 = dictfetchall(cursor)
+        data_digitized = pd.DataFrame(data1)
+
+
+    for digitized_file_name in data_digitized['file_name']:
+        digitized_file_name = str(digitized_file_name)  # Convert file name to a string
+        digitized_file_name = digitized_file_name.split('_', 2)[-1]
+        # digitized_file_name += ".pdf"
+        # digitized_file_name = digitized_file_name[:-4]  # Remove the last four characters from the file name
+
+        with connection.cursor() as cursor:
+            # Perform the update operation
+            query = "UPDATE a5_kit.mysite_upload_file_details SET status = 'Digitized' WHERE file_name LIKE %s;"
+            pattern = '%' + digitized_file_name + '%'  # Create the pattern to match the file name
+            cursor.execute(query, [pattern])
+
+    for failed_name in data_failed['file_name']:
+        failed_name = str(failed_name)  # Convert file name to a string
+        failed_name = failed_name.split('_', 2)[-1]
+        # digitized_file_name += ".pdf"
+        # digitized_file_name = digitized_file_name[:-4]  # Remove the last four characters from the file name
+
+        with connection.cursor() as cursor:
+            # Perform the update operation
+            query = "UPDATE a5_kit.mysite_upload_file_details SET status = 'Failed' WHERE file_name LIKE %s;"
+            pattern = '%' + failed_name + '%'  # Create the pattern to match the file name
+            cursor.execute(query, [pattern])
+
+    with connection.cursor() as cursor:
+        query = '''
+        UPDATE a5_kit.mysite_upload_file_details
+        SET status = 'In Progress'
+        WHERE STATUS is NULL
+        '''
+        cursor.execute(query)
+
+
+
+    print(data_upload)
+    return HttpResponse('1')

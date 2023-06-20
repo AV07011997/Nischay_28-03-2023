@@ -178,6 +178,7 @@ def bank_customer_month_kpi(request):
                 KPI['Non_cash_credits_Value'] = KPI['Non_cash_credits_Value'].apply(lambda x: round(x))
                 KPI['Non_cash_credits_Value'] = KPI['Non_cash_credits_Value'].apply(
                     lambda x: format_currency(x, 'INR', locale='en_IN'))
+                KPI['Non_cash_credits_Value'] = KPI['Non_cash_credits_Value'].apply(lambda x: str(x).replace('₹', ''))
                 KPI['Non_cash_credits_Value'] = KPI['Non_cash_credits_Value'].apply(lambda x: str(x).split('.')[0])
 
                 # KPI['Non_cash_credits_Value'] = KPI['Non_cash_credits_Value'].apply(lambda x: (round(x)))
@@ -188,6 +189,7 @@ def bank_customer_month_kpi(request):
                 KPI['Cash_credits_Value'] = KPI['Cash_credits_Value'].apply(lambda x: round(x))
                 KPI['Cash_credits_Value'] = KPI['Cash_credits_Value'].apply(
                     lambda x: format_currency(x, 'INR', locale='en_IN'))
+                KPI['Cash_credits_Value'] = KPI['Cash_credits_Value'].apply(lambda x: str(x).replace('₹', ''))
                 KPI['Cash_credits_Value'] = KPI['Cash_credits_Value'].apply(lambda x: str(x).split('.')[0])
 
                 # KPI['Cash_credits_Value'] = KPI['Cash_credits_Value'].apply(lambda x: (round(x)))
@@ -302,6 +304,8 @@ def bank_customer_month_kpi(request):
                 KPI['EMI'] = KPI['EMI'].apply(lambda x: round(x))
                 KPI['EMI'] = KPI['EMI'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
                 KPI['EMI'] = KPI['EMI'].apply(lambda x: str(x).split('.')[0])
+
+                KPI = KPI.replace('₹', '', regex=True)
 
                 json_records = KPI.reset_index().to_json(orient='records')
                 data1 = json.loads(json_records)
@@ -698,7 +702,23 @@ def bank_customer_kpi(request):
 
 
                     KPI2['Highest_Credit_Amount'] = KPI2['Highest_Credit_Amount'].apply(lambda x: str(x).split('.')[0]) 
-                    KPI2['Lowest_Debit_Amount'] = KPI2['Lowest_Debit_Amount'].apply(lambda x: str(x).split('.')[0]) 
+                    KPI2['Lowest_Debit_Amount'] = KPI2['Lowest_Debit_Amount'].apply(lambda x: str(x).split('.')[0])
+
+
+                    KPI3['Min_Amt_Chq_Bounce'] = KPI3['Min_Amt_Chq_Bounce'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    # KPI3['Latest_Chq_Bounce'] = KPI3['Latest_Chq_Bounce'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    # KPI3['Latest_Chq_Bounce']=KPI3['Latest_Chq_Bounce'].astype(str)
+
+                    # # KPI3['Min_Amt_Chq_Bounce']
+                    # Latest_Chq_Bounce
+
+                    KPI = KPI.replace('₹', '₹ ', regex=True)
+                    KPI2 = KPI2.replace('₹', '₹ ', regex=True)
+                    KPI3 = KPI3.replace('₹', '₹ ', regex=True)
+                    KPI4 = KPI4.replace('₹', '₹ ', regex=True)
+                    KPI1 = KPI1.replace('₹', '₹ ', regex=True)
+
+
                     
 
                     json_records = KPI.to_json(orient ='records') 
@@ -1963,6 +1983,7 @@ def bank_entity_kpi(request):
 
                     KPI1 = KPI[KPI['entity'] == 'Overall']
                     KPI = KPI[KPI['entity'] != 'Overall']
+                    KPI = KPI.replace('₹', '', regex=True)
 
                     json_records = KPI.reset_index().to_json(orient='records', date_format='iso')
                     data1 = json.loads(json_records)
@@ -3293,6 +3314,14 @@ def statements(request):
         data=pd.DataFrame(data)
         data=data[data['account_number']==accountNo]
         data['txn_date'] = data['txn_date'].apply(lambda x: x.strftime('%d/%m/%Y'))
+        data['debit'] = data['debit'].apply(
+            lambda x: format_currency(x, 'INR', locale='en_IN'))
+        data['credit'] = data['credit'].apply(
+            lambda x: format_currency(x, 'INR', locale='en_IN'))
+        data['balance'] = data['balance'].apply(
+            lambda x: format_currency(x, 'INR', locale='en_IN'))
+        data = data.replace('₹', '', regex=True)
+
 
         json_records = data.to_json(orient='records')
         data = json.loads(json_records)

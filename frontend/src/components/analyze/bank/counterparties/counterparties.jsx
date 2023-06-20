@@ -9,7 +9,7 @@ import { postApi } from "../../../../callapi";
 
 function PopUpComponent(props) {
   const { data } = props;
-  console.log(data);
+  // console.log(data);
   const headers = [
     "Transaction Date",
     "Description",
@@ -85,20 +85,25 @@ const ANALYZECOUNTERPARTIES = (props) => {
 
   const [acc_number, setacc_number] = useState();
   const [popupData, setPopUpData] = useState();
-  const [sortKey, setSortKey] = useState();
+  const [selection, setSelection] = useState(0);
+  const [index, setIndex] = useState();
 
   function handledata(data, acc_number) {
     setacc_number(acc_number);
     setoptbank(data);
     setoptbank2(data);
+    // setpagestate(0);
   }
+  useEffect(() => {
+    setpagestate(0);
+  }, [acc_number]);
 
   const mainHeader = [
     { header: "", col_span: 1 },
     { header: "Transaction", col_span: 2 },
-    { header: "Number of transactions", col_span: 2 },
-    { header: "Debited amount", col_span: 4 },
-    { header: "Credited amount", col_span: 4 },
+    { header: "Number of Transactions", col_span: 2 },
+    { header: "Debited Amount (₹)", col_span: 4 },
+    { header: "Credited Amount (₹)", col_span: 4 },
   ];
 
   const sub_headers = [
@@ -129,9 +134,10 @@ const ANALYZECOUNTERPARTIES = (props) => {
 
   const filterData = (sortVariable, index) => {
     const databackup = optbank2;
+    setIndex(index);
     // Comparator function for sorting in ascending order
-
-    console.log(databackup);
+    // console.log(index, sortVariable);
+    // console.log(databackup);
     if (index >= 5) {
       if (pagestate % 2 == 0) {
         databackup.sort((a, b) => {
@@ -158,7 +164,7 @@ const ANALYZECOUNTERPARTIES = (props) => {
     }
 
     if (index === 3 || index === 4) {
-      console.log("1");
+      // console.log("1");
       if (pagestate % 2 == 0) {
         setoptbank(
           databackup?.sort((a, b) => b[sortVariable] - a[sortVariable])
@@ -231,7 +237,7 @@ const ANALYZECOUNTERPARTIES = (props) => {
 
   function openWindow(entity) {
     const getPopUpData = async () => {
-      console.log("hello");
+      // console.log("hello");
       const response = await postApi(
         "analyze/" + APIADDRESS.ANALYZECOUNTERPARTIESPOPUP,
         {
@@ -240,7 +246,7 @@ const ANALYZECOUNTERPARTIES = (props) => {
           account_number: acc_number,
         }
       );
-      console.log(response);
+      // console.log(response);
       setPopUpData(response);
     };
 
@@ -248,9 +254,9 @@ const ANALYZECOUNTERPARTIES = (props) => {
   }
 
   useEffect(() => {
-    console.log("called");
-    console.log(popupData);
-    console.log(buttonClicked);
+    // console.log("called");
+    // console.log(popupData);
+    // console.log(buttonClicked);
 
     if (popupData && buttonClicked === "open") {
       const newWindow = window.open("", "_blank");
@@ -265,6 +271,7 @@ const ANALYZECOUNTERPARTIES = (props) => {
       setbuttonClicked("closed");
     }
   }, [popupData]);
+  console.log(pagestate);
 
   return (
     <div>
@@ -283,13 +290,6 @@ const ANALYZECOUNTERPARTIES = (props) => {
           </h4>
           <table className="table1_counterparties">
             <thead className="table2_headers_counterparties">
-              {/* <tr>
-                <th colSpan={1}></th>
-                <th colSpan={2}>Transaction</th>
-                <th colSpan={2}>Number of transactions</th>
-                <th colSpan={4}>Debited amount</th>
-                <th colSpan={4}>Credit amount</th>
-              </tr> */}
               <tr>
                 {mainHeader.map((item, i) => {
                   return (
@@ -299,29 +299,7 @@ const ANALYZECOUNTERPARTIES = (props) => {
                   );
                 })}
               </tr>
-              {/* <tr>
-                <th className="entityClass">
-                  Entity{" "}
-                  <button
-                    className="filterButton_counterparties"
-                    onClick={() => filterData("debits")}
-                  >
-                    ⇅
-                  </button>
-                </th>
-                <th>From</th>
-                <th>To</th>
-                <th>Dr</th>
-                <th>Cr</th>
-                <th>Total</th>
-                <th>Average</th>
-                <th>Min</th>
-                <th>Max</th>
-                <th>Total</th>
-                <th>Average</th>
-                <th>Min</th>
-                <th>Max</th>
-              </tr> */}
+
               <tr>
                 {sub_headers.map((item, i) => {
                   return (
@@ -331,7 +309,29 @@ const ANALYZECOUNTERPARTIES = (props) => {
                         className="filterButton_counterparties"
                         onClick={() => filterData(item.variable, i)}
                       >
-                        ⇅
+                        {pagestate === 0 && <span className="gray">⇅</span>}
+                        {i === 0 &&
+                          pagestate !== 0 &&
+                          (i === index ? (
+                            pagestate % 2 === 0 ? (
+                              <span>🔼</span>
+                            ) : (
+                              <span>🔽</span>
+                            )
+                          ) : (
+                            <span className="gray">⇅</span>
+                          ))}
+                        {i !== 0 &&
+                          pagestate !== 0 &&
+                          (i === index ? (
+                            pagestate % 2 !== 0 ? (
+                              <span>🔼</span>
+                            ) : (
+                              <span>🔽</span>
+                            )
+                          ) : (
+                            <span className="gray">⇅</span>
+                          ))}
                       </button>
                     </th>
                   );
@@ -342,7 +342,7 @@ const ANALYZECOUNTERPARTIES = (props) => {
               {optbank?.map((item, i) => {
                 return (
                   <tr key={i}>
-                    <td>
+                    <td style={{ textAlign: "left" }}>
                       <button
                         className="button_monthwise"
                         onClick={() => {
@@ -356,16 +356,24 @@ const ANALYZECOUNTERPARTIES = (props) => {
                     </td>
                     <td>{item?.latest_txn}</td>
                     <td>{item?.oldest_txn}</td>
-                    <td>{item?.debits}</td>
-                    <td>{item?.credits}</td>
-                    <td>{item?.debited_amt_total}</td>
-                    <td>{item?.debited_amt_mthly}</td>
-                    <td>{item?.min_debit}</td>
-                    <td>{item?.max_debit}</td>
-                    <td>{item?.credited_amt_total}</td>
-                    <td>{item?.credited_amt_mthly}</td>
-                    <td>{item?.min_credit}</td>
-                    <td>{item?.max_credit}</td>
+                    <td style={{ textAlign: "right" }}>{item?.debits}</td>
+                    <td style={{ textAlign: "right" }}>{item?.credits}</td>
+                    <td style={{ textAlign: "right" }}>
+                      {item?.debited_amt_total}
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      {item?.debited_amt_mthly}
+                    </td>
+                    <td style={{ textAlign: "right" }}>{item?.min_debit}</td>
+                    <td style={{ textAlign: "right" }}>{item?.max_debit}</td>
+                    <td style={{ textAlign: "right" }}>
+                      {item?.credited_amt_total}
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      {item?.credited_amt_mthly}
+                    </td>
+                    <td style={{ textAlign: "right" }}>{item?.min_credit}</td>
+                    <td style={{ textAlign: "right" }}>{item?.max_credit}</td>
                   </tr>
                 );
               })}

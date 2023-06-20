@@ -173,6 +173,8 @@ def job():
 
     files = glob.glob(r"C:\Users\Abhishek\Desktop\pdf_files\*.pdf")
 
+    file_name=''
+
     for i in range(len(files)):
         print(files[i])
         fstype = bank_extraction(files[i])
@@ -185,9 +187,7 @@ def job():
             lead_id = file_name.split("\\")[0][:6]
 
 
-            # with connection.cursor() as cursor:
-            #     queryset = "INSERT INTO a5_kit.mysite_downloaded_file_details(lead_id, file_name,date ) VALUES(" + lead_id + ",'" + file_name + "," + now() + ");"
-            #     cursor.execute(queryset)
+
 
 
             u = downloaded_file_details(lead_id=lead_id,file_name=file_name, date=datetime.now())
@@ -201,65 +201,7 @@ def job():
             u.save()
             os.remove(files[i])
 
-        # elif fstype == 'SBI':
-        #     file_name = files[i].split('\\')[-1][:-4]
-        #
-        #     lead_id = file_name.split("\\")[0][:6]
-        #
-        #     u = failed_digitization(lead_id=lead_id, file_name=file_name)
-        #     u.save()
-        #     os.remove(files[i])
-        #
-        #     pass
-        #     # str(files[i])
-        #     #
-        #     # file_path = sbi_digitization(files[i])
-        #     # # response = s3.Bucket(bucket2).upload_file(file_path, Key=os.path.basename(file_path))
-        #     # os.remove(files[i])
-        #
-        # elif fstype == 'ICICI':
-        #     file_name = files[i].split('\\')[-1][:-4]
-        #
-        #     lead_id = file_name.split("\\")[0][:6]
-        #
-        #     u = failed_digitization(lead_id=lead_id,file_name=file_name)
-        #     u.save()
-        #     os.remove(files[i])
-        #
-        #     pass
-        #
-        #     # str(files[i])
-        #     #
-        #     # file_path = icici_digitization(files[i])
-        #     # # response = s3.Bucket(bucket2).upload_file(file_path, Key=os.path.basename(file_path))
-        #
-        #
-        # elif fstype == 'AXIS':
-        #     file_name = files[i].split('\\')[-1][:-4]
-        #
-        #     lead_id = file_name.split("\\")[0][:6]
-        #
-        #     u = failed_digitization(lead_id=lead_id, file_name=file_name)
-        #     u.save()
-        #     os.remove(files[i])
-        #     pass
-        #     # file_path = axis_digitization(files[i])
-        #     # # response = s3.Bucket(bucket2).upload_file(file_path, Key=os.path.basename(file_path))
-        #     # os.remove(files[i])
 
-        # elif fstype == 'Corporation':
-        #     file_name = files[i].split('\\')[-1][:-4]
-        #     lead_id = file_name.split("\\")[0][:6]
-        #     u = failed_digitization(lead_id=lead_id,file_name=file_name)
-        #     u.save()
-        #
-        #     os.remove(files[i])
-        #
-        #     pass
-        #
-        #     # file_path = corporation_digitization(files[i],'')
-        #     # # response = s3.Bucket(bucket2).upload_file(file_path, Key=os.path.basename(file_path))
-        #     # os.remove(files[i])
 
         for filename in os.listdir(csv_path):
             lead_id = filename.split("\\")[0][:6]
@@ -283,7 +225,7 @@ def job():
                                       credit=row[4], balance=row[5], account_name=row[6], account_number=row[7],
                                       mode=row[8], entity=row[9], source_of_trans=row[10], sub_mode=row[11],
                                       transaction_type=row[12], bank_name=row[13], lead_id=lead_id,
-                                      creation_time=timestamp)
+                                      creation_time=timestamp, file_name=file_name)
 
                         u.save()
 

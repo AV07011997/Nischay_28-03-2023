@@ -103,3 +103,20 @@
   width: 92%;
   margin-left: 4%;
 }
+.delete_option_upoad {
+  margin-left: 47%;
+  margin-top: 60px;
+  border-radius: 100px;
+}
+.delete_option_upoad_text {
+  /* margin-bottom: 12px; */
+  /* height: 100%; */
+  /* margin: 0; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: top;
+}
+.delete_option_upoad_button {
+  border-radius: 10%;
+}

@@ -13,7 +13,10 @@ import ScrollToTop from "../../utilities/moveToTop/moveToTop";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+// import Typography from "@mui/material/Typography";
+// import { redirect } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = ({ setinfo }) => {
   var [table, settable] = useState([]);
@@ -31,15 +34,17 @@ const LandingPage = ({ setinfo }) => {
 
   const [isHovering, setIsHovering] = useState(false);
 
+  const navigate = useNavigate();
+
   const tableheaders = [
     { value: "LMS Updates", colspan: "3" },
-    { value: "Bank statements updates", colspan: "2" },
+    { value: "Bank Statements Updates", colspan: "2" },
     { value: "Bureau Updates", colspan: "2" },
   ];
 
   const tablesubheaders = [
-    "Lead id selection",
-    "Customer name",
+    "Lead ID Selection",
+    "Customer Name",
     "Creation Time",
     "Uploaded",
     "Digitized",
@@ -147,11 +152,17 @@ const LandingPage = ({ setinfo }) => {
       color: "#ffffff",
       maxWidth: 220,
       fontSize: theme.typography.pxToRem(13),
+
       // border: "1px solid #dadde9",
     },
   }));
 
   console.log(table);
+
+  const redirect_to_upload = (radio, name, uploadcount) => {
+    // navigate("/upload");
+    navigate(`/upload/${radio}/${name}/${uploadcount}`);
+  };
   return (
     <div>
       <NavBar
@@ -227,8 +238,12 @@ const LandingPage = ({ setinfo }) => {
                             <td>{item.bank_uploaded}</td>
                             {/* <td>{item.bank_download}</td> */}
                             <td className="digitizedtd">
-                              <div className="hover_text">
+                              <div
+                                className="hover_text"
+                                style={{ marginLeft: "44px" }}
+                              >
                                 {item.bank_download}
+                                <span style={{ marginLeft: "15px" }}></span>
 
                                 {item.bank_uploaded !== item.bank_download && (
                                   <HtmlTooltip
@@ -243,7 +258,23 @@ const LandingPage = ({ setinfo }) => {
                                       </React.Fragment>
                                     }
                                   >
-                                    <Button className="hover_button">
+                                    <Button
+                                      className="hover_button"
+                                      style={{
+                                        color: "blue",
+                                        background: "transparent",
+                                        border: "none",
+                                        padding: "0",
+                                        margin: "-23px",
+                                      }}
+                                      onClick={() => {
+                                        redirect_to_upload(
+                                          radio,
+                                          name,
+                                          uploadcount
+                                        );
+                                      }}
+                                    >
                                       {item.failed_count === 0 ? (
                                         <FiInfo></FiInfo>
                                       ) : (

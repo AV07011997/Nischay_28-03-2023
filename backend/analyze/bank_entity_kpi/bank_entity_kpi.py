@@ -8,6 +8,7 @@ def bek(data):
 
   df['debit'] = df['debit'].replace(0, np.nan)
   df['credit'] = df['credit'].replace(0, np.nan)
+
   df['entity'] = df['entity'].apply(lambda x : x.strip())
   df['txn_date'] = pd.to_datetime(df['txn_date'], format='%Y-%m-%d')
   df['month_year'] = df['txn_date'].dt.month.astype(str)+'-'+df['txn_date'].dt.year.astype(str)
@@ -19,14 +20,39 @@ def bek(data):
   end = df['txn_date'].max() #transactions_till
   tot_entities = df.entity.nunique() #count of entities transacted with
 
+  # df2 = df.copy()
+  # df2['debit'] = df['debit'].astype(float)
+  # df2['credit'] = df['credit'].astype(float)
+  # df2['entity'].fillna('Other Transactions', inplace=True)
+  # a = df2.groupby('entity', as_index=False)
+  #
+  # v1 = a.debit.count().rename(columns={'debit':'debits'}) #count debits
+  # # v1 = a[a['credit'] == 0].debit.count().rename('debits')
+  #
+  # v2 = a.credit.count().rename(columns={'credit':'credits'}) #count credits
+  # # v2 = a[a['debit'] == 0].credit.count().rename('credits')
+
   df2 = df.copy()
+
   df2['debit'] = df['debit'].astype(float)
-  df2['credit'] = df['debit'].astype(float)
+
+  df2['credit'] = df['credit'].astype(float)
+
   df2['entity'].fillna('Other Transactions', inplace=True)
+
   a = df2.groupby('entity', as_index=False)
 
-  v1 = a.debit.count().rename(columns={'debit':'debits'}) #count debits
-  v2 = a.credit.count().rename(columns={'credit':'credits'}) #count credits
+  tempDebt = df2[df2['debit'] > 0].groupby('entity', as_index=False)
+
+  tempCredit = df2[df2['credit'] > 0].groupby('entity', as_index=False)
+
+  v1 = tempDebt.debit.count().rename(columns={'debit': 'debits'})  # count debits
+
+  v2 = tempCredit.credit.count().rename(columns={'credit': 'credits'})  # count credits
+
+
+
+
 
   # v3 = a.debit.sum().rename(columns={'debit':'debited_amt_total'}) #total debit (sum)
   v3 = df2.groupby('entity', as_index=False)['debit'].sum().rename(columns={'debit': 'debited_amt_total'})

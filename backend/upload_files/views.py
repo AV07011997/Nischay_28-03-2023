@@ -28,7 +28,7 @@ def upload_statements(request, text):
         queryset1 = los_did_cid_generation.objects.all().filter(lead_id=text).values("lead_id", "name")
         data1 = pd.DataFrame(list(queryset1))
 
-        queryset2 = upload_file_details.objects.all().filter(lead_id=text).values("file_name", "date")
+        queryset2 = upload_file_details.objects.all().filter(lead_id=text).values("file_name", "date","status")
         data2 = pd.DataFrame(list(queryset2))
         data2['date'] = data2['date'].dt.strftime('%B %d, %Y')
         data2['date'] = data2['date'].astype(str)
@@ -159,3 +159,44 @@ def uploadBankStatments(request):
         return HttpResponse("1")
     else:
         print("No files available")
+
+
+def delete_file(request):
+    key1 = request.POST.get('data')
+    # Convert the JSON data into a list of dictionaries
+    data_list = json.loads(key1)
+
+    # Convert the list of dictionaries to a DataFrame
+    df = pd.DataFrame(data_list)
+
+    for fileName in df['file_name']:
+        str(fileName)
+        fileName = fileName[:-4]
+        # Perform operations on each value
+        with connection.cursor() as cursor:
+            # Perform the delete operation
+            query = "DELETE FROM `a5_kit`.`mysite_bank_bank` WHERE file_name LIKE %s;"
+            pattern = '%'+fileName+'%'  # Replace 'substring' with your desired pattern
+            cursor.execute(query, [pattern])
+
+        with connection.cursor() as cursor:
+            # Perform the update operation
+            query = "UPDATE a5_kit.mysite_upload_file_details SET status = 'Deleted' WHERE file_name LIKE %s;"
+            pattern = '%' + fileName + '%'  # Replace 'substring' with your desired pattern
+            cursor.execute(query, [pattern])
+
+        with connection.cursor() as cursor:
+            # Perform the delete operation
+            query = "DELETE FROM `a5_kit`.`mysite_downloaded_file_details` WHERE file_name LIKE %s;"
+            pattern = '%'+fileName+'%'  # Replace 'substring' with your desired pattern
+            cursor.execute(query, [pattern])
+
+
+        print(fileName)
+
+    # with connection.cursor() as cursor:
+    #     cursor.execute(
+    #         "SELECT account_number, bank_name, min(txn_date) as from_date, max(txn_date) as to_date  FROM a5_kit.mysite_bank_bank WHERE lead_id = " + str(
+    #             lead_id) + " GROUP BY account_number" + ";")
+
+    return HttpResponse("1")

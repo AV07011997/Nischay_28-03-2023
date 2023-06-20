@@ -7,7 +7,7 @@ import squarify
 from django.conf import settings
 from babel.numbers import format_currency
 from CONSTANT import path_digitized_folder,path_pdf_files_folder,path_static_files
-
+from babel.numbers import format_currency
 def bck(data):
   df = data
   df['txn_date'] = pd.to_datetime(df['txn_date'], format='%Y-%m-%d')
@@ -146,9 +146,16 @@ def bck(data):
   plt.switch_backend('Agg')
   def annotate_plot(frame, plot_col, label_col, **kwargs):
     for label, x, y in zip(frame[label_col], frame.index, frame[plot_col]):
-      plt.annotate(format_currency(label, 'INR', locale='en_IN').split('.')[0], xy=(x, y), **kwargs, weight='bold')
+      currency_label = format_currency(label, 'INR', locale='en_IN')
+      formatted_label = currency_label.replace('₹', '₹ ')
+      plt.annotate(formatted_label.split('.')[0], xy=(x, y), **kwargs, weight='bold')
+    # for label, x, y in zip(frame[label_col], frame.index, frame[plot_col]):
+    #   plt.annotate(format_currency(label, 'INR', locale='en_IN').split('.')[0], xy=(x, y), **kwargs, weight='bold')
+
 
   plt.figure(figsize=(12, 6))
+
+
 
   # plt.yticks(range(min(df3['Closing Balance']), max(df3['Closing Balance'])+1))
   plt.plot(df3['Month'], df3['Closing Balance'], color='#ee8a11', marker='o', linewidth=3)
@@ -157,7 +164,7 @@ def bck(data):
   # ax.get_yaxis().get_major_formatter().set_scientific(False)
   annotate_plot(df3, 'Closing Balance', 'Closing Balance')
   plt.title('Closing Balance Monthly Trend',fontdict={'fontsize': 20, 'fontweight': 'bold'})
-  plt.xlabel('Month-Year', fontsize=14)
+  # plt.xlabel('Month-Year', fontsize=14)
   plt.ylabel('Closing Balance', fontsize=14)
   plt.xticks(fontsize=12)
   plt.yticks(fontsize=12)

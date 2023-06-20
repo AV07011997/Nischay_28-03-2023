@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 const Upload = () => {
   var [table, settable] = useState();
   var [table1, settable1] = useState();
-
+  const [deleteFileList, setDeleteFileList] = useState();
   const [mergefiles, setmergefiles] = useState();
   const navigate = useNavigate();
   const params = useParams();
@@ -46,7 +46,9 @@ const Upload = () => {
   };
 
   useEffect(() => {
-    getApi(APIADDRESS.UPLOADSTATEMENT + radiovalue + "/").then((response) => {
+    getApi(
+      APIADDRESS.UPLOADSTATEMENT + localStorage.getItem("leadID") + "/"
+    ).then((response) => {
       if (response) {
         console.log(response);
         if (response[1]) {
@@ -60,7 +62,7 @@ const Upload = () => {
       }
     });
   }, []);
-  console.log(table1);
+  // console.log(table1);
   var newFiles = [];
   var pdfurl = [];
 
@@ -89,6 +91,7 @@ const Upload = () => {
     columns: [
       { title: "File Name", field: "file_name" },
       { title: "Date", field: "date" },
+      { title: "Status", field: "status" },
     ],
   };
 
@@ -100,7 +103,6 @@ const Upload = () => {
       }
     }
   }, [table]);
-  // console.log(table);
 
   const uplooadfiles = () => {
     var repeatnumber = 0;
@@ -160,6 +162,24 @@ const Upload = () => {
     }
     setmergefiles(localmergedfile);
   };
+  const deleteFiles = async () => {
+    var jsonData = JSON.stringify(deleteFileList);
+
+    console.log(deleteFileList);
+    const response = await postApi(
+      "upload_file/" + APIADDRESS.UPLOADEDFILESDELETE,
+      {
+        data: jsonData,
+      }
+    );
+    console.log(response);
+    if (response == 1) {
+      alert("File(s) successfully deleted");
+      window.location.reload();
+    }
+  };
+
+  postApi(APIADDRESS.UPDATEUPLOADLIST, {}).then((res) => {});
 
   return (
     <div>
@@ -178,11 +198,25 @@ const Upload = () => {
         onChange={handleFile}
       />
 
+      {deleteFileList?.length > 0 && (
+        <div className="delete_option_upoad">
+          <button className="delete_option_upoad_button" onClick={deleteFiles}>
+            <AiFillDelete size={30} style={{ color: "red" }}></AiFillDelete>{" "}
+            <span className="delete_option_upoad_text">
+              Delete selected files
+            </span>
+          </button>
+        </div>
+      )}
+
       <div className="upload_table">
         <MaterialTable
           title="Upload table Records"
           columns={state.columns}
           data={table}
+          options={{
+            selection: true,
+          }}
           actions={[
             {
               icon: () => {
@@ -201,6 +235,7 @@ const Upload = () => {
               },
             },
           ]}
+          onSelectionChange={(rows) => setDeleteFileList(rows)}
         />
       </div>
 

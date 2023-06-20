@@ -5,26 +5,23 @@ import NavBar from "../../../../utilities/navbar/navbar";
 import SELECTBANKCUSTOMER from "../../../../utilities/selectBankCustomer/selectBankCustomer";
 import { Loader } from "rsuite";
 
-const addSpaceAfterRupee = (data) => {
-  const modifiedData = {};
+const NumberWithRupees = ({ value }) => {
+  // Convert the value to a numeric format
+  const numericValue = parseFloat(value);
 
-  for (let key in data) {
-    if (data.hasOwnProperty(key)) {
-      const value = data[key];
-      let modifiedValue = value;
+  // Check if the value is valid and not NaN
+  if (!isNaN(numericValue)) {
+    // Format the value with rupees sign and thousands separator
+    const formattedValue = numericValue.toLocaleString("en-IN", {
+      style: "currency",
+      currency: "INR",
+    });
 
-      if (typeof value === "string" && value.includes("₹")) {
-        modifiedValue = value.replace(/₹(\d+)/g, "₹ $1");
-        if (modifiedValue === "₹ 0") {
-          modifiedValue = "0";
-        }
-      }
-
-      modifiedData[key] = modifiedValue;
-    }
+    return <span>{formattedValue}</span>;
   }
 
-  return modifiedData;
+  // Return the original value if it's not a valid number
+  return <span>{value}</span>;
 };
 
 function NewComponent(props) {
@@ -162,18 +159,6 @@ const AnalyzeBankSummary = (leadID) => {
 
   //function to put space after rupee symbol
 
-  if (info) {
-    const data1_modified1 = addSpaceAfterRupee(info.data1);
-    info.data1 = data1_modified1;
-    const data1_modified2 = addSpaceAfterRupee(info.data3);
-    info.data3 = data1_modified2;
-    const data1_modified5 = addSpaceAfterRupee(info.data5);
-    info.data5 = data1_modified5;
-    // const data1_modified3 = addSpaceAfterRupee(info.data4);
-
-    console.log(data1_modified1);
-  }
-
   return (
     <div>
       <NavBar></NavBar>
@@ -184,7 +169,7 @@ const AnalyzeBankSummary = (leadID) => {
             <thead className="thead_table1_monthwise">
               <tr>
                 <th rowSpan={2}>Account Number</th>
-                <th rowSpan={2}>Bank Name number</th>
+                <th rowSpan={2}>Bank Name </th>
                 <th colSpan="2">Transactions</th>
               </tr>
               <tr>
@@ -267,8 +252,8 @@ const AnalyzeBankSummary = (leadID) => {
             justifyContent: "space-between",
           }}
         >
-          <span style={{ marginLeft: "10px" }}>Opening Balance</span>
-          <span style={{ marginLeft: "3px" }}>
+          <span style={{ marginLeft: "10px" }}>Balance</span>
+          <span style={{ marginLeft: "63px" }}>
             {info?.data5.Opening_Balance}
           </span>
           <span style={{ marginLeft: "18px" }}>-</span>
@@ -418,7 +403,7 @@ const AnalyzeBankSummary = (leadID) => {
                     Lowest Credit Amount
                   </td>
                   <td style={{ textAlign: "right" }}>
-                    ₹ {info.data3.Lowest_Debit_Amount}{" "}
+                    {info.data3.Lowest_Debit_Amount}{" "}
                   </td>
                 </tr>
                 <tr>
@@ -474,7 +459,7 @@ const AnalyzeBankSummary = (leadID) => {
                         openWindow("debit", info.data3.Lowest_Debit_Amount_Org);
                       }}
                     >
-                      {info.data3.Lowest_Debit_Amount_Org}
+                      {"₹ "} {info.data3.Lowest_Debit_Amount_Org}
                     </button>
                   </td>
                 </tr>
@@ -542,7 +527,6 @@ const AnalyzeBankSummary = (leadID) => {
                         );
                       }}
                     >
-                      ₹{" "}
                       {info.data4.Min_Amt_Chq_Bounce
                         ? info.data4.Min_Amt_Chq_Bounce
                         : "N/A"}{" "}
@@ -577,10 +561,14 @@ const AnalyzeBankSummary = (leadID) => {
                         );
                       }}
                     >
-                      ₹{" "}
-                      {info.data4.Latest_Chq_Bounce.length > 0
-                        ? info.data4.Latest_Chq_Bounce
-                        : "N/A"}{" "}
+                      {info.data4.Latest_Chq_Bounce.length > 0 ? (
+                        // ? "₹ " + info.data4.Latest_Chq_Bounce
+                        <NumberWithRupees
+                          value={info.data4.Latest_Chq_Bounce}
+                        />
+                      ) : (
+                        "N/A"
+                      )}{" "}
                     </button>
                   </td>
                 </tr>
@@ -657,7 +645,7 @@ const AnalyzeBankSummary = (leadID) => {
                     >
                       {info.data4.Num_Charges_Levied
                         ? info.data4.Num_Charges_Levied
-                        : "None"}{" "}
+                        : "N/A"}{" "}
                     </button>
                   </td>
                 </tr>
