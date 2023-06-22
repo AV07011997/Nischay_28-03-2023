@@ -4,12 +4,34 @@ import { postApi } from "../../../../callapi";
 import "./statement.css";
 import { APIADDRESS } from "../../../../constants/constants";
 import { Loader } from "rsuite";
+import { useRef } from "react";
 const AnalyzeStatement = (leadID) => {
   const [table, setTable] = useState();
   const [table1, settable1] = useState();
   const [table2, settable2] = useState();
   const [from, setfrom] = useState();
   const [to, setto] = useState();
+  const debitFromInputRef = useRef(null);
+  const debitToInputRef = useRef(null);
+  const txnFromInputRef = useRef(null);
+  const txnToInputRef = useRef(null);
+  const creditFromInputRef = useRef(null);
+  const creditToInputRef = useRef(null);
+  const balFromInputRef = useRef(null);
+  const balToInputRef = useRef(null);
+
+  const resetForm = () => {
+    debitFromInputRef.current.value = ""; // Resetting the input value directly
+    debitToInputRef.current.value = ""; // Resetting the input value directly
+    txnFromInputRef.current.value = ""; // Resetting the input value directly
+    txnToInputRef.current.value = ""; // Resetting the input value directly
+    creditFromInputRef.current.value = ""; // Resetting the input value directly
+    creditToInputRef.current.value = ""; // Resetting the input value directly
+    balFromInputRef.current.value = ""; // Resetting the input value directly
+    balToInputRef.current.value = ""; // Resetting the input value directly
+
+    settable1(table2);
+  };
 
   useEffect(() => {
     postApi("analyze/" + APIADDRESS.ANALYZEBANKSUMMARY, {
@@ -35,11 +57,11 @@ const AnalyzeStatement = (leadID) => {
     });
     if (document.getElementById("txn_date_from").value) {
       txn_from = document.getElementById("txn_date_from").value;
+      // console.log(txn_from);
     }
     if (document.getElementById("txn_date_to").value) {
       txn_to = document.getElementById("txn_date_to").value;
     }
-    // console.log(txn_from, txn_to);
     // console.log(typeof document.getElementById("txn_date_to").value);
 
     var debit_from = "0.0";
@@ -92,10 +114,33 @@ const AnalyzeStatement = (leadID) => {
       ).value;
     }
     // console.log(debit_from, debit_to);
+    console.log(txn_from, txn_to);
 
-    const parts_from = txn_from.split("/");
+    var parts_from;
 
-    const parts_to = txn_to.split("/");
+    if (txn_from.includes("/")) {
+      parts_from = txn_from.split("/");
+    } else {
+      const [year, month, day] = txn_from.split("-");
+
+      parts_from = [day.toString(), month.toString(), year.toString()];
+    }
+
+    // parts_from = parts_from.toString();
+    // parts_from = parts_from.replace(/-/g, "/");
+    // const newDateString = `${parts_from[0]}/${parts_from[1]}/${parts_from[2]}`;
+
+    console.log(parts_from);
+    var parts_to;
+    if (txn_to.includes("/")) {
+      parts_to = txn_to.split("/");
+    } else {
+      const [year, month, day] = txn_to.split("-");
+
+      parts_to = [day.toString(), month.toString(), year.toString()];
+    }
+    console.log(parts_to);
+    // const parts_to = txn_to.split("/");
     // console.log(parts_to[0]);
     // console.log(parts_from[0]);
 
@@ -107,10 +152,38 @@ const AnalyzeStatement = (leadID) => {
     const filteredData = [];
 
     if (txn_from && txn_to) {
+      // console.log(parts_from, parts_to);
       for (let item of convertedData) {
-        // console.log(item);
-        if (item.txn_date >= parts_from[0] && item.txn_date <= parts_to[0]) {
-          // console.log("ok");
+        // console.log(parts_from, parts_to);
+
+        const parts = item.txn_date.split("-");
+        const formattedDate = `${parts[0]}-${parts[1]}-${parts[2]}`;
+        const actualDate = new Date(formattedDate);
+
+        const formattedDateFrom = `${parts_from[0]}-${parts_from[1]}-${parts_from[2]}`;
+        const dateArrayFrom = formattedDateFrom.split("-");
+        const actualDateFrom = new Date(
+          dateArrayFrom[2],
+          dateArrayFrom[1] - 1,
+          dateArrayFrom[0]
+        );
+
+        // const formattedDateTo = `${parts_to[0]}/${parts_to[1]}/${parts_to[2]}`;
+        const formattedDateTo = `${parts_to[0]}-${parts_to[1]}-${parts_to[2]}`;
+        const dateArrayTo = formattedDateTo.split("-");
+        const actualDateTo = new Date(
+          dateArrayTo[2],
+          dateArrayTo[1] - 1,
+          dateArrayTo[0]
+        );
+        console.log(dateArrayTo);
+
+        // console.log(actualDateFrom, actualDateTo);
+        // console.log(formattedDate);
+        // console.log(formattedDateFrom, formattedDateTo);
+
+        if (actualDate >= actualDateFrom && actualDate <= actualDateTo) {
+          console.log("ok");
           filteredData.push(item);
         }
       }
@@ -186,7 +259,7 @@ const AnalyzeStatement = (leadID) => {
         document?.getElementById("debit_amount_to").value
       ) {
         console.log("called");
-        // console.log(convertedDataFinal);
+        console.log(convertedDataFinal);
         // console.log(debit_from, debit_to);
 
         const convertedDataFinalDebit = filterOnDebit(
@@ -460,6 +533,7 @@ const AnalyzeStatement = (leadID) => {
     });
   };
   // console.log(table1);
+
   return (
     <div>
       <NavBar></NavBar>
@@ -536,12 +610,14 @@ const AnalyzeStatement = (leadID) => {
               style={{ width: "25.5%" }}
               type="date"
               id="txn_date_from"
+              ref={txnFromInputRef}
             ></input>
             <span>&nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;</span>
             <input
               style={{ width: "25.5%" }}
               type="date"
               id="txn_date_to"
+              ref={txnToInputRef}
             ></input>
           </div>
           <div className="filter_element">
@@ -550,9 +626,17 @@ const AnalyzeStatement = (leadID) => {
               Debited Amount
             </h6>
             <span>From&nbsp;&nbsp;&nbsp;</span>
-            <input type="text" id="debit_amount_from"></input>
+            <input
+              type="text"
+              id="debit_amount_from"
+              ref={debitFromInputRef}
+            ></input>
             <span>&nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;</span>
-            <input type="text" id="debit_amount_to"></input>
+            <input
+              type="text"
+              id="debit_amount_to"
+              ref={debitToInputRef}
+            ></input>
           </div>
 
           <div className="filter_element">
@@ -560,9 +644,17 @@ const AnalyzeStatement = (leadID) => {
               Credited Amount
             </h6>
             <span>From&nbsp;&nbsp;&nbsp;</span>
-            <input type="text" id="credit_amount_from"></input>
+            <input
+              type="text"
+              id="credit_amount_from"
+              ref={creditFromInputRef}
+            ></input>
             <span>&nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;</span>
-            <input type="text" id="credit_amount_to"></input>
+            <input
+              type="text"
+              id="credit_amount_to"
+              ref={creditToInputRef}
+            ></input>
           </div>
 
           <div className="filter_element">
@@ -571,9 +663,17 @@ const AnalyzeStatement = (leadID) => {
               Closing Balance Amount
             </h6>
             <span>From&nbsp;&nbsp;&nbsp;</span>
-            <input type="text" id="closing_balance_amount_from"></input>
+            <input
+              type="text"
+              id="closing_balance_amount_from"
+              ref={balFromInputRef}
+            ></input>
             <span>&nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;</span>
-            <input type="text" id="closing_balance_amount_to"></input>
+            <input
+              type="text"
+              id="closing_balance_amount_to"
+              ref={balToInputRef}
+            ></input>
           </div>
           <br></br>
           <div className="submit_statement">
@@ -586,8 +686,20 @@ const AnalyzeStatement = (leadID) => {
               Submit
             </button>
           </div>
+          <div>
+            <button
+              // className="resetButton"
+              className="custom-button"
+              onClick={() => {
+                resetForm();
+              }}
+            >
+              Reset
+            </button>
+          </div>
         </div>
       )}
+
       {table1 && (
         <div className="div_table1_monthwise">
           <table className="table1_monthwise">

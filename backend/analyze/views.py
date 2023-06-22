@@ -705,7 +705,7 @@ def bank_customer_kpi(request):
                     KPI2['Lowest_Debit_Amount'] = KPI2['Lowest_Debit_Amount'].apply(lambda x: str(x).split('.')[0])
 
 
-                    KPI3['Min_Amt_Chq_Bounce'] = KPI3['Min_Amt_Chq_Bounce'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    # KPI3['Min_Amt_Chq_Bounce'] = KPI3['Min_Amt_Chq_Bounce'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
                     # KPI3['Latest_Chq_Bounce'] = KPI3['Latest_Chq_Bounce'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
                     # KPI3['Latest_Chq_Bounce']=KPI3['Latest_Chq_Bounce'].astype(str)
 
@@ -1826,8 +1826,10 @@ def bank_entity(request):
         data = pd.DataFrame(data)
 
         filtered_data = data[data['lead_id'] == lead_id]
-        filtered_data = filtered_data[data['entity'] == entity]
-        filtered_data = filtered_data[data['account_number'] == accno]
+        filtered_data=filtered_data[filtered_data['account_number']==accno]
+        entity = entity.strip()
+        filtered_data=filtered_data[filtered_data['entity']==entity]
+
 
         data=filtered_data
 

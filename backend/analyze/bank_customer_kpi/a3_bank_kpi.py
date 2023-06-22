@@ -8,6 +8,7 @@ from django.conf import settings
 from babel.numbers import format_currency
 from CONSTANT import path_digitized_folder,path_pdf_files_folder,path_static_files
 from babel.numbers import format_currency
+import calendar
 def bck(data):
   df = data
   df['txn_date'] = pd.to_datetime(df['txn_date'], format='%Y-%m-%d')
@@ -41,7 +42,7 @@ def bck(data):
   
   a = df2.groupby('month_year')['balance'].mean()
 
-  avg_mthly_bal = a.sum()/a.shape[0]
+  avg_mthly_bal = AverageMonthlyBalance(df2)
 
   df['debit']=df['debit'].astype(float)
   a=df.loc[df.debit.notnull(),:].groupby('month_year').debit.mean()
@@ -239,3 +240,69 @@ def bck(data):
   plt.savefig(path)
 
   return table,table1,table2,table3,table4
+
+def AverageMonthlyBalance(df):
+
+    monthly_df = df.groupby('month_year')
+
+    AverageBalance = []
+
+    for group_name, group_df in monthly_df:
+      new_df = pd.DataFrame(group_df)
+
+      AverageBalance.append(CalculationsMonthly(new_df))
+
+    return np.mean(AverageBalance)
+
+
+def assign_non_zero_to_previous_zeros(array):
+  non_zero_found = False
+
+  non_zero_value = None
+
+  for i in range(len(array)):
+
+    if array[i] != 0:
+      non_zero_found = True
+
+      non_zero_value = array[i]
+
+    if non_zero_found and array[i] == 0:
+      array[i] = non_zero_value
+
+  return array
+
+
+def CalculationsMonthly(DF):
+  month = (DF['date'].iloc[0]).month
+
+  year = (DF['date'].iloc[0]).year
+
+  days_in_month = calendar.monthrange(year, month)[1]
+
+  monthly_balance_array = np.zeros(days_in_month)
+
+  final_records = DF.groupby('date').last().reset_index()
+
+  final_records['day'] = final_records['date'].apply(lambda x: x.day)
+
+  for index, row in final_records.iterrows():
+    # Access individual row elements
+
+    monthly_balance_array[row['day'] - 1] = row['balance']
+
+  prevMaxBal = 0
+
+  monthly_balance_array = assign_non_zero_to_previous_zeros(monthly_balance_array)
+
+  for i in range(len(monthly_balance_array)):
+
+    if (monthly_balance_array[i] == 0):
+
+      monthly_balance_array[i] = prevMaxBal
+
+    else:
+
+      prevMaxBal = monthly_balance_array[i]
+
+  return np.mean(monthly_balance_array)

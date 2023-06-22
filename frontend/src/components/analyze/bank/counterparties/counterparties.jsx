@@ -113,11 +113,11 @@ const ANALYZECOUNTERPARTIES = (props) => {
     { variable: "debits", column_name: "Dr" },
     { variable: "credits", column_name: "Cr" },
     { variable: "debited_amt_total", column_name: "Total" },
-    { variable: "debited_amt_mthly", column_name: "Average" },
+    { variable: "debited_amt_mthly", column_name: "Monthly Average" },
     { variable: "min_debit", column_name: "Min" },
     { variable: "max_debit", column_name: "Max" },
     { variable: "credited_amt_total", column_name: "Total" },
-    { variable: "credited_amt_mthly", column_name: "Average" },
+    { variable: "credited_amt_mthly", column_name: "Monthly Average" },
     { variable: "min_credit", column_name: "Min" },
     { variable: "max_credit", column_name: "Max" },
   ];
@@ -271,7 +271,8 @@ const ANALYZECOUNTERPARTIES = (props) => {
       setbuttonClicked("closed");
     }
   }, [popupData]);
-  console.log(pagestate);
+  // console.log(pagestate);
+  console.log(optbank);
 
   return (
     <div>
@@ -354,8 +355,8 @@ const ANALYZECOUNTERPARTIES = (props) => {
                         {item?.entity}
                       </button>
                     </td>
-                    <td>{item?.latest_txn}</td>
                     <td>{item?.oldest_txn}</td>
+                    <td>{item?.latest_txn}</td>
                     <td style={{ textAlign: "right" }}>{item?.debits}</td>
                     <td style={{ textAlign: "right" }}>{item?.credits}</td>
                     <td style={{ textAlign: "right" }}>
