@@ -20,7 +20,7 @@ from django.db import connection
 def upload_statements(request, text):
     queryset = upload_file_details.objects.all().values("lead_id", "name").annotate(Count("lead_id")).filter(
         lead_id=text)
-    queryset3 = upload_file_details.objects.all().values("lead_id", "file_name", "name")
+    queryset3 = upload_file_details.objects.all().values("lead_id", "file_name", "name","status")
     if (queryset):
         data = pd.DataFrame(list(queryset))
         data3 = pd.DataFrame(list(queryset3))

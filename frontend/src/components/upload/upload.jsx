@@ -50,7 +50,7 @@ const Upload = () => {
       APIADDRESS.UPLOADSTATEMENT + localStorage.getItem("leadID") + "/"
     ).then((response) => {
       if (response) {
-        console.log(response);
+        // console.log(response);
         if (response[1]) {
           table = objectFunction(response[1]);
           settable(table);
@@ -109,11 +109,17 @@ const Upload = () => {
     var repeateddocuments = {};
     var repeatfiles = [];
 
-    for (let filesDataBase of table1) {
+    for (let filesDataBase of table) {
       // console.log(filesDataBase);
       for (let newFiles in mergefiles) {
-        // console.log(mergefiles[newFiles][0]);
-        if (filesDataBase.file_name == mergefiles[newFiles][0].name) {
+        console.log(table1);
+        console.log(table);
+
+        if (
+          filesDataBase.file_name == mergefiles[newFiles][0].name &&
+          filesDataBase.status != "Deleted"
+          // JSON.stringify(filesDataBase.lead_id) == JSON.stringify(radiovalue)
+        ) {
           repeatnumber = repeatnumber + 1;
           let repeatfilesvariable =
             "File Name: " +
@@ -165,14 +171,14 @@ const Upload = () => {
   const deleteFiles = async () => {
     var jsonData = JSON.stringify(deleteFileList);
 
-    console.log(deleteFileList);
+    // console.log(deleteFileList);
     const response = await postApi(
       "upload_file/" + APIADDRESS.UPLOADEDFILESDELETE,
       {
         data: jsonData,
       }
     );
-    console.log(response);
+    // console.log(response);
     if (response == 1) {
       alert("File(s) successfully deleted");
       window.location.reload();
