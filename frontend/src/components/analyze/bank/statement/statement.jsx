@@ -137,7 +137,11 @@ const AnalyzeStatement = (leadID) => {
     } else {
       const [year, month, day] = txn_to.split("-");
 
-      parts_to = [day.toString(), month.toString(), year.toString()];
+      parts_to = [
+        (parseInt(day) + 1).toString(),
+        month.toString(),
+        year.toString(),
+      ];
     }
     console.log(parts_to);
     // const parts_to = txn_to.split("/");

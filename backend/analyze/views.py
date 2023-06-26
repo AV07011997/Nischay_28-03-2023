@@ -152,10 +152,12 @@ def bank_customer_month_kpi(request):
                     'sub_mode',
                     'entity',
                     'source_of_trans',
-                    'description'
+                    'description',
+                    'lead_id'
                 )
 
                 data1 = pd.DataFrame(data1)
+                data1=data1[data1['lead_id']==lead_id]
                 # print(data1)
                 KPI = KPIs(data1)
                 # print(KPI)
@@ -601,10 +603,14 @@ def bank_customer_kpi(request):
                     n = "'%" + n[1:-1] + "%'"
                     # print(n)
                     p1 = 'q'       
-                    cursor.execute("SELECT txn_date, credit, debit, balance, account_number, account_name, mode, sub_mode, entity, source_of_trans, description, transaction_type FROM mysite_bank_bank WHERE account_number like " + n  +";")
+                    cursor.execute("SELECT txn_date, credit, debit, balance, account_number, account_name, mode, sub_mode, entity, source_of_trans, description, transaction_type,lead_id FROM mysite_bank_bank WHERE account_number like " + n  +";")
                     data1 = dictfetchall(cursor)
-                                
+
+
                     data1 = pd.DataFrame(data1)
+                    lead_id_str=str(lead_id)
+                    data1 = data1[data1['lead_id'] == lead_id_str]
+
                     print('output from views')
                     print(data1['account_number'])
                     KPI = bck(data1)
@@ -1899,6 +1905,8 @@ def bank_entity_kpi(request):
                     cursor1.execute("SELECT * FROM mysite_bank_bank WHERE account_number like " + n + ";")
                     data1 = dictfetchall(cursor1)
                     data1 = pd.DataFrame(data1)
+                    data1 = data1[data1['lead_id'] == lead_id]
+
                     KPI = bek(data1)
 
                     KPI['debits'] = KPI['debits'].fillna(0)
