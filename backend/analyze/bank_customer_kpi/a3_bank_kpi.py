@@ -44,12 +44,15 @@ def bck(data):
 
   avg_mthly_bal = AverageMonthlyBalance(df2)
 
+  
   df['debit']=df['debit'].astype(float)
-  a=df.loc[df.debit.notnull(),:].groupby('month_year').debit.mean()
+  temp=df[df['debit']>0]
+  a=temp.loc[temp.debit.notnull(),:].groupby('month_year').debit.mean()
   avg_mthly_debit = (a.sum()/a.shape[0])
 
   df['credit']=df['credit'].astype(float)
-  a=df.loc[df.credit.notnull(),:].groupby('month_year').credit.mean()
+  temp=df[df['credit']>0]
+  a=temp.loc[temp.credit.notnull(),:].groupby('month_year').credit.mean()
   avg_mthly_credit = (a.sum()/a.shape[0])
 
 
