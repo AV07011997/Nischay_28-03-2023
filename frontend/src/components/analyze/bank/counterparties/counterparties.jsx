@@ -77,7 +77,9 @@ function PopUpComponent(props) {
   );
 }
 
-const ANALYZECOUNTERPARTIES = (props) => {
+const ANALYZECOUNTERPARTIES = ({ setUser }) => {
+  setUser(localStorage.getItem("user"));
+
   var [optbank, setoptbank] = useState();
   var [optbank2, setoptbank2] = useState();
   const [pagestate, setpagestate] = useState(0);

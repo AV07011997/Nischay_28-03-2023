@@ -90,7 +90,9 @@ function NewComponent(props) {
   );
 }
 
-const AnalyzeBankMonthWise = (props) => {
+const AnalyzeBankMonthWise = ({ setUser }) => {
+  setUser(localStorage.getItem("user"));
+
   var [table1, settable1] = useState();
   var [optbank, setoptbank] = useState();
   const [acc_number, setacc_number] = useState();
@@ -140,6 +142,7 @@ const AnalyzeBankMonthWise = (props) => {
           type: type,
           amount: amount,
           account_number: acc_number,
+          leadID: localStorage.getItem("leadID"),
         }
       );
       console.log(response);

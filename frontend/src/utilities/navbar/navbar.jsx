@@ -15,6 +15,8 @@ const NavBar = (props) => {
   const navigate = useNavigate();
 
   const logout = () => {
+    localStorage.removeItem("user");
+
     navigate("/");
   };
   const handleclick = (item) => {

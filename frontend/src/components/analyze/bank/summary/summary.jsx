@@ -85,7 +85,9 @@ function NewComponent(props) {
   );
 }
 
-const AnalyzeBankSummary = (leadID) => {
+const AnalyzeBankSummary = ({ setUser }) => {
+  setUser(localStorage.getItem("user"));
+
   var [table, setTable] = useState();
   var [info, setInfo] = useState();
   const [acc_number, setacc_number] = useState();
@@ -132,6 +134,7 @@ const AnalyzeBankSummary = (leadID) => {
           type: type,
           amount: amount,
           account_number: acc_number,
+          leadID: localStorage.getItem("leadID"),
         }
       );
       console.log(response);
@@ -222,6 +225,118 @@ const AnalyzeBankSummary = (leadID) => {
         )}
       </div>
       <div
+        style={{ marginTop: "2%", marginBottom: "2%" }}
+        className="smallTableUpload"
+      >
+        <table
+          style={{
+            width: "45%",
+            textAlign: "center",
+            marginLeft: "27%",
+            borderCollapse: "collapse",
+            border: "none",
+          }}
+          className="tableSmallTableUpload"
+        >
+          <thead>
+            <tr>
+              <th
+                style={{
+                  width: "150px",
+                  background: "#e0e0e0",
+                  borderCollapse: "collapse",
+                  border: "none",
+                }}
+                className="width_customised"
+              >
+                Statement Duration
+              </th>
+              <th
+                style={{
+                  width: "150px",
+                  background: "#e0e0e0",
+                  borderCollapse: "collapse",
+                  border: "none",
+                }}
+                className="width_customised"
+              >
+                {info?.data[0].from_date}
+              </th>
+              <th
+                style={{
+                  width: "150px",
+                  background: "#e0e0e0",
+                  borderCollapse: "collapse",
+                  border: "none",
+                }}
+                className="width_customised"
+              >
+                To
+              </th>
+              <th
+                style={{
+                  width: "150px",
+                  background: "#e0e0e0",
+                  borderCollapse: "collapse",
+                  border: "none",
+                }}
+                className="width_customised"
+              >
+                {info?.data[0].to_date}
+              </th>
+            </tr>
+          </thead>
+          <tbody style={{ fontWeight: "bold" }}>
+            <tr>
+              <td
+                style={{
+                  width: "150px",
+                  background: "#f0f0f0",
+                  borderCollapse: "collapse",
+                  border: "none",
+                }}
+                className="width_customised"
+              >
+                Balance
+              </td>
+              <td
+                style={{
+                  width: "150px",
+                  background: "#f0f0f0",
+                  borderCollapse: "collapse",
+                  border: "none",
+                }}
+                className="width_customised"
+              >
+                {info?.data5.Opening_Balance}
+              </td>
+              <td
+                style={{
+                  width: "150px",
+                  background: "#f0f0f0",
+                  borderCollapse: "collapse",
+                  border: "none",
+                }}
+                className="width_customised"
+              >
+                -
+              </td>
+              <td
+                style={{
+                  width: "150px",
+                  background: "#f0f0f0",
+                  borderCollapse: "collapse",
+                  border: "none",
+                }}
+                className="width_customised"
+              >
+                {info?.data5.Closing_Balance}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {/* <div
         style={{ paddingTop: "2em", paddingLeft: "12em", paddingRight: "12em" }}
       >
         <div
@@ -261,7 +376,7 @@ const AnalyzeBankSummary = (leadID) => {
             {info?.data5.Closing_Balance}
           </span>
         </div>
-      </div>
+      </div> */}
       <div style={{ display: "flex" }}>
         <div style={{ width: "65%" }}>
           <div

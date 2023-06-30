@@ -18,6 +18,7 @@ def bck(data):
   df.sort_values('txn_date', ascending=True, inplace=True)
   print('output from python code')
   print(df['account_number'])
+  df=df.reset_index()
   account_number=df['account_number'][0]
   start = df['txn_date'].min()
   end = df['txn_date'].max()

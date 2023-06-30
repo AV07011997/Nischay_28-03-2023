@@ -87,6 +87,12 @@ def home_page(request):
         pass
 
     try:
+        queryset = upload_file_details.objects.all().values("lead_id",'status')
+        bank_upload_status = pd.DataFrame(list(queryset))
+    except:
+        pass
+
+    try:
         queryset = downloaded_file_details.objects.all().values("lead_id")
         bank_download = pd.DataFrame(list(queryset))
     except:
@@ -108,6 +114,12 @@ def home_page(request):
     try:
         queryset = los_did_cid_generation.objects.all().values("lead_id", "creation_time").order_by()
         creation_time = pd.DataFrame(list(queryset))
+    except:
+        pass
+
+    try:
+        queryset = failed_digitization.objects.all().values("lead_id","file_name").order_by()
+        bank_download_ready = pd.DataFrame(list(queryset))
     except:
         pass
 
@@ -144,6 +156,13 @@ def home_page(request):
             grouped= bank_download_ready.groupby('lead_id')['file_name'].count().reset_index(name='failed_count')
 
             customer_detail = customer_detail.merge(grouped, on="lead_id", how="left")
+        if (bank_upload_status.empty == False):
+            grouped1 = bank_upload_status[bank_upload_status['status'] == 'Deleted'].groupby('lead_id')[
+                'status'].count().reset_index(name='deleted_count')
+            grouped1['lead_id']=grouped1['lead_id'].astype(str)
+            customer_detail['lead_id']=customer_detail['lead_id'].astype(str)
+
+            customer_detail = customer_detail.merge(grouped1, on="lead_id", how="left")
 
 
 
@@ -864,30 +883,33 @@ def update_upload_list(request):
         data1 = dictfetchall(cursor)
         data_digitized = pd.DataFrame(data1)
 
+    if not data_digitized.empty:
+        for digitized_file_name in data_digitized['file_name']:
+            digitized_file_name = str(digitized_file_name)  # Convert file name to a string
+            digitized_file_name = digitized_file_name.split('_', 2)[-1]
+            # digitized_file_name += ".pdf"
+            # digitized_file_name = digitized_file_name[:-4]  # Remove the last four characters from the file name
 
-    for digitized_file_name in data_digitized['file_name']:
-        digitized_file_name = str(digitized_file_name)  # Convert file name to a string
-        digitized_file_name = digitized_file_name.split('_', 2)[-1]
-        # digitized_file_name += ".pdf"
-        # digitized_file_name = digitized_file_name[:-4]  # Remove the last four characters from the file name
+            with connection.cursor() as cursor:
+                # Perform the update operation
+                # query = "UPDATE a5_kit.mysite_upload_file_details SET status = 'Digitized' WHERE file_name LIKE %s;"
+                query = "UPDATE a5_kit.mysite_upload_file_details SET status = 'Digitized' WHERE file_name LIKE %s AND status != 'Deleted';"
 
-        with connection.cursor() as cursor:
-            # Perform the update operation
-            query = "UPDATE a5_kit.mysite_upload_file_details SET status = 'Digitized' WHERE file_name LIKE %s;"
-            pattern = '%' + digitized_file_name + '%'  # Create the pattern to match the file name
-            cursor.execute(query, [pattern])
+                pattern = '%' + digitized_file_name + '%'  # Create the pattern to match the file name
+                cursor.execute(query, [pattern])
 
-    for failed_name in data_failed['file_name']:
-        failed_name = str(failed_name)  # Convert file name to a string
-        failed_name = failed_name.split('_', 2)[-1]
-        # digitized_file_name += ".pdf"
-        # digitized_file_name = digitized_file_name[:-4]  # Remove the last four characters from the file name
+    if not data_failed.empty:
+        for failed_name in data_failed['file_name']:
+            failed_name = str(failed_name)  # Convert file name to a string
+            failed_name = failed_name.split('_', 2)[-1]
+            # digitized_file_name += ".pdf"
+            # digitized_file_name = digitized_file_name[:-4]  # Remove the last four characters from the file name
 
-        with connection.cursor() as cursor:
-            # Perform the update operation
-            query = "UPDATE a5_kit.mysite_upload_file_details SET status = 'Failed' WHERE file_name LIKE %s;"
-            pattern = '%' + failed_name + '%'  # Create the pattern to match the file name
-            cursor.execute(query, [pattern])
+            with connection.cursor() as cursor:
+                # Perform the update operation
+                query = "UPDATE a5_kit.mysite_upload_file_details SET status = 'Failed' WHERE file_name LIKE %s;"
+                pattern = '%' + failed_name + '%'  # Create the pattern to match the file name
+                cursor.execute(query, [pattern])
 
     with connection.cursor() as cursor:
         query = '''

@@ -2025,6 +2025,12 @@ def bck_popup(request):
         customer_id = request.session["customer_id"]
         deal_id = request.session["deal_id"]
 
+    leadID=''
+    leadID = leadID.join(request.POST.getlist('leadID'))
+    leadID=leadID.rstrip()
+
+
+
     accno = ''
     accno = accno.join(request.POST.getlist('account_number'))
     accno = accno.rstrip()
@@ -2034,7 +2040,18 @@ def bck_popup(request):
 
     amount = ''
     amount = amount.join(request.POST.getlist('amount'))
-    amount = ''.join(e for e in amount if e.isalnum() or e.isspace())
+    # amount = ''.join(e for e in amount if e.isalnum() or e.isspace())
+    # amount = ''.join(e for e in amount if e.isalnum() or e.isspace() or (e == '-' and amount.index(e) == 0))
+    amount = amount.replace(',', '').replace('₹', '')
+    amount = amount.split('.')
+    whole_part = amount[0]
+    decimal_part = amount[1] if len(amount) > 1 else ''
+
+    decimal_part = decimal_part.rstrip('0')
+    amount = whole_part + ('.' + decimal_part if decimal_part else '')
+
+    print(amount)
+
     # accno = accno[1:-1]
     # accno = "'%" + accno + "%'"
     if not amount=='':
@@ -2055,6 +2072,7 @@ def bck_popup(request):
 
             data = pd.DataFrame(data)
             data = data[data['account_number'] == accno]
+            data=data[data['lead_id']==leadID]
             # filtered_data = data[data['account_number'] == accno]
             filtered_data = data[data['credit'] == amount]
 
@@ -2069,6 +2087,8 @@ def bck_popup(request):
 
             data = pd.DataFrame(data)
             data = data[data['account_number'] == accno]
+            data=data[data['lead_id']==leadID]
+
             # filtered_data = data[data['account_number'] == accno]
             filtered_data=data
             filtered_data=filtered_data[filtered_data['debit']==amount]
@@ -2084,6 +2104,8 @@ def bck_popup(request):
 
             data = pd.DataFrame(data)
             data = data[data['account_number'] == accno]
+            data=data[data['lead_id']==leadID]
+
             data['balance'] = data['balance'].astype(float)
             filtered_data = data[data['balance'] <= 0]
 
@@ -2104,6 +2126,8 @@ def bck_popup(request):
 
             data = pd.DataFrame(data)
             data=data[data['account_number']==accno]
+            data=data[data['lead_id']==leadID]
+
 
             filtered_data = data[data['transaction_type'] == "Bounced"]
             # filtered_data = filtered_data[filtered_data['account_number'] == accno]
@@ -2129,6 +2153,8 @@ def bck_popup(request):
 
             data = pd.DataFrame(data)
             data=data[data['account_number']==accno]
+            data=data[data['lead_id']==leadID]
+
 
             data = data[data['transaction_type'] == "Bounced"]
             data['debit'] = data['debit'].astype(float)
@@ -2160,6 +2186,8 @@ def bck_popup(request):
 
             data = pd.DataFrame(data)
             data=data[data['account_number']==accno]
+            data=data[data['lead_id']==leadID]
+
 
             data = data[data['transaction_type'] == "Bounced"]
             # data['debit'] = data['debit'].astype(float)
@@ -2191,6 +2219,8 @@ def bck_popup(request):
 
             data = pd.DataFrame(data)
             data=data[data['account_number']==accno]
+            data=data[data['lead_id']==leadID]
+
 
             filtered_data = data[data['transaction_type'] == "charges"]
         # with connection.cursor() as cursor:

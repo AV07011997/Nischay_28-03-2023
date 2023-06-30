@@ -9,7 +9,7 @@ import Buttonutility from "../../utilities/button/buttonutility";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const HomePage = () => {
+const HomePage = ({ setUser }) => {
   window.DataStream = null;
   const userid = useRef();
   const password = useRef();
@@ -29,10 +29,14 @@ const HomePage = () => {
     });
     console.log(response);
     if (response.login_page == true) {
+      localStorage.setItem("user", true);
+      setUser(localStorage.setItem("user", true));
       console.log(true);
+
       navigate("/home");
     } else {
       toast.error("Please Enter Valid Credentials");
+      // setinfo(false);
     }
   };
 

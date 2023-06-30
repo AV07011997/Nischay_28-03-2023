@@ -1,3 +1,15 @@
-.numbersAlignRight {
-  text-align-last: right;
+.smallTableUpload {
+  display: flex;
+  margin-top: 1%;
+  margin-left: 100px;
+}
+
+.tableSmallTableUpload {
+  width: 45%;
+  text-align: center;
+  margin-left: 27%;
+  margin-top: 1%;
+}
+.width_customised {
+  width: 100px;
 }

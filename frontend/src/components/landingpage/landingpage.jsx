@@ -13,12 +13,14 @@ import ScrollToTop from "../../utilities/moveToTop/moveToTop";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
+import { postApi } from "../../callapi";
 // import Typography from "@mui/material/Typography";
 // import { redirect } from "react-router-dom";
 // import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-const LandingPage = ({ setinfo }) => {
+const LandingPage = ({ setUser }) => {
+  setUser(localStorage.getItem("user"));
   var [table, settable] = useState([]);
   const [radio, setradio] = useState();
   const [name, setname] = useState();
@@ -122,7 +124,9 @@ const LandingPage = ({ setinfo }) => {
       settable(local);
     }
   }, [search]);
-
+  useEffect(() => {
+    postApi(APIADDRESS.UPDATEUPLOADLIST, {}).then((res) => {});
+  });
   useEffect(() => {
     setupperLimit(parseInt(valueDropdown));
     setlowerLimit(0);
@@ -249,12 +253,15 @@ const LandingPage = ({ setinfo }) => {
                                   <HtmlTooltip
                                     title={
                                       <React.Fragment>
-                                        In-progress:
+                                        In-progress :{" "}
                                         {item.bank_uploaded -
                                           item.failed_count -
-                                          item.bank_download}
+                                          item.bank_download -
+                                          item.deleted_count}
                                         <br></br>
-                                        Failed :{item.failed_count}
+                                        Failed : {item.failed_count}
+                                        <br></br>
+                                        Deleted : {item.deleted_count}
                                       </React.Fragment>
                                     }
                                   >

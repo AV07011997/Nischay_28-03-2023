@@ -5,7 +5,9 @@ import "./statement.css";
 import { APIADDRESS } from "../../../../constants/constants";
 import { Loader } from "rsuite";
 import { useRef } from "react";
-const AnalyzeStatement = (leadID) => {
+const AnalyzeStatement = ({ setUser }) => {
+  setUser(localStorage.getItem("user"));
+
   const [table, setTable] = useState();
   const [table1, settable1] = useState();
   const [table2, settable2] = useState();

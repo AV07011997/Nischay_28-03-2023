@@ -22,7 +22,9 @@ import { AiFillDelete, AiOutlineFileAdd } from "react-icons/ai";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Upload = () => {
+const Upload = ({ setUser }) => {
+  setUser(localStorage.getItem("user"));
+
   var [table, settable] = useState();
   var [table1, settable1] = useState();
   const [deleteFileList, setDeleteFileList] = useState();
@@ -109,27 +111,29 @@ const Upload = () => {
     var repeateddocuments = {};
     var repeatfiles = [];
 
-    for (let filesDataBase of table) {
-      // console.log(filesDataBase);
-      for (let newFiles in mergefiles) {
-        console.log(table1);
-        console.log(table);
+    if (table) {
+      for (let filesDataBase of table) {
+        // console.log(filesDataBase);
+        for (let newFiles in mergefiles) {
+          // console.log(table1);
+          // console.log(table);
 
-        if (
-          filesDataBase.file_name == mergefiles[newFiles][0].name &&
-          filesDataBase.status != "Deleted"
-          // JSON.stringify(filesDataBase.lead_id) == JSON.stringify(radiovalue)
-        ) {
-          repeatnumber = repeatnumber + 1;
-          let repeatfilesvariable =
-            "File Name: " +
-            filesDataBase.file_name +
-            " Customer Name: " +
-            filesDataBase.name +
-            " Lead ID: " +
-            filesDataBase.lead_id +
-            " ";
-          repeatfiles.push(repeatfilesvariable);
+          if (
+            filesDataBase.file_name == mergefiles[newFiles][0].name &&
+            filesDataBase.status != "Deleted"
+            // JSON.stringify(filesDataBase.lead_id) == JSON.stringify(radiovalue)
+          ) {
+            repeatnumber = repeatnumber + 1;
+            let repeatfilesvariable =
+              "File Name: " +
+              filesDataBase.file_name +
+              " Customer Name: " +
+              filesDataBase.name +
+              " Lead ID: " +
+              filesDataBase.lead_id +
+              " ";
+            repeatfiles.push(repeatfilesvariable);
+          }
         }
       }
     }
@@ -186,6 +190,42 @@ const Upload = () => {
   };
 
   postApi(APIADDRESS.UPDATEUPLOADLIST, {}).then((res) => {});
+  console.log(table);
+
+  useEffect(() => {
+    removeDuplicates(table);
+  }, [table1]);
+
+  const removeDuplicates = (myArray) => {
+    const uniqueObjects = [];
+
+    if (Array.isArray(myArray) && myArray.length > 0) {
+      // Sort the array based on the date in descending order
+      myArray.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      // Create a new array for unique entries
+
+      // Iterate through each object
+      for (const object of myArray) {
+        // Check if the combination of file_name and status already exists in uniqueObjects
+        const isDuplicate = uniqueObjects.some(
+          (item) =>
+            item.file_name === object.file_name && item.status === object.status
+        );
+
+        // If it's a duplicate, skip adding it to uniqueObjects
+        if (isDuplicate) continue;
+
+        // If it's not a duplicate, add it to uniqueObjects
+        uniqueObjects.push(object);
+      }
+
+      console.log(uniqueObjects);
+    } else {
+      console.log("The input array is empty or undefined.");
+    }
+    settable(uniqueObjects);
+  };
 
   return (
     <div>
