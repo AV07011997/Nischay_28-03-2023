@@ -21,4 +21,5 @@ export const APIADDRESS = {
   ANALYZESTATEMENTS: "statements/",
   UPLOADEDFILESDELETE: "delete_files/",
   UPDATEUPLOADLIST: "update_upload_list/",
+  BUREAUMONTHWISE: "bureau_customer_month_kpi/",
 };

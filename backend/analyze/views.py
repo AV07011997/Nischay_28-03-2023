@@ -2249,15 +2249,16 @@ def bck_popup(request):
     # return render(request, "bck_popup.html", {'data': data})
 
 
-@login_required
+
 def bureau_customer_month_kpi(request):
     status = {}
-    if "deal_id" not in request.session or "customer_id" not in request.session:
-        status["type"] = "deal"
-        status["message"] = "Please select a deal first!"
-    else:
-        customer_id = request.session["customer_id"]
-        deal_id = request.session["deal_id"]
+    # if "deal_id" not in request.session or "customer_id" not in request.session:
+    #     status["type"] = "deal"
+    #     status["message"] = "Please select a deal first!"
+    # else:
+    if(1>0):
+        customer_id = '5'
+        deal_id = '5898'
 
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM bureau_ref_dtl WHERE CUSTOMER_ID = " + customer_id + ";")
@@ -2343,6 +2344,8 @@ def bureau_customer_month_kpi(request):
 
             fy1['sum_emi'] = fy1['sum_emi'].apply(
                 lambda x: format_currency(int(x), 'INR', locale='en_IN') if pd.notnull(x) else x)
+            fy1['sum_emi'] = fy1['sum_emi'].apply(lambda x: str(x).replace('₹', '₹ '))
+
             fy1['sum_emi'] = fy1['sum_emi'].astype(str).apply(lambda x: x.split('.')[0])
 
             fy1['cnt_active_accounts'] = fy1['cnt_active_accounts'].fillna(0)
@@ -2358,6 +2361,8 @@ def bureau_customer_month_kpi(request):
 
             fy1_1['valid_emi'] = fy1_1['valid_emi'].apply(
                 lambda x: format_currency(int(x), 'INR', locale='en_IN') if pd.notnull(x) else x)
+            fy1_1['valid_emi'] = fy1_1['valid_emi'].apply(lambda x: str(x).replace('₹', '₹ '))
+
             fy1_1['valid_emi'] = fy1_1['valid_emi'].astype(str).apply(lambda x: x.split('.')[0])
 
             fy1_1_1 = fy1_1[fy1_1['Month'] == 1]
@@ -2397,6 +2402,8 @@ def bureau_customer_month_kpi(request):
 
             fy2['sum_emi'] = fy2['sum_emi'].apply(
                 lambda x: format_currency(int(x), 'INR', locale='en_IN') if pd.notnull(x) else x)
+            fy2['sum_emi'] = fy2['sum_emi'].apply(lambda x: str(x).replace('₹', '₹ '))
+
             fy2['sum_emi'] = fy2['sum_emi'].astype(str).apply(lambda x: x.split('.')[0])
 
             # fy2['cnt_active_accounts'] = fy2['cnt_active_accounts'].apply(lambda x : int(x) if pd.notnull(x) else x)
@@ -2414,6 +2421,8 @@ def bureau_customer_month_kpi(request):
 
             fy2_1['valid_emi'] = fy2_1['valid_emi'].apply(
                 lambda x: format_currency(int(x), 'INR', locale='en_IN') if pd.notnull(x) else x)
+            fy2_1['valid_emi'] = fy2_1['valid_emi'].apply(lambda x: str(x).replace('₹', '₹ '))
+
             fy2_1['valid_emi'] = fy2_1['valid_emi'].astype(str).apply(lambda x: x.split('.')[0])
 
             fy2_1_1 = fy2_1[fy2_1['Month'] == 1]
@@ -2452,6 +2461,8 @@ def bureau_customer_month_kpi(request):
 
             fy3['sum_emi'] = fy3['sum_emi'].apply(
                 lambda x: format_currency(int(x), 'INR', locale='en_IN') if pd.notnull(x) else x)
+            fy3['sum_emi'] = fy3['sum_emi'].apply(lambda x: str(x).replace('₹', '₹ '))
+
             fy3['sum_emi'] = fy3['sum_emi'].astype(str).apply(lambda x: x.split('.')[0])
 
             fy3['cnt_active_accounts'] = fy3['cnt_active_accounts'].fillna(0)
@@ -2469,6 +2480,8 @@ def bureau_customer_month_kpi(request):
 
             fy3_1['valid_emi'] = fy3_1['valid_emi'].apply(
                 lambda x: format_currency(int(x), 'INR', locale='en_IN') if pd.notnull(x) else x)
+            fy3_1['valid_emi'] = fy3_1['valid_emi'].apply(lambda x: str(x).replace('₹', '₹ '))
+
             fy3_1['valid_emi'] = fy3_1['valid_emi'].astype(str).apply(lambda x: x.split('.')[0])
 
             fy3_1_1 = fy3_1[fy3_1['Month'] == 1]
@@ -2508,6 +2521,8 @@ def bureau_customer_month_kpi(request):
 
                 fy4['sum_emi'] = fy4['sum_emi'].apply(
                     lambda x: format_currency(int(x), 'INR', locale='en_IN') if pd.notnull(x) else x)
+                fy4['sum_emi'] = fy4['sum_emi'].apply(lambda x: str(x).replace('₹', '₹ '))
+
                 fy4['sum_emi'] = fy4['sum_emi'].astype(str).apply(lambda x: x.split('.')[0])
 
                 fy4['cnt_active_accounts'] = fy4['cnt_active_accounts'].fillna(0)
@@ -2528,6 +2543,8 @@ def bureau_customer_month_kpi(request):
 
                 fy4_1['valid_emi'] = fy4_1['valid_emi'].apply(
                     lambda x: format_currency(int(x), 'INR', locale='en_IN') if pd.notnull(x) else x)
+                fy4_1['valid_emi'] = fy4_1['valid_emi'].apply(lambda x: str(x).replace('₹', '₹ '))
+
                 fy4_1['valid_emi'] = fy4_1['valid_emi'].astype(str).apply(lambda x: x.split('.')[0])
 
                 fy4_1_1 = fy4_1[fy4_1['Month'] == 1]
@@ -2881,14 +2898,17 @@ def bureau_customer_month_kpi(request):
                            'fy3_2_5': fy3_2_5, 'fy3_2_6': fy3_2_6, 'fy3_2_7': fy3_2_7, 'fy3_2_8': fy3_2_8,
                            'fy3_2_9': fy3_2_9, 'fy3_2_10': fy3_2_10, 'fy3_2_11': fy3_2_11, 'fy3_2_12': fy3_2_12,
                            'years': years}
-                return render(request, "bureau_c_m_k.html", payload)
+                # return render(request, "bureau_c_m_k.html", payload)
+                pydict = json.dumps(payload)
+                return HttpResponse(pydict)
+
             else:
                 payload = {'fy1_1_1': fy1_1_1, 'fy1_1_2': fy1_1_2, 'fy1_1_3': fy1_1_3, 'fy1_1_4': fy1_1_4,
                            'fy1_1_5': fy1_1_5, 'fy1_1_6': fy1_1_6, 'fy1_1_7': fy1_1_7, 'fy1_1_8': fy1_1_8,
                            'fy1_1_9': fy1_1_9, 'fy1_1_10': fy1_1_10, 'fy1_1_11': fy1_1_11, 'fy1_1_12': fy1_1_12,
                            'fy1_2_1': fy1_2_1, 'fy1_2_2': fy1_2_2, 'fy1_2_3': fy1_2_3, 'fy1_2_4': fy1_2_4,
                            'fy1_2_5': fy1_2_5, 'fy1_2_6': fy1_2_6, 'fy1_2_7': fy1_2_7, 'fy1_2_8': fy1_2_8,
-                           'fy1_2_9': fy1_2_9, 'fy1_2_10': fy1_1_10, 'fy1_2_11': fy1_1_11, 'fy1_2_12': fy1_2_12,
+                           'fy1_2_9': fy1_2_9, 'fy1_2_10': fy1_2_10, 'fy1_2_11': fy1_2_11, 'fy1_2_12': fy1_2_12,
                            'fy2_1_1': fy2_1_1, 'fy2_1_2': fy2_1_2, 'fy2_1_3': fy2_1_3, 'fy2_1_4': fy2_1_4,
                            'fy2_1_5': fy2_1_5, 'fy2_1_6': fy2_1_6, 'fy2_1_7': fy2_1_7, 'fy2_1_8': fy2_1_8,
                            'fy2_1_9': fy2_1_9, 'fy2_1_10': fy2_1_10, 'fy2_1_11': fy2_1_11, 'fy2_1_12': fy2_1_12,
@@ -2908,7 +2928,59 @@ def bureau_customer_month_kpi(request):
                            'fy4_2_5': fy4_2_5, 'fy4_2_6': fy4_2_6, 'fy4_2_7': fy4_2_7, 'fy4_2_8': fy4_2_8,
                            'fy4_2_9': fy4_2_9, 'fy4_2_10': fy4_2_10, 'fy4_2_11': fy4_2_11, 'fy4_2_12': fy4_2_12,
                            'years': years}
-                return render(request, "bureau_c_m_k.html", payload)
+                payload_11 = {'fy1_1_12': fy1_1_12, 'fy1_1_11': fy1_1_11, 'fy1_1_10': fy1_1_10,
+                                    'fy1_1_9': fy1_1_9,
+                                    'fy1_1_8': fy1_1_8, 'fy1_1_7': fy1_1_7, 'fy1_1_6': fy1_1_6, 'fy1_1_5': fy1_1_5,
+                                    'fy1_1_4': fy1_1_4, 'fy1_1_3': fy1_1_3, 'fy1_1_2': fy1_1_2, 'fy1_1_1': fy1_1_1}
+
+                payload_12 = {'fy1_2_12': fy1_2_12, 'fy1_2_11': fy1_2_11, 'fy1_2_10': fy1_2_10,
+                                    'fy1_2_9': fy1_2_9,
+                                    'fy1_2_8': fy1_2_8, 'fy1_2_7': fy1_2_7, 'fy1_2_6': fy1_2_6, 'fy1_2_5': fy1_2_5,
+                                    'fy1_2_4': fy1_2_4, 'fy1_2_3': fy1_2_3, 'fy1_2_2': fy1_2_2, 'fy1_2_1': fy1_2_1}
+
+                payload_21 = {
+                    'fy2_1_12': fy2_1_12, 'fy2_1_11': fy2_1_11, 'fy2_1_10': fy2_1_10, 'fy2_1_9': fy2_1_9,
+                    'fy2_1_8': fy2_1_8, 'fy2_1_7': fy2_1_7, 'fy2_1_6': fy2_1_6, 'fy2_1_5': fy2_1_5,
+                    'fy2_1_4': fy2_1_4, 'fy2_1_3': fy2_1_3, 'fy2_1_2': fy2_1_2, 'fy2_1_1': fy2_1_1
+                }
+
+                payload_22 = {
+                    'fy2_2_12': fy2_2_12, 'fy2_2_11': fy2_2_11, 'fy2_2_10': fy2_2_10, 'fy2_2_9': fy2_2_9,
+                    'fy2_2_8': fy2_2_8, 'fy2_2_7': fy2_2_7, 'fy2_2_6': fy2_2_6, 'fy2_2_5': fy2_2_5,
+                    'fy2_2_4': fy2_2_4, 'fy2_2_3': fy2_2_3, 'fy2_2_2': fy2_2_2, 'fy2_2_1': fy2_2_1
+                }
+
+                payload_31 = {
+                    'fy3_1_12': fy3_1_12, 'fy3_1_11': fy3_1_11, 'fy3_1_10': fy3_1_10, 'fy3_1_9': fy3_1_9,
+                    'fy3_1_8': fy3_1_8, 'fy3_1_7': fy3_1_7, 'fy3_1_6': fy3_1_6, 'fy3_1_5': fy3_1_5,
+                    'fy3_1_4': fy3_1_4, 'fy3_1_3': fy3_1_3, 'fy3_1_2': fy3_1_2, 'fy3_1_1': fy3_1_1,
+                }
+
+                payload_32 = {
+                    'fy3_2_12': fy3_2_12, 'fy3_2_11': fy3_2_11, 'fy3_2_10': fy3_2_10, 'fy3_2_9': fy3_2_9,
+                    'fy3_2_8': fy3_2_8, 'fy3_2_7': fy3_2_7, 'fy3_2_6': fy3_2_6, 'fy3_2_5': fy3_2_5,
+                    'fy3_2_4': fy3_2_4, 'fy3_2_3': fy3_2_3, 'fy3_2_2': fy3_2_2, 'fy3_2_1': fy3_2_1,
+                }
+
+                payload_41 = {
+                    'fy4_1_12': fy4_1_12, 'fy4_1_11': fy4_1_11, 'fy4_1_10': fy4_1_10, 'fy4_1_9': fy4_1_9,
+                    'fy4_1_8': fy4_1_8, 'fy4_1_7': fy4_1_7, 'fy4_1_6': fy4_1_6, 'fy4_1_5': fy4_1_5,
+                    'fy4_1_4': fy4_1_4, 'fy4_1_3': fy4_1_3, 'fy4_1_2': fy4_1_2, 'fy4_1_1': fy4_1_1,
+                }
+
+                payload_42 = {
+                    'fy4_2_12': fy4_2_12, 'fy4_2_11': fy4_2_11, 'fy4_2_10': fy4_2_10, 'fy4_2_9': fy4_2_9,
+                    'fy4_2_8': fy4_2_8, 'fy4_2_7': fy4_2_7, 'fy4_2_6': fy4_2_6, 'fy4_2_5': fy4_2_5,
+                    'fy4_2_4': fy4_2_4, 'fy4_2_3': fy4_2_3, 'fy4_2_2': fy4_2_2, 'fy4_2_1': fy4_2_1,
+                }
+
+                # finaldata = pd.DataFrame(list([payload]))
+                # finaldata = finaldata.to_dict('split')
+                # pydict = json.dumps(payload,payload_11,payload_12)
+                pydict = json.dumps([payload, payload_11, payload_12,payload_21,payload_22,payload_31,payload_32,payload_41,payload_41])
+                return HttpResponse(pydict)
+
+                # return render(request, "bureau_c_m_k.html", payload)
 
     payload = {"analyze_page": True, "status": status if status else None}
     return render(request, "bureau_c_m_k.html", payload)

@@ -20,10 +20,10 @@ const NavBar = (props) => {
     navigate("/");
   };
   const handleclick = (item) => {
-    if (localStorage.getItem("leadID") == undefined || null) {
+    console.log(localStorage.getItem("leadID"));
+
+    if (localStorage.getItem("leadID") === "undefined") {
       toast.error("Please select a Lead Id first");
-    } else if (item == "DOWNLOAD") {
-      // navigate(`/download/${navigatevalue}`);
     } else if (item == "UPLOAD") {
       navigate(`/upload/${navigatevalue}/${navigatenamevalue}/${uploadcount}`);
       // console.log(item);

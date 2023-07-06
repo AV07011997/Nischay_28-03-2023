@@ -45,6 +45,11 @@ def bureau_c_m_k(bureau_ref_dtl,bureau_score_segment,bureau_account_segment_tl,b
   data_score=bureau_score_segment
   data_score=data_score.rename(columns={'BUREAU_ID':'report_id','CUSTOMER_ID':'cust_id'})
   data_score=data_score[['source','report_id','cust_id','SCORE']]
+  # data_score.astype(str)
+  # data_basic.astype(str)
+  data_score['cust_id']=  data_score['cust_id'].astype('int64')
+  data_score['report_id']=  data_score['report_id'].astype('int64')
+
 
   data_basic=data_basic.merge(data_score,on=['source','report_id','cust_id'],how='left')
   data_basic['Aadhar']=np.nan
@@ -166,7 +171,7 @@ def bureau_c_m_k(bureau_ref_dtl,bureau_score_segment,bureau_account_segment_tl,b
                     'DATE_OF_ENQUIRY':'date_of_inquiry','ENQUIRY_PURPOSE':'purpose_of_inquiry','CUSTOMER_ID':'cust_id' })
 
   data_inquiry=data_inquiry[['source','report_id','cust_id','inquiry_id','date_of_inquiry','purpose_of_inquiry']]
-  data_inquiry['date_of_inquiry']=pd.to_datetime(data_inquiry['date_of_inquiry'],format="%Y-%m-%d")
+  data_inquiry['date_of_inquiry']=pd.to_datetime(data_inquiry['date_of_inquiry'],format="%d-%m-%Y")
 
   data_inquiry=data_inquiry.merge(data_basic[['deal_id','cust_id','date_issued','source','report_id']],on=['source','report_id','cust_id'],how='left')
 
@@ -189,8 +194,8 @@ def bureau_c_m_k(bureau_ref_dtl,bureau_score_segment,bureau_account_segment_tl,b
   ##############################################################month since dpd in loan table########################################
 
   data_dpd_final=data_dpd_final.merge(data_basic[['deal_id','cust_id','date_issued','source','report_id']],on=['source','report_id','cust_id','deal_id'],how='left')
-  data_dpd_final['date_issued'] = pd.to_datetime(data_dpd_final['date_issued'], format = "%Y-%m-%d")
-  data_dpd_final['DPD_month'] = pd.to_datetime(data_dpd_final['DPD_month'], format = "%Y-%m-%d")
+  data_dpd_final['date_issued'] = pd.to_datetime(data_dpd_final['date_issued'], format = "%d-%m-%Y")
+  data_dpd_final['DPD_month'] = pd.to_datetime(data_dpd_final['DPD_month'], format = "%d-%m-%Y")
   data_dpd_final['month_since_dpd']=(data_dpd_final['date_issued']-data_dpd_final['DPD_month'])/np.timedelta64(1,"M")
   temp=data_dpd_final[~data_dpd_final['DPD'].isin(["XXX","STD","000"])]
   temp=temp[temp['month_since_dpd']<=12]
@@ -404,7 +409,7 @@ def bureau_c_m_k(bureau_ref_dtl,bureau_score_segment,bureau_account_segment_tl,b
   temp['date_issued_som']=temp['date_issued_som'].apply(lambda x: x.replace(day=1))
 
   temp['date_issued_som'] = pd.to_datetime(temp['date_issued_som'])
-  temp['DOB'] = pd.to_datetime(temp['DOB'], format = "%Y-%m-%d")
+  temp['DOB'] = pd.to_datetime(temp['DOB'], format = "%d-%m-%Y")
   temp['age']=(temp['date_issued_som']-temp['DOB'])/np.timedelta64(1,"Y")
   temp['age']=temp['age'].astype(int)
   temp=temp.groupby(['deal_id','cust_id'])['age'].max().reset_index(name='age')

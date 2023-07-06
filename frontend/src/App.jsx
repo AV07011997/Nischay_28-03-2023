@@ -13,6 +13,7 @@ import AnalyzeBankMonthWise from "./components/analyze/bank/month_wise/month_wis
 import AnalyzeStatement from "./components/analyze/bank/statement/statement";
 import ANALYZECOUNTERPARTIES from "./components/analyze/bank/counterParties/counterparties";
 import { useEffect } from "react";
+import BureauMonthwise from "./components/analyze/Bureau/Bureau_Monthwise/bureauMonthwise";
 
 function App() {
   const history = createBrowserHistory();
@@ -112,6 +113,17 @@ function App() {
             element={
               user ? (
                 <AnalyzeStatement setUser={setUser} />
+              ) : (
+                <HomePage setUser={setUser} />
+              )
+            }
+          ></Route>
+          <Route
+            path="/bureaumonthwise"
+            // element={<AnalyzeStatement />}
+            element={
+              user ? (
+                <BureauMonthwise setUser={setUser} />
               ) : (
                 <HomePage setUser={setUser} />
               )
