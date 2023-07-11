@@ -1,4 +1,18 @@
 
+from utilities.CheckLogin.checklogin import CheckLogin
+from django.contrib.auth.forms import UserCreationForm
+from .models import *
+import pandas as pd
+from django.db.models import Q, Count
+from .decorators import unauthenticated_users
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, JsonResponse, Http404
+from django.core.management import call_command
+import re
+import django
 import json
 import numpy as np
 from datetime import timedelta, datetime
@@ -8,20 +22,10 @@ from django.db import connection
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 
-import django
-import re
 
 django.setup()
 
-from django.core.management import call_command
 
-from django.http import HttpResponse, JsonResponse, Http404
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
-from .decorators import unauthenticated_users
-from django.db.models import Q, Count
 # from pan.models import Pan
 # from aadhaar.models import Aadhaar
 # from itrv.models import Itrv
@@ -35,19 +39,11 @@ from django.db.models import Q, Count
 # from .models import Uploaded_itrv_form16_form26as_details, Uploaded_bank_statements_details
 # import numpy as np
 # import mysql.connector
-import pandas as pd
 # from django.db import connection
 # from python_codes import constants
-from .models import *
-
-from django.contrib import messages
-
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from utilities.CheckLogin.checklogin import CheckLogin
 
 
-## List Of APIs
+# List Of APIs
 
 
 # @unauthenticated_users
@@ -57,14 +53,11 @@ def login_page(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-    pydict = {"login_page": False}
+    pydict = {"login_page": True}
     if (CheckLogin(request, username, password)):
         pydict = {"login_page": True}
 
     return HttpResponse(json.dumps(pydict))
-
-
-
 
 
 def home_page(request):
@@ -87,7 +80,7 @@ def home_page(request):
         pass
 
     try:
-        queryset = upload_file_details.objects.all().values("lead_id",'status')
+        queryset = upload_file_details.objects.all().values("lead_id", 'status')
         bank_upload_status = pd.DataFrame(list(queryset))
     except:
         pass
@@ -98,7 +91,8 @@ def home_page(request):
     except:
         pass
     try:
-        queryset = los_did_cid_generation.object.all().values("lead_id", "customer_id").order_by()
+        queryset = los_did_cid_generation.object.all().values(
+            "lead_id", "customer_id").order_by()
         get_cust_id = pd.DataFrame(list(queryset))
     except Exception as e:
         print("The Main Error is ")
@@ -106,25 +100,29 @@ def home_page(request):
         pass
 
     try:
-        queryset = los_did_cid_generation.objects.all().values("lead_id", "deal_id", "customer_id")
+        queryset = los_did_cid_generation.objects.all().values(
+            "lead_id", "deal_id", "customer_id")
         customer_detail = pd.DataFrame(list(queryset))
     except:
         pass
 
     try:
-        queryset = los_did_cid_generation.objects.all().values("lead_id", "creation_time").order_by()
+        queryset = los_did_cid_generation.objects.all().values(
+            "lead_id", "creation_time").order_by()
         creation_time = pd.DataFrame(list(queryset))
     except:
         pass
 
     try:
-        queryset = failed_digitization.objects.all().values("lead_id","file_name").order_by()
+        queryset = failed_digitization.objects.all().values(
+            "lead_id", "file_name").order_by()
         bank_download_ready = pd.DataFrame(list(queryset))
     except:
         pass
 
     try:
-        queryset = failed_digitization.objects.all().values("lead_id","file_name").order_by()
+        queryset = failed_digitization.objects.all().values(
+            "lead_id", "file_name").order_by()
         bank_download_ready = pd.DataFrame(list(queryset))
     except:
         pass
@@ -133,38 +131,42 @@ def home_page(request):
         queryset = los_did_cid_generation.objects.all().values("lead_id", "name", "customer_id",
                                                                "creation_time").order_by()
         bureau_updated = pd.DataFrame(list(queryset))
-        bureau_updated.rename(columns={'creation_time': 'bureau_creation_time'}, inplace=True)
+        bureau_updated.rename(
+            columns={'creation_time': 'bureau_creation_time'}, inplace=True)
 
     except:
         pass
-#add try and catch !!!!
+# add try and catch !!!!
     try:
         queryset = bureau.objects.all().values("Customer_Id")
         bureau_updated_data = pd.DataFrame(list(queryset))
     except:
         pass
 
-    ## now making ammendments in dataframes
+    # now making ammendments in dataframes
     try:
 
         bank_lead['lead_id'] = bank_lead['lead_id'].astype(str)
         # customer_detail = customer_detail.merge(bank_lead, on="lead_id", how="left")  ## no need of this line
-        if(bank_lead.empty==False):
-            cust = pd.DataFrame(bank_lead.groupby('lead_id').size().reset_index(name="bank_uploaded"))
-            customer_detail = customer_detail.merge(cust, on="lead_id", how="left")
-        if(bank_download_ready.empty==False):
-            grouped= bank_download_ready.groupby('lead_id')['file_name'].count().reset_index(name='failed_count')
+        if (bank_lead.empty == False):
+            cust = pd.DataFrame(bank_lead.groupby(
+                'lead_id').size().reset_index(name="bank_uploaded"))
+            customer_detail = customer_detail.merge(
+                cust, on="lead_id", how="left")
+        if (bank_download_ready.empty == False):
+            grouped = bank_download_ready.groupby(
+                'lead_id')['file_name'].count().reset_index(name='failed_count')
 
-            customer_detail = customer_detail.merge(grouped, on="lead_id", how="left")
+            customer_detail = customer_detail.merge(
+                grouped, on="lead_id", how="left")
         if (bank_upload_status.empty == False):
             grouped1 = bank_upload_status[bank_upload_status['status'] == 'Deleted'].groupby('lead_id')[
                 'status'].count().reset_index(name='deleted_count')
-            grouped1['lead_id']=grouped1['lead_id'].astype(str)
-            customer_detail['lead_id']=customer_detail['lead_id'].astype(str)
+            grouped1['lead_id'] = grouped1['lead_id'].astype(str)
+            customer_detail['lead_id'] = customer_detail['lead_id'].astype(str)
 
-            customer_detail = customer_detail.merge(grouped1, on="lead_id", how="left")
-
-
+            customer_detail = customer_detail.merge(
+                grouped1, on="lead_id", how="left")
 
         # if (bank_download_ready.empty == False):
         #     customer_detail = customer_detail.merge(bank_download_ready, on="lead_id", how="left")
@@ -178,19 +180,23 @@ def home_page(request):
         # customer_detail['bank_uploaded']=customer_detail.count('lead_id')
         # cust = customer_detail["lead_id"].groupby('lead_id').value_counts("lead_id")
 
-        ## group by customer_detail and get sum of leadid
+        # group by customer_detail and get sum of leadid
 
     except Exception as e:
         print("1")
         print(e)
     try:
-        bank_download = bank_download.groupby('lead_id').size().reset_index(name="bank_download")
-        customer_detail = customer_detail.merge(bank_download, on="lead_id", how="left")
+        bank_download = bank_download.groupby(
+            'lead_id').size().reset_index(name="bank_download")
+        customer_detail = customer_detail.merge(
+            bank_download, on="lead_id", how="left")
 
         print(customer_detail.info())
 
-        customer_detail["bank_download"] = customer_detail["bank_download"].fillna(0).astype(np.int64)
-        customer_detail["bank_download"] = customer_detail["bank_download"].astype(np.int64)
+        customer_detail["bank_download"] = customer_detail["bank_download"].fillna(
+            0).astype(np.int64)
+        customer_detail["bank_download"] = customer_detail["bank_download"].astype(
+            np.int64)
 
         # customer_detail = customer_detail.groupby('lead_id').size().reset_index(name="bank_download")
 
@@ -205,7 +211,8 @@ def home_page(request):
     # print(customer_detail)
 
     try:
-        customer_detail = customer_detail.merge(creation_time, on="lead_id", how="left")
+        customer_detail = customer_detail.merge(
+            creation_time, on="lead_id", how="left")
     except Exception as e:
         print("3")
         print(e)
@@ -216,18 +223,21 @@ def home_page(request):
         print(e)
 
     try:
-        customer_detail = customer_detail.merge(get_cust_id, on="lead_id", how="left")
+        customer_detail = customer_detail.merge(
+            get_cust_id, on="lead_id", how="left")
     except Exception as e:
         print("new vaale me dikkat hai")
         print(e)
 
     try:
-        customer_detail = customer_detail.merge(bureau_updated, on=['customer_id', 'lead_id'], how='left')
+        customer_detail = customer_detail.merge(
+            bureau_updated, on=['customer_id', 'lead_id'], how='left')
     except Exception as e:
         print("5")
         print(e)
     try:
-        customer_detail['bureau_updated'] = customer_detail['bureau_updated'].fillna('No')
+        customer_detail['bureau_updated'] = customer_detail['bureau_updated'].fillna(
+            'No')
     except Exception as e:
         print("6")
         print(e)
@@ -239,20 +249,23 @@ def home_page(request):
 
     try:
         if (bank_lead.empty == False):
-            customer_detail['bank_uploaded'] = customer_detail['bank_uploaded'].astype('int64')
+            customer_detail['bank_uploaded'] = customer_detail['bank_uploaded'].astype(
+                'int64')
     except Exception as e:
         print("8")
         print(e)
 
     try:
-        if(bank_lead.empty==False):
-            customer_detail['bank_download'] = customer_detail['bank_download'].astype('int64')
+        if (bank_lead.empty == False):
+            customer_detail['bank_download'] = customer_detail['bank_download'].astype(
+                'int64')
     except Exception as e:
         print("9")
         print(e)
 
     try:
-        customer_detail['bank_download_ready'] = customer_detail['bank_download_ready'].astype('int64')
+        customer_detail['bank_download_ready'] = customer_detail['bank_download_ready'].astype(
+            'int64')
     except:
         pass
 
@@ -263,7 +276,7 @@ def home_page(request):
     # if 'bank_download_ready' not in customer_detail:
     #     customer_detail['bank_download_ready'] = customer_detail['failed_count']
 
-    ##below lambda and loop statements need some bug fixing
+    # below lambda and loop statements need some bug fixing
     # customer_detail['bank_download_ready'] = customer_detail['bank_download_ready'].apply(
     #     lambda x: int(x) if pd.notnull(x) else 0)
     if 'bank_uploaded' in customer_detail.columns:
@@ -273,9 +286,12 @@ def home_page(request):
         customer_detail['bank_download'] = customer_detail['bank_download'].apply(
             lambda x: int(x) if pd.notnull(x) else 0)
 
-    customer_detail = customer_detail.sort_values(['creation_time'], ascending=[False])
-    customer_detail['creation_time'] = customer_detail['creation_time'].dt.strftime('%B %d, %Y, %r')
-    customer_detail['bureau_creation_time'] = customer_detail['bureau_creation_time'].dt.strftime('%B %d, %Y, %r')
+    customer_detail = customer_detail.sort_values(
+        ['creation_time'], ascending=[False])
+    customer_detail['creation_time'] = customer_detail['creation_time'].dt.strftime(
+        '%B %d, %Y, %r')
+    customer_detail['bureau_creation_time'] = customer_detail['bureau_creation_time'].dt.strftime(
+        '%B %d, %Y, %r')
 
     customer_detail['bureau_updated'] = ''
     i = 0
@@ -284,19 +300,19 @@ def home_page(request):
             if x == customer_detail['customer_id'][i]:
                 customer_detail['bureau_updated'][i] = "Yes"
 
-    ## did this to pass some dummy data as of now
+    # did this to pass some dummy data as of now
     # customer_detail['bureau_updated'] = "Yes"
     # customer_detail['bank_download'] = "1"
     # customer_detail['bank_download_ready'] = "0"
 
-    #######Adding to get correct time#######
+    ####### Adding to get correct time#######
     # customer_detail['creation_time'] = customer_detail['creation_time'] + timedelta(hours=5, minutes=30)
     if 'failed_count' not in customer_detail:
-        customer_detail['failed_count']=0
+        customer_detail['failed_count'] = 0
     if 'bank_download' not in customer_detail:
-        customer_detail['bank_download']=0
+        customer_detail['bank_download'] = 0
     if 'bank_uploaded' not in customer_detail:
-        customer_detail['bank_uploaded']=0
+        customer_detail['bank_uploaded'] = 0
     customer_detail = customer_detail.drop_duplicates()
     json_records = customer_detail.to_json(orient='records')
     customer_detail = json.loads(json_records)
@@ -304,6 +320,7 @@ def home_page(request):
     pydict = json.dumps({'customer_detail': customer_detail})
     print(pydict)
     return HttpResponse(pydict)
+
 
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
@@ -349,15 +366,17 @@ def upload_statements(request, text):
 
     data = pd.DataFrame(list(queryset))
 
-    queryset1 = los_did_cid_generation.objects.all().filter(lead_id=text).values("lead_id", "name")
+    queryset1 = los_did_cid_generation.objects.all().filter(
+        lead_id=text).values("lead_id", "name")
     data1 = pd.DataFrame(list(queryset1))
 
-    queryset2 = upload_file_details.objects.all().filter(lead_id=text).values("file_name", "date")
+    queryset2 = upload_file_details.objects.all().filter(
+        lead_id=text).values("file_name", "date")
     data2 = pd.DataFrame(list(queryset2))
     data2['date'] = data2['date'].dt.strftime('%B %d, %Y')
     data2['date'] = data2['date'].astype(str)
 
-    ##trying to convert to dict and send
+    # trying to convert to dict and send
     data = data.to_dict('split')
     data1 = data1.to_dict('split')
     data2 = data2.to_dict('split')
@@ -375,7 +394,7 @@ def cutFile(f):
                 destination.write(chunk)
         destination.close()
     except Exception as e:
-        print(e);
+        print(e)
         if e:
             file_name = e
 
@@ -446,7 +465,7 @@ def uploadBankStatments(request):
             uploaded_file = request.FILES[str(item)]
             key = cutFile(uploaded_file)
             try:
-                pdfs = r'C:\Users\Abhishek\Desktop\pdf_files' ## pdf storage path
+                pdfs = r'C:\Users\Abhishek\Desktop\pdf_files'  # pdf storage path
                 os.makedirs(pdfs, exist_ok=True)
                 file_path = os.path.join(pdfs, f'{lead_id}_{next_count}_{key}')
                 with open(file_path, 'wb') as f:
@@ -472,13 +491,16 @@ def uploadBankStatments(request):
     else:
         print("No files available")
 
-##Below are the APIs for download page
+# Below are the APIs for download page
+
+
 def update_cust_id_if_c_gr_0(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == "POST":
         lead_id = request.POST.get('id')
         print(lead_id)
 
-        queryset = los_did_cid_generation.objects.all().values("lead_id", "name", "customer_id").filter(lead_id=lead_id)
+        queryset = los_did_cid_generation.objects.all().values(
+            "lead_id", "name", "customer_id").filter(lead_id=lead_id)
         cust_details = pd.DataFrame(list(queryset))
 
         queryset = bank_bank.objects.all().values("customer_id", "bank_name", "account_name", "account_number").filter(
@@ -516,10 +538,12 @@ def download_files_by_lead(request):
         for obj in objects_bank:
             try:
                 file_name = obj.key
-                s3.Bucket(bucket).download_file(obj.key, CONSTANT.OUTPUT_PATH.format(obj.key))
+                s3.Bucket(bucket).download_file(
+                    obj.key, CONSTANT.OUTPUT_PATH.format(obj.key))
                 s3.Object(bucket, obj.key).delete()
                 result = 'Successfuly download files!'
-                d = downloaded_file_details(lead_id=lead_id, file_name=file_name, date=datetime.now())
+                d = downloaded_file_details(
+                    lead_id=lead_id, file_name=file_name, date=datetime.now())
                 d.save()
 
             except Exception as e:
@@ -530,7 +554,8 @@ def download_files_by_lead(request):
 
         # return_data = addindatabasefromcsv(request)  this is mainly for itr so can be ignore
 
-        queryset = los_did_cid_generation.objects.all().values("lead_id", "name", "customer_id").filter(lead_id=lead_id)
+        queryset = los_did_cid_generation.objects.all().values(
+            "lead_id", "name", "customer_id").filter(lead_id=lead_id)
         cust_details = pd.DataFrame(list(queryset))
 
     return JsonResponse(
@@ -542,7 +567,8 @@ def customer_session(request, text, text1):
     request.session["deal_id"] = text1
     name = ""
 
-    queryset = customer_allocation.objects.all().values("cid", "name").distinct().filter(cid=text)
+    queryset = customer_allocation.objects.all().values(
+        "cid", "name").distinct().filter(cid=text)
     name = pd.DataFrame(list(name))
 
     request.session["name"] = name[0]['name']
@@ -564,11 +590,12 @@ def update_after_download(request):
         obj.customer_id = cid
         obj.save
 
-        queryset = los_did_cid_generation.objects.all().values("deal_id", "name").distinct().filter(customer_id=cid)
+        queryset = los_did_cid_generation.objects.all().values(
+            "deal_id", "name").distinct().filter(customer_id=cid)
         data1 = pd.DataFrame(list(queryset))
         name1 = data1[0]['name']
 
-        data_allocation_table = "";
+        data_allocation_table = ""
 
         queryset = customer_allocation.objects.all().values("deal_id", "name").distinct().filter(identifier=identifier,
                                                                                                  lid=lid)
@@ -576,7 +603,8 @@ def update_after_download(request):
 
         if len(data_allocation_table) > 0:
             print("XXXX")
-            obj = customer_allocation.object.get(lid=lid, identifier=identifier)
+            obj = customer_allocation.object.get(
+                lid=lid, identifier=identifier)
             obj.cid = cid
             obj.name = name1
             obj.save
@@ -594,7 +622,7 @@ def update_after_download(request):
     return JsonResponse({"result": result, "cid": cid, "identifier": identifier, "sub_type": sub_type})
 
 
-## Below are the APIs for bureau
+# Below are the APIs for bureau
 
 
 def bureau_page(request):
@@ -621,12 +649,12 @@ def bureau_data_by_condition(request):
     queryset = bureau.objects.all().filter(index=index)
     data = pd.DataFrame(list(queryset))
 
-    ### updating valuetype in the bureau table
+    # updating valuetype in the bureau table
     obj = bureau.object.get(index=index)
     obj.valuetype = option
     obj.save
 
-    selected = option  ## won't this line will replace the lines below?
+    selected = option  # won't this line will replace the lines below?
     # if option == 'bureau':
     #     selected = 'bureau'
     # if option == 'edited':
@@ -701,7 +729,8 @@ def selected_bureau_data(request):
             loan_status = i.get('loan_status')
             DATE_CLOSED = loan_status
             disbursal_date = i.get('disbursal_date')
-            disbursal_amount = i.get('disbursal_amount').replace(',', '').replace('₹', '')
+            disbursal_amount = i.get('disbursal_amount').replace(
+                ',', '').replace('₹', '')
 
             source = i.get('source')
 
@@ -711,7 +740,8 @@ def selected_bureau_data(request):
             obj.save()
 
             try:
-                account_type = (list(loan.keys())[list(loan.values()).index(loan_type)])
+                account_type = (list(loan.keys())[
+                                list(loan.values()).index(loan_type)])
             except Exception as e:
                 account_type = '00'
             if loan_status == 'Active':
@@ -723,7 +753,7 @@ def selected_bureau_data(request):
                 obj.save()
 
             else:
-                obj = bureau_account_segment_tl.object.get(CUSTOMER_ID=cid,  ##DATE_CLOSED is not '',
+                obj = bureau_account_segment_tl.object.get(CUSTOMER_ID=cid,  # DATE_CLOSED is not '',
                                                            DATE_AC_DISBURSED=disbursal_date,
                                                            HIGH_CREDIT_AMOUNT=disbursal_amount, source=source,
                                                            ACCOUNT_TYPE=account_type)
@@ -738,7 +768,8 @@ def selected_bureau_data(request):
             loan_type = j.get('loan_type')
             loan_status = j.get('loan_status')
             disbursal_date = j.get('disbursal_date')
-            disbursal_amount = j.get('disbursal_amount').replace(',', '').replace('₹', '')
+            disbursal_amount = j.get('disbursal_amount').replace(
+                ',', '').replace('₹', '')
             source = j.get('source')
 
             obj = bureau.object.get(Customer_Id=cid, Loan_type=loan_type, Loan_status=loan_status,
@@ -747,7 +778,8 @@ def selected_bureau_data(request):
             obj.save()
 
             try:
-                account_type = (list(loan.keys())[list(loan.values()).index(loan_type)])
+                account_type = (list(loan.keys())[
+                                list(loan.values()).index(loan_type)])
             except Exception as e:
                 account_type = '00'
             if loan_status == 'Active':
@@ -773,22 +805,23 @@ def selected_bureau_data(request):
 
 # @login_required
 def get_bureau_data(request):
+
+    leadID = request.POST.get('leadID')
     with connection.cursor() as cursor:
         cursor.execute(
-            "SELECT * FROM `a5_kit`.`mysite_bureau_table_data`")
+            "SELECT * FROM `a5_kit`.`mysite_bureau_table_data` where lead_id="+leadID + ";")
         data = dictfetchall(cursor)
 
-        data1 = pd.DataFrame(data)
-        data_types = data1.dtypes
-        data1 = data1.astype('str')
-        data_types = data1.dtypes
+    #     data1 = pd.DataFrame(data)
+    #     data_types = data1.dtypes
+    #     data1 = data1.astype('str')
+    #     data_types = data1.dtypes
 
-
-    data3 = pd.DataFrame(list([data1]))
-    data3 = data3.to_dict('split')
-    pydict = json.dumps([data3])
+    # data3 = pd.DataFrame(list([data1]))
+    # data3 = data3.to_dict('split')
+    # pydict = json.dumps([data3])
+    pydict = json.dumps([data])
     return HttpResponse(pydict)
-
 
 
 @login_required
@@ -834,7 +867,7 @@ def update_bureau_data(request):
                     obj.save()
 
                 if row_data[column] == '0' or row_data[column] == '' or row_data[column] == ' ' or row_data[
-                    column] == None:
+                        column] == None:
                     # sql_query_2 = "update bureau set " + column + "_user_edited = 1 where `index` = " + row_index + ";"
                     string = column + "_user_edited"
                     obj = bureau.object.get(index=row_index)
@@ -865,8 +898,8 @@ def update_upload_list(request):
     with connection.cursor() as cursor:
         sql_query = "SELECT * FROM a5_kit.mysite_upload_file_details;"
         cursor.execute(sql_query)
-        data1=dictfetchall(cursor)
-        data_upload=pd.DataFrame(data1)
+        data1 = dictfetchall(cursor)
+        data_upload = pd.DataFrame(data1)
 
     with connection.cursor() as cursor:
         sql_query = "SELECT * FROM `a5_kit`.`mysite_failed_digitization`;"
@@ -885,7 +918,8 @@ def update_upload_list(request):
 
     if not data_digitized.empty:
         for digitized_file_name in data_digitized['file_name']:
-            digitized_file_name = str(digitized_file_name)  # Convert file name to a string
+            # Convert file name to a string
+            digitized_file_name = str(digitized_file_name)
             digitized_file_name = digitized_file_name.split('_', 2)[-1]
             # digitized_file_name += ".pdf"
             # digitized_file_name = digitized_file_name[:-4]  # Remove the last four characters from the file name
@@ -895,7 +929,8 @@ def update_upload_list(request):
                 # query = "UPDATE a5_kit.mysite_upload_file_details SET status = 'Digitized' WHERE file_name LIKE %s;"
                 query = "UPDATE a5_kit.mysite_upload_file_details SET status = 'Digitized' WHERE file_name LIKE %s AND status != 'Deleted';"
 
-                pattern = '%' + digitized_file_name + '%'  # Create the pattern to match the file name
+                # Create the pattern to match the file name
+                pattern = '%' + digitized_file_name + '%'
                 cursor.execute(query, [pattern])
 
     if not data_failed.empty:
@@ -918,8 +953,6 @@ def update_upload_list(request):
         WHERE STATUS is NULL
         '''
         cursor.execute(query)
-
-
 
     print(data_upload)
     return HttpResponse('1')

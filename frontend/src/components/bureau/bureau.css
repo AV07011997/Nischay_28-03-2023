@@ -1,12 +1,24 @@
 .table_bureau {
   margin-bottom: auto;
   margin-left: auto;
-  margin-top: 40px;
+  margin-top: 10em;
   margin-right: auto;
   width: 95%;
+  padding: 8px;
 }
 .table_bureau_thead {
   background-color: black;
   color: white;
   height: 40px;
+}
+
+.table_bureau_text {
+  padding: 8px;
+}
+
+.bureau_input_design {
+  width: 70px;
+}
+.bureau_dropdown {
+  width: 120px;
 }
