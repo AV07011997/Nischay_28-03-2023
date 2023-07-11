@@ -22,9 +22,10 @@ const NavBar = (props) => {
   const handleclick = (item) => {
     console.log(localStorage.getItem("leadID"));
 
-    if (localStorage.getItem("leadID") === "undefined") {
-      toast.error("Please select a Lead Id first");
-    } else if (item == "UPLOAD") {
+    // if (localStorage.getItem("leadID") === "undefined") {
+    //   toast.error("Please select a Lead Id first");
+    // }
+    if (item == "UPLOAD") {
       navigate(`/upload/${navigatevalue}/${navigatenamevalue}/${uploadcount}`);
       // console.log(item);
       // console.log(radiovalue);

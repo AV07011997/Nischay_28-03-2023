@@ -15,7 +15,6 @@ urlpatterns = [
     path('bankAnalyze1/', analyze_views.bankAnalyze, name="bankAnalyze"),
     # path('bank_entity_kpi/<entity>/<accno>/', analyze_views.bank_entity, name="bank_entity"),
     path('bank_entity_kpi_pop_up/', analyze_views.bank_entity, name="bank_entity"),
-
     # path('bank_entity_kpi/entitywise/', analyze_views.bank_entity, name="bank_entity"),
     path('bank_customer_month_kpi/<date>/<maxcredit>/<accno>/', analyze_views.maxcredit, name="maxcredit"),
     path('bureau_customer_kpi/', analyze_views.bureau_customer_kpi, name="bureau_customer_kpi"),

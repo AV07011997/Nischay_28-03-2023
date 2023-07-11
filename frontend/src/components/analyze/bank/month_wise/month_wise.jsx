@@ -71,7 +71,12 @@ function NewComponent(props) {
                   <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
                     {item.description}
                   </td>
-                  <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
+                  <td
+                    style={{
+                      padding: "10px",
+                      border: "1px solid #5a5a5a",
+                    }}
+                  >
                     {item.debit}
                   </td>
                   <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
@@ -119,6 +124,8 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
   }
 
   const tablesubheaders = ["", "", "From", "To"];
+
+  const lightGrey = "#f0f0f0";
 
   console.log(localStorage.getItem("leadID"));
 
@@ -321,12 +328,17 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 </td>
               </tr> */}
               <tr>
-                <td rowSpan={3} style={{ textAlign: "left" }}>
+                <td
+                  rowSpan={3}
+                  style={{ textAlign: "left", background: lightGrey }}
+                >
                   Auto{" "}
                 </td>
               </tr>
               <tr>
-                <td style={{ textAlign: "left" }}>Count</td>
+                <td style={{ textAlign: "left", background: lightGrey }}>
+                  Count
+                </td>
                 {/* {optbank.map((item) => {
                   if (item) {
                     return (
@@ -339,7 +351,7 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 {optbank.map((item) => {
                   if (item) {
                     return (
-                      <td style={{ textAlign: "right" }}>
+                      <td style={{ textAlign: "right", background: lightGrey }}>
                         {item.Auto_debits_Count}
                       </td>
                     );
@@ -347,7 +359,9 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 })}
               </tr>
               <tr>
-                <td style={{ textAlign: "left" }}>Value{" (₹)"}</td>
+                <td style={{ textAlign: "left", background: lightGrey }}>
+                  Value{" (₹)"}
+                </td>
                 {/* {optbank.map((item) => {
                   if (item) {
                     return (
@@ -360,7 +374,7 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 {optbank.map((item) => {
                   if (item) {
                     return (
-                      <td style={{ textAlign: "right" }}>
+                      <td style={{ textAlign: "right", background: lightGrey }}>
                         {item.Auto_debits_Value}
                       </td>
                     );
@@ -368,16 +382,21 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 })}
               </tr>
               <tr>
-                <td style={{ textAlign: "left" }} rowSpan={3}>
+                <td
+                  style={{ textAlign: "left", background: lightGrey }}
+                  rowSpan={3}
+                >
                   Cash{" "}
                 </td>
               </tr>
               <tr>
-                <td style={{ textAlign: "left" }}>Count</td>
+                <td style={{ textAlign: "left", background: lightGrey }}>
+                  Count
+                </td>
                 {optbank.map((item) => {
                   if (item) {
                     return (
-                      <td style={{ textAlign: "right" }}>
+                      <td style={{ textAlign: "right", background: lightGrey }}>
                         {item.Cash_debits_Count}
                       </td>
                     );
@@ -385,11 +404,13 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 })}
               </tr>
               <tr>
-                <td style={{ textAlign: "left" }}>Value{" (₹)"}</td>
+                <td style={{ textAlign: "left", background: lightGrey }}>
+                  Value{" (₹)"}
+                </td>
                 {optbank.map((item) => {
                   if (item) {
                     return (
-                      <td style={{ textAlign: "right" }}>
+                      <td style={{ textAlign: "right", background: lightGrey }}>
                         {item.Cash_debits_Value}
                       </td>
                     );
@@ -402,12 +423,17 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 </td>
               </tr> */}
               <tr>
-                <td style={{ textAlign: "left" }} rowSpan={3}>
+                <td
+                  style={{ textAlign: "left", background: lightGrey }}
+                  rowSpan={3}
+                >
                   Other{" "}
                 </td>
               </tr>
               <tr>
-                <td style={{ textAlign: "left" }}>Count</td>
+                <td style={{ textAlign: "left", background: lightGrey }}>
+                  Count
+                </td>
                 {/* {optbank.map((item) => {
                   if (item) {
                     return (
@@ -420,7 +446,7 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 {optbank.map((item) => {
                   if (item) {
                     return (
-                      <td style={{ textAlign: "right" }}>
+                      <td style={{ textAlign: "right", background: lightGrey }}>
                         {item.Non_cash_debits_Count}
                       </td>
                     );
@@ -437,7 +463,9 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 })} */}
               </tr>
               <tr>
-                <td style={{ textAlign: "left" }}>Value{" (₹)"}</td>
+                <td style={{ textAlign: "left", background: lightGrey }}>
+                  Value{" (₹)"}
+                </td>
                 {/* {optbank.map((item) => {
                   if (item) {
                     return (
@@ -459,7 +487,7 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 {optbank.map((item) => {
                   if (item) {
                     return (
-                      <td style={{ textAlign: "right" }}>
+                      <td style={{ textAlign: "right", background: lightGrey }}>
                         {item.Non_cash_debits_Value}
                       </td>
                     );
@@ -467,12 +495,17 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 })}
               </tr>
               <tr>
-                <td rowSpan={3} style={{ textAlign: "left" }}>
+                <td
+                  rowSpan={3}
+                  style={{ textAlign: "left", background: lightGrey }}
+                >
                   Total{" "}
                 </td>
               </tr>
               <tr>
-                <td style={{ textAlign: "left" }}>Count</td>
+                <td style={{ textAlign: "left", background: lightGrey }}>
+                  Count
+                </td>
                 {/* {optbank.map((item) => {
                   if (item) {
                     return (
@@ -485,7 +518,7 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 {optbank.map((item) => {
                   if (item) {
                     return (
-                      <td style={{ textAlign: "right" }}>
+                      <td style={{ textAlign: "right", background: lightGrey }}>
                         {item.Total_debits_Count}
                       </td>
                     );
@@ -493,7 +526,9 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 })}
               </tr>
               <tr>
-                <td style={{ textAlign: "left" }}>Value{" (₹)"}</td>
+                <td style={{ textAlign: "left", background: lightGrey }}>
+                  Value{" (₹)"}
+                </td>
                 {/* {optbank.map((item) => {
                   if (item) {
                     return (
@@ -506,7 +541,7 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 {optbank.map((item) => {
                   if (item) {
                     return (
-                      <td style={{ textAlign: "right" }}>
+                      <td style={{ textAlign: "right", background: lightGrey }}>
                         {item.Total_debits_Value}
                       </td>
                     );
@@ -628,14 +663,14 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
         </div>
       )}
 
-      {optbank && (
+      {/* {optbank && (
         <div>
           <span>
             <img className="graph_monthwise" src={src} alt="graph1"></img>
             <img className="graph_monthwise" src={src2} alt="graph2"></img>
           </span>
         </div>
-      )}
+      )} */}
 
       {/* <div>
           <table>

@@ -209,8 +209,8 @@ def bck(data):
   for i, (debit, credit) in enumerate(zip(df10['debit'], df10['credit'])):
     debit_label = f'{debit:,.0f}' if debit >= 1000 else f'{debit:.0f}'
     credit_label = f'{credit:,.0f}' if credit >= 1000 else f'{credit:.0f}'
-    plt.text(debit+0.05, i-0.15, debit_label, fontsize=10,fontweight='bold')
-    plt.text(credit+0.05, i+0.1, credit_label, fontsize=10,fontweight='bold')
+    plt.text(debit+0.05, i-0.15, debit_label, fontsize=12)
+    plt.text(credit+0.05, i+0.1, credit_label, fontsize=12)
 
 
 

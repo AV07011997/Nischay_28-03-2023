@@ -26,6 +26,9 @@ const NumberWithRupees = ({ value }) => {
 
 function NewComponent(props) {
   const { data } = props;
+  const { type } = props;
+  console.log(type);
+
   const headers = [
     "Transaction Date",
     "Description",
@@ -58,8 +61,23 @@ function NewComponent(props) {
           </thead>
           <tbody style={{ border: "2px solid black" }}>
             {data.map((item, i) => {
+              const isBounced = type === "BOUNCED"; // Check if the global type is "BOUNCED"
+              const isNegativeBalance = type === "negative_balance"; // Check if the global type is "negative_balance"
+              const isEvenRow = i % 2 === 0; // Check if the row index is even
+
+              let shouldApplyColor = false;
+              if (isNegativeBalance) {
+                shouldApplyColor = item.balance === "₹0.00"; // Check if color coding should be applied based on the pattern "₹0.00" for negative_balance type
+              } else {
+                shouldApplyColor =
+                  (isBounced && isEvenRow) ||
+                  ((i % 4 === 2 || i % 4 === 3) && !isBounced); // Check if color coding should be applied based on conditions for BOUNCED type
+              }
+
+              const rowColor = shouldApplyColor ? "#f0f0f0" : "#ffffff"; // Set background color based on conditions
+
               return (
-                <tr key={i}>
+                <tr key={i} style={{ backgroundColor: rowColor }}>
                   <td style={{ padding: "10px", border: "1px solid #5a5a5a" }}>
                     {item.txn_date}
                   </td>
@@ -94,6 +112,7 @@ const AnalyzeBankSummary = ({ setUser }) => {
   const [popupData, setPopUpData] = useState();
   const [buttonClicked, setbuttonClicked] = useState("closed");
   const [pagestate, setpagestate] = useState();
+  const [type, settype] = useState();
   const [src, setSrc] = useState();
   const [src2, setSrc2] = useState();
   var Amount_pop_up = 0;
@@ -125,6 +144,7 @@ const AnalyzeBankSummary = ({ setUser }) => {
   };
 
   function openWindow(type, amount) {
+    settype(type);
     Amount_pop_up = amount;
     const getPopUpData = async () => {
       console.log("hello");
@@ -153,7 +173,10 @@ const AnalyzeBankSummary = ({ setUser }) => {
       newWindow.document.body.appendChild(newElement);
 
       // Render the NewComponent with the data in the new element
-      ReactDOM.render(<NewComponent data={popupData[0]} />, newElement);
+      ReactDOM.render(
+        <NewComponent data={popupData[0]} type={type} />,
+        newElement
+      );
       setbuttonClicked("closed");
     }
   }, [popupData]);
