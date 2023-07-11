@@ -707,10 +707,16 @@ const AnalyzeStatement = ({ setUser }) => {
       )}
 
       {table1 && (
-        <div className="div_table1_monthwise">
-          <table className="table1_monthwise">
+        <div
+          className="div_table1_monthwise"
+          style={{ overflowY: "auto", height: "700px" }}
+        >
+          <table
+            className="table1_monthwise"
+            style={{ width: "91%", marginLeft: "5%" }}
+          >
             <thead className="thead_table1_monthwise">
-              <tr>
+              <tr style={{ position: "sticky", top: "0", background: "black" }}>
                 <th>Transaction Date</th>
                 <th>Description</th>
                 <th>Cheque Number</th>

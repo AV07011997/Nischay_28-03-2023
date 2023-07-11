@@ -26,7 +26,7 @@ const Bureau = ({ info }) => {
       for (var j = 0; j < res[0].length; j++) {
         selectedvalueArray.push("bureau");
       }
-      console.log(selectedvalueArray);
+      // console.log(selectedvalueArray);
       setSelectedValueType(selectedvalueArray);
       setTableData(res);
 
@@ -44,11 +44,11 @@ const Bureau = ({ info }) => {
 
         tempArray.push(tempObject);
       }
+      console.log(tempArray);
 
       setEmiDataArray(tempArray);
     });
   }, []);
-
   const emiCalculation = (p, r, t) => {
     // console.log(t)
     r = r / 1200;
@@ -69,10 +69,11 @@ const Bureau = ({ info }) => {
   const handleChange = (i) => {
     // console.log(i)
 
-    var temp = selectedValueType;
+    var temp = [...selectedValueType];
     temp[i] = "edited";
+
     // console.log(temp)
-    setSelectedValueType[temp];
+    setSelectedValueType(temp);
 
     const roi = document.getElementById("roi_input" + i.toString());
     const tenure = document.getElementById("tenure_input" + i.toString());
@@ -93,7 +94,10 @@ const Bureau = ({ info }) => {
     temp[index] = value;
 
     setSelectedValueType[temp];
+    console.log(temp);
   };
+  console.log(selectedValueType);
+
   return (
     <div>
       <NavBar radiovalue={radiovalue}></NavBar>
@@ -113,6 +117,8 @@ const Bureau = ({ info }) => {
           <tbody className="table_bureau_tbody">
             {tableData &&
               tableData[0].map((item, i) => {
+                // console.log(selectedValueType);
+
                 return (
                   <tr key={"row" + i.toString()}>
                     {state.columns.map((coloumn, j) => {
