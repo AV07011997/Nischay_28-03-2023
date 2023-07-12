@@ -20,6 +20,7 @@ from django.conf import settings
 def bcmk_charts(data):
     
     final = data
+    data.reset_index(inplace=True)
     account_number=data['account_number'][0]
     #Converting string date into datetime 
     #final.info()

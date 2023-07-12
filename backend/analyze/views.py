@@ -182,6 +182,25 @@ def bank_customer_month_kpi(request):
                     lambda x: format_currency(x, 'INR', locale='en_IN'))
                 KPI['Non_cash_credits_Value'] = KPI['Non_cash_credits_Value'].apply(lambda x: str(x).replace('₹', ''))
                 KPI['Non_cash_credits_Value'] = KPI['Non_cash_credits_Value'].apply(lambda x: str(x).split('.')[0])
+                ########################################################
+
+                KPI['Min_Balance'] = KPI['Min_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
+                KPI['Min_Balance'] = KPI['Min_Balance'].apply(lambda x: round(x))
+                KPI['Min_Balance'] = KPI['Min_Balance'].apply(
+                    lambda x: format_currency(x, 'INR', locale='en_IN'))
+                KPI['Min_Balance'] = KPI['Min_Balance'].apply(lambda x: str(x).replace('₹', ''))
+                KPI['Min_Balance'] = KPI['Min_Balance'].apply(lambda x: str(x).split('.')[0])
+
+                ###################################################
+
+                KPI['Max_Balance'] = KPI['Max_Balance'].apply(lambda x: x if pd.notnull(x) else 0)
+                KPI['Max_Balance'] = KPI['Max_Balance'].apply(lambda x: round(x))
+                KPI['Max_Balance'] = KPI['Max_Balance'].apply(
+                    lambda x: format_currency(x, 'INR', locale='en_IN'))
+                KPI['Max_Balance'] = KPI['Max_Balance'].apply(lambda x: str(x).replace('₹', ''))
+                KPI['Max_Balance'] = KPI['Max_Balance'].apply(lambda x: str(x).split('.')[0])
+
+
 
                 # KPI['Non_cash_credits_Value'] = KPI['Non_cash_credits_Value'].apply(lambda x: (round(x)))
                 # KPI['Non_cash_credits_Value'] = KPI['Non_cash_credits_Value'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))

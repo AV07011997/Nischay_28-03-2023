@@ -14,9 +14,6 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import { postApi } from "../../callapi";
-// import Typography from "@mui/material/Typography";
-// import { redirect } from "react-router-dom";
-// import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const LandingPage = ({ setUser }) => {
@@ -90,9 +87,13 @@ const LandingPage = ({ setUser }) => {
     });
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("leadID", radio);
-  }, [radio]);
+  // useEffect(() => {
+  //   localStorage.setItem("leadID", radio);
+  // }, [radio]);
+
+  const setLeadIdInLocal = (leadID) => {
+    localStorage.setItem("leadID", leadID);
+  };
 
   useEffect(() => {
     let local = [];
@@ -167,6 +168,9 @@ const LandingPage = ({ setUser }) => {
     // navigate("/upload");
     navigate(`/upload/${radio}/${name}/${uploadcount}`);
   };
+
+  var selectionDeafult = "";
+
   return (
     <div>
       <NavBar
@@ -209,8 +213,19 @@ const LandingPage = ({ setUser }) => {
                   {table?.map((item, i) => {
                     {
                       if (i < upperLimit && i >= lowerLimit) {
+                        var backgroundColorRow = "";
+                        if (item.lead_id === localStorage.getItem("leadID")) {
+                          backgroundColorRow = "#f0f0f0";
+                          selectionDeafult = i;
+                        } else {
+                          backgroundColorRow = "";
+                          selectionDeafult = "";
+                        }
                         return (
-                          <tr key={i}>
+                          <tr
+                            key={i}
+                            style={{ background: backgroundColorRow }}
+                          >
                             <td>
                               <label>
                                 <input
@@ -218,11 +233,12 @@ const LandingPage = ({ setUser }) => {
                                   id="radio_table"
                                   name="radio_table"
                                   value={item.lead_id}
+                                  defaultChecked={i === selectionDeafult}
                                   onClick={() => {
                                     setradio(item.lead_id);
                                     setname(item.name);
                                     setuploadcount(item.bank_uploaded);
-
+                                    setLeadIdInLocal(item.lead_id);
                                     setvalues(
                                       item.lead_id,
                                       item.customer_id,

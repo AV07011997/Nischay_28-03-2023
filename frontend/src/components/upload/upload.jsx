@@ -226,6 +226,14 @@ const Upload = ({ setUser }) => {
     }
     settable(uniqueObjects);
   };
+  const scrollTo = () => {};
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 700, // Replace with the desired pixel height
+      behavior: "smooth", // This enables smooth scrolling
+    });
+  }, [mergefiles]);
 
   return (
     <div>

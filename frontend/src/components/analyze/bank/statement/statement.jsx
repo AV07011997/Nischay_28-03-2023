@@ -328,7 +328,7 @@ const AnalyzeStatement = ({ setUser }) => {
 
     tempData.forEach((element) => {
       if (
-        parseFloat(element.credit.replace(/,/g, "")) >= from &&
+        parseFloat(element.credit.replace(/,/g, "")) > from &&
         parseFloat(element.credit.replace(/,/g, "")) <= to
         // ||
         // parseFloat(element.debit.replace(/,/g, "")) > 0
@@ -352,7 +352,7 @@ const AnalyzeStatement = ({ setUser }) => {
 
     tempData.forEach((element) => {
       if (
-        parseFloat(element.debit.replace(/,/g, "")) >= from &&
+        parseFloat(element.debit.replace(/,/g, "")) > from &&
         parseFloat(element.debit.replace(/,/g, "")) <= to
         // ||
         // parseFloat(element.credit.replace(/,/g, "")) > 0

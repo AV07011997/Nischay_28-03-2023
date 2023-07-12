@@ -83,6 +83,15 @@ def KPIs(data):
         ######Avg balance
         Average_balance=final.groupby(['month_year']).agg(Average_balance=("balance","mean")).reset_index()
 
+        ###Min-bal Monthwise
+        Min_Balance=final.groupby(['month_year']).agg(Min_Balance=("balance","min")).reset_index()
+
+        ###Max-bal Monthwise
+        Max_Balance = final.groupby(['month_year']).agg(Max_Balance=("balance", "max")).reset_index()
+
+
+
+
         #######Month_End_balance'
         #final.info()
         check_month_df = {"month_min":(final['txn_date'].min()).month,"month_max":(final['txn_date'].max()).month,"year_min": (final['txn_date'].min()).year,"year_max": (final['txn_date'].max()).year}
@@ -126,8 +135,13 @@ def KPIs(data):
         cd3=cd2.merge(EMI,on="month_year",how="left")
         cd3["EMI"]=cd3["EMI"].fillna(0)
 
+        cd4=cd3.merge(Min_Balance,on="month_year",how="left").merge(Max_Balance,on="month_year",how="left")
+
+
+
+
         #Transposing the table
-        Monthly_KPIs = cd3.transpose().sort_index(axis=1,ascending=False)
+        Monthly_KPIs = cd4.transpose().sort_index(axis=1,ascending=False)
         Monthly_KPIs.columns
         Monthly_KPIs.iloc[0,:]=Monthly_KPIs.iloc[0,:].astype(str).str.split("-").apply(lambda x: dt.date(int(x[0]),int(x[1]),1))
         Monthly_KPIs.iloc[0,:]=Monthly_KPIs.iloc[0,:].apply(lambda x:x.strftime('%b-%y') )                           

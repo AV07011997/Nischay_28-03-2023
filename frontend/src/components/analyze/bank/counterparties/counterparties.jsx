@@ -100,6 +100,13 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
     setpagestate(0);
   }, [acc_number]);
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 300, // Replace with the desired pixel height
+      behavior: "smooth", // This enables smooth scrolling
+    });
+  }, [optbank]);
+
   const mainHeader = [
     { header: "", col_span: 1 },
     { header: "Transaction", col_span: 2 },
@@ -295,8 +302,21 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
             <thead className="table2_headers_counterparties">
               <tr>
                 {mainHeader.map((item, i) => {
+                  var headerWidth = "auto";
+                  if (item.header === "") {
+                    headerWidth = "26em";
+                    console.log(headerWidth);
+                  } else if (item.header === "Number of Transactions") {
+                    headerWidth = "30em";
+                  } else {
+                    headerWidth = "40em";
+                  }
                   return (
-                    <th className="sticky-main_header" colSpan={item.col_span}>
+                    <th
+                      className="sticky-main_header"
+                      colSpan={item.col_span}
+                      style={{ width: headerWidth, textAlign: "center" }}
+                    >
                       {item.header}
                     </th>
                   );
@@ -305,8 +325,17 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
 
               <tr>
                 {sub_headers.map((item, i) => {
+                  var columnWidth = "";
+                  if (item.column_name === "Monthly Average") {
+                    columnWidth = "4.5em";
+                  } else {
+                    columnWidth = "auto";
+                  }
                   return (
-                    <th className="sticky-sub_header">
+                    <th
+                      className="sticky-sub_header"
+                      style={{ width: columnWidth }}
+                    >
                       {item.column_name}{" "}
                       <button
                         className="filterButton_counterparties"

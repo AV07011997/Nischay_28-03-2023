@@ -117,6 +117,13 @@ const AnalyzeBankSummary = ({ setUser }) => {
   const [src2, setSrc2] = useState();
   var Amount_pop_up = 0;
 
+  const handleClick = () => {
+    window.scrollTo({
+      top: 300, // Replace with the desired pixel height
+      behavior: "smooth", // This enables smooth scrolling
+    });
+  };
+
   useEffect(() => {
     var statementsArray = [];
     postApi("analyze/" + APIADDRESS.ANALYZEBANKSUMMARY, {
@@ -221,6 +228,7 @@ const AnalyzeBankSummary = ({ setUser }) => {
                               value={item.account_number}
                               onClick={() => {
                                 getData(item.account_number);
+                                handleClick();
                               }}
                             />
                             <span className="radiobuttongap">

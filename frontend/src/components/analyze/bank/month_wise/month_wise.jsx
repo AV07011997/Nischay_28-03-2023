@@ -139,6 +139,13 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
     setSrc2("./staticfiles/" + String(acc_number) + "bcmk_fig_1.png");
   }, [optbank]);
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 500, // Replace with the desired pixel height
+      behavior: "smooth", // This enables smooth scrolling
+    });
+  }, [optbank]);
+
   function openWindow(type, amount) {
     Amount_pop_up = amount;
     const getPopUpData = async () => {
@@ -182,6 +189,8 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
     });
   };
   const maxColumns = 12;
+
+  console.log(optbank);
 
   return (
     <div>
@@ -550,6 +559,58 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
               </tr>
               <tr>
                 <td className="highlighted_headers" colSpan={3}>
+                  Minimum Balance{" (₹)"}
+                </td>
+                {optbank.map((item) => {
+                  if (item) {
+                    return (
+                      <td style={{ textAlign: "right" }}>{item.Min_Balance}</td>
+                    );
+                  }
+                })}
+              </tr>
+              <tr>
+                <td className="highlighted_headers" colSpan={3}>
+                  Maximum Balance{" (₹)"}
+                </td>
+                {optbank.map((item) => {
+                  if (item) {
+                    return (
+                      <td style={{ textAlign: "right" }}>{item.Max_Balance}</td>
+                    );
+                  }
+                })}
+              </tr>
+              <tr>
+                <td className="highlighted_headers" colSpan={3}>
+                  Average Balance{" (₹)"}
+                </td>
+                {optbank.map((item) => {
+                  if (item) {
+                    return (
+                      <td style={{ textAlign: "right" }}>
+                        {item.Average_balance}
+                      </td>
+                    );
+                  }
+                })}
+              </tr>
+              <tr>
+                <td className="highlighted_headers" colSpan={3}>
+                  Month End Balance{" (₹)"}
+                </td>
+                {optbank.map((item) => {
+                  if (item) {
+                    return (
+                      <td style={{ textAlign: "right" }}>
+                        {item.Month_End_balance}
+                      </td>
+                    );
+                  }
+                })}
+              </tr>
+              <tr>
+                <td className="highlighted_headers" colSpan={3}>
                   Max Credit Amount{" (₹)"}
                 </td>
                 {optbank.map((item) => {
@@ -610,20 +671,7 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                   }
                 })}
               </tr>
-              <tr>
-                <td className="highlighted_headers" colSpan={3}>
-                  Average Balance{" (₹)"}
-                </td>
-                {optbank.map((item) => {
-                  if (item) {
-                    return (
-                      <td style={{ textAlign: "right" }}>
-                        {item.Average_balance}
-                      </td>
-                    );
-                  }
-                })}
-              </tr>
+
               <tr>
                 <td className="highlighted_headers" colSpan={3}>
                   Month End Balance{" (₹)"}
