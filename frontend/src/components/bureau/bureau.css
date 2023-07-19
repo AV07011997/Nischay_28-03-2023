@@ -1,7 +1,7 @@
 .table_bureau {
-  margin-bottom: auto;
+  /* margin-bottom: auto; */
   margin-left: auto;
-  margin-top: 10em;
+  /* margin-top: 10em; */
   margin-right: auto;
   width: 95%;
   padding: 8px;
@@ -11,7 +11,14 @@
   color: white;
   height: 40px;
 }
+.button_bureau {
+  margin-bottom: auto;
 
+  margin-top: 2em;
+
+  padding: 8px;
+  margin-left: 100em;
+}
 .table_bureau_text {
   padding: 8px;
 }

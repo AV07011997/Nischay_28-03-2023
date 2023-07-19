@@ -824,62 +824,76 @@ def get_bureau_data(request):
     return HttpResponse(pydict)
 
 
-@login_required
+# @login_required
 def update_bureau_data(request):
-    datatemp = json.loads(request.POST['data'])
-    selectedoptionsinarow = datatemp.pop('data')
+    # datatemp = json.loads(request.POST['data'])
+    # selectedoptionsinarow = datatemp.pop('data')
 
-    data = datatemp
-    customer_id = request.session["customer_id"]
-    deal_id = request.session["deal_id"]
+    # data = datatemp
+    # customer_id = request.session["customer_id"]
+    # deal_id = request.session["deal_id"]
 
-    for x in selectedoptionsinarow:
-        index = x['index'] + 1
-        selectedoption = x['selectedoption']
-        # with connection.cursor() as cursor:
-        #     cursor.execute(f"UPDATE bureau SET valuetype = '{selectedoption}' WHERE `index` = '{index}';")
-        obj = bureau.object.get(index=index)
-        obj.valuetype = selectedoption
-        obj.save()
+    # for x in selectedoptionsinarow:
+    #     index = x['index'] + 1
+    #     selectedoption = x['selectedoption']
+    #     # with connection.cursor() as cursor:
+    #     #     cursor.execute(f"UPDATE bureau SET valuetype = '{selectedoption}' WHERE `index` = '{index}';")
+    #     obj = bureau.object.get(index=index)
+    #     obj.valuetype = selectedoption
+    #     obj.save()
 
-        for row_index in data:
-            row_data = data[row_index]
-            for column in row_data:
-                # print("row data: ", row_data[column])
-                if type(row_data[column]) == str:
-                    # print("data type string.")
-                    # sql_query_1 = "update bureau set " + column + "_edited = '" + row_data[
-                    #     column] + "' where `index` = " + row_index + ";"
-                    string = column + "_edited"
-                    obj = bureau.object.get(index=row_index)
-                    obj[string] = row_data[column]
-                    obj.save()
-                    obj = bureau.object.get
+    #     for row_index in data:
+    #         row_data = data[row_index]
+    #         for column in row_data:
+    #             # print("row data: ", row_data[column])
+    #             if type(row_data[column]) == str:
+    #                 # print("data type string.")
+    #                 # sql_query_1 = "update bureau set " + column + "_edited = '" + row_data[
+    #                 #     column] + "' where `index` = " + row_index + ";"
+    #                 string = column + "_edited"
+    #                 obj = bureau.object.get(index=row_index)
+    #                 obj[string] = row_data[column]
+    #                 obj.save()
+    #                 obj = bureau.object.get
 
-                elif type(row_data[column]) == int:
-                    # print("data type integer.")
-                    # sql_query_1 = "update bureau set " + column + "_edited = '" + str(
-                    #     row_data[column]) + "' where `index` = " + row_index + ";"
+    #             elif type(row_data[column]) == int:
+    #                 # print("data type integer.")
+    #                 # sql_query_1 = "update bureau set " + column + "_edited = '" + str(
+    #                 #     row_data[column]) + "' where `index` = " + row_index + ";"
 
-                    string = column + "_edited"
-                    obj = bureau.object.get(index=row_index)
-                    obj[string] = str(row_data[column])
-                    obj.save()
+    #                 string = column + "_edited"
+    #                 obj = bureau.object.get(index=row_index)
+    #                 obj[string] = str(row_data[column])
+    #                 obj.save()
 
-                if row_data[column] == '0' or row_data[column] == '' or row_data[column] == ' ' or row_data[
-                        column] == None:
-                    # sql_query_2 = "update bureau set " + column + "_user_edited = 1 where `index` = " + row_index + ";"
-                    string = column + "_user_edited"
-                    obj = bureau.object.get(index=row_index)
-                    obj[string] = str(row_data[column])
-                    obj.save()
+    #             if row_data[column] == '0' or row_data[column] == '' or row_data[column] == ' ' or row_data[
+    #                     column] == None:
+    #                 # sql_query_2 = "update bureau set " + column + "_user_edited = 1 where `index` = " + row_index + ";"
+    #                 string = column + "_user_edited"
+    #                 obj = bureau.object.get(index=row_index)
+    #                 obj[string] = str(row_data[column])
+    #                 obj.save()
 
-                # print(sql_query_2)
+    #             # print(sql_query_2)
 
-    status = {}
-    status["type"] = "success"
-    status["message"] = "Data has been updated successfully."
-    return HttpResponse(json.dumps({"bureau_page": True, "status": status}))
+    # status = {}
+    # status["type"] = "success"
+    # status["message"] = "Data has been updated successfully."
+    # return HttpResponse(json.dumps({"bureau_page": True, "status": status}))
+
+    payload = request.POST.get('payload')
+    payload = json.loads(payload)
+
+    for item in payload:
+
+        with connection.cursor() as cursor:
+            sql_query = "UPDATE `a5_kit`.`mysite_bureau_table_data` SET `selectedValue` ='" + \
+                item['selectedValue'] + "', `ROI_user_edited` ='"+str(item['ROI_user_edited'])+"' , `Tenure_user_edited`='"+str(item['Tenure_user_edited'])+"' WHERE `lead_id` ='" + \
+                str(item['lead_id'])+"' AND  `loan_id` = '" + \
+                str(item['loan_id'])+"' ;"
+            cursor.execute(sql_query)
+
+    return HttpResponse({'status': 'Success'})
 
 
 def update_upload_list(request):

@@ -22,6 +22,7 @@ export const APIADDRESS = {
   UPLOADEDFILESDELETE: "delete_files/",
   UPDATEUPLOADLIST: "update_upload_list/",
   BUREAUMONTHWISE: "bureau_customer_month_kpi/",
+  SAVEBUREAUDATA: "update_bureau_data/",
 };
 
 export const BUREAUPAGECOLUMNS = {
