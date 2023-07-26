@@ -91,8 +91,10 @@ const LandingPage = ({ setUser }) => {
   //   localStorage.setItem("leadID", radio);
   // }, [radio]);
 
-  const setLeadIdInLocal = (leadID) => {
+  const setLeadIdInLocal = (leadID, name, bank_uploaded) => {
     localStorage.setItem("leadID", leadID);
+    localStorage.setItem("name", name);
+    localStorage.setItem("uploadcount", bank_uploaded);
   };
 
   useEffect(() => {
@@ -125,9 +127,7 @@ const LandingPage = ({ setUser }) => {
       settable(local);
     }
   }, [search]);
-  useEffect(() => {
-    postApi(APIADDRESS.UPDATEUPLOADLIST, {}).then((res) => {});
-  });
+
   useEffect(() => {
     setupperLimit(parseInt(valueDropdown));
     setlowerLimit(0);
@@ -238,7 +238,11 @@ const LandingPage = ({ setUser }) => {
                                     setradio(item.lead_id);
                                     setname(item.name);
                                     setuploadcount(item.bank_uploaded);
-                                    setLeadIdInLocal(item.lead_id);
+                                    setLeadIdInLocal(
+                                      item.lead_id,
+                                      item.name,
+                                      item.bank_uploaded
+                                    );
                                     setvalues(
                                       item.lead_id,
                                       item.customer_id,

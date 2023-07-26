@@ -3,7 +3,7 @@ from numpy import nan
 from tabula import read_pdf
 from re import findall
 from datetime import datetime as dt
-
+from django.db import connection
 
 
 

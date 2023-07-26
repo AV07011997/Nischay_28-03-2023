@@ -117,12 +117,12 @@ const AnalyzeBankSummary = ({ setUser }) => {
   const [src2, setSrc2] = useState();
   var Amount_pop_up = 0;
 
-  const handleClick = () => {
-    window.scrollTo({
-      top: 300, // Replace with the desired pixel height
-      behavior: "smooth", // This enables smooth scrolling
-    });
-  };
+  // const handleClick = () => {
+  //   window.scrollTo({
+  //     top: 300, // Replace with the desired pixel height
+  //     behavior: "smooth", // This enables smooth scrolling
+  //   });
+  // };
 
   useEffect(() => {
     var statementsArray = [];
@@ -191,6 +191,14 @@ const AnalyzeBankSummary = ({ setUser }) => {
   console.log(table);
 
   //function to put space after rupee symbol
+  useEffect(() => {
+    if (table) {
+      window.scrollTo({
+        top: 260 + 30 * (table.length - 1), // Replace with the desired pixel height - 140*2 -140/4
+        behavior: "smooth", // This enables smooth scrolling
+      });
+    }
+  }, [info]);
 
   return (
     <div>
@@ -446,11 +454,19 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "3px",
                     }}
                   >
                     Average Monthly Balance
                   </td>
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "2px",
+                    }}
+                  >
                     {info.data1.Average_Monthly_Balance}
                   </td>
                 </tr>
@@ -459,11 +475,19 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "2px",
                     }}
                   >
                     Average Monthly Debit
                   </td>
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "2px",
+                    }}
+                  >
                     {info.data1.Average_Monthly_Debit}{" "}
                   </td>
                 </tr>
@@ -472,11 +496,19 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "2px",
                     }}
                   >
                     Average Monthly Credit
                   </td>
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "2px",
+                    }}
+                  >
                     {info.data1.Average_Monthly_Credit}{" "}
                   </td>
                 </tr>
@@ -485,11 +517,19 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "3px",
                     }}
                   >
                     Maximum Balance
                   </td>
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "3px",
+                    }}
+                  >
                     {info.data1.Maximum_Balance}{" "}
                   </td>
                 </tr>
@@ -498,11 +538,19 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "3px",
                     }}
                   >
                     Minimum Balance
                   </td>
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "3px",
+                    }}
+                  >
                     {info.data1.Minimum_Balance}{" "}
                   </td>
                 </tr>
@@ -518,11 +566,19 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "3px",
                     }}
                   >
                     Ratio Debit Credit
                   </td>
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "3px",
+                    }}
+                  >
                     {info.data3.Ratio_Debit_Credit}
                   </td>
                 </tr>
@@ -531,11 +587,19 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "3px",
                     }}
                   >
                     Ratio Cash Total Credit
                   </td>
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "3px",
+                    }}
+                  >
                     {info.data3.Ratio_Cash_Total_Credit}{" "}
                   </td>
                 </tr>
@@ -544,11 +608,19 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "3px",
                     }}
                   >
                     Lowest Credit Amount
                   </td>
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "3px",
+                    }}
+                  >
                     {info.data3.Lowest_Debit_Amount}{" "}
                   </td>
                 </tr>
@@ -557,11 +629,19 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "3px",
                     }}
                   >
                     Highest Credit Amount
                   </td>
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "3px",
+                    }}
+                  >
                     <button
                       style={{
                         color: "blue",
@@ -586,11 +666,19 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "3px",
                     }}
                   >
                     Lowest Debit Amount
                   </td>
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "3px",
+                    }}
+                  >
                     <button
                       style={{
                         color: "blue",
@@ -613,7 +701,14 @@ const AnalyzeBankSummary = ({ setUser }) => {
             )}
           </table>
 
-          <table style={{ marginTop: "4em", width: "100%" }}>
+          <table
+            style={{
+              marginTop: "4em",
+              width: "100%",
+              border: "1px solid #575757",
+              padding: "3px",
+            }}
+          >
             {info && (
               <tbody>
                 <tr>
@@ -621,11 +716,19 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "3px",
                     }}
                   >
                     Number of Cheque Bounce
                   </td>
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "3px",
+                    }}
+                  >
                     <button
                       style={{
                         color: "blue",
@@ -650,11 +753,19 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "3px",
                     }}
                   >
                     Minimum Amount Cheque Bounce
                   </td>
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "3px",
+                    }}
+                  >
                     <button
                       style={{
                         color: "blue",
@@ -684,11 +795,19 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "3px",
                     }}
                   >
                     Latest Cheque Bounce
                   </td>
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "3px",
+                    }}
+                  >
                     <button
                       style={{
                         color: "blue",
@@ -723,6 +842,8 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "3px",
                     }}
                   >
                     Entries with Zero or Negative Balance
@@ -755,11 +876,19 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "3px",
                     }}
                   >
                     Days with balance 0 or negative.
                   </td>
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "3px",
+                    }}
+                  >
                     {info.data4.Days_with_bal_0_neg}{" "}
                   </td>
                 </tr>
@@ -768,12 +897,20 @@ const AnalyzeBankSummary = ({ setUser }) => {
                     style={{
                       width: "16em",
                       height: "3em",
+                      border: "1px solid #575757",
+                      padding: "3px",
                     }}
                   >
                     Number of Charges Levied
                   </td>
 
-                  <td style={{ textAlign: "right" }}>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      border: "1px solid #575757",
+                      padding: "3px",
+                    }}
+                  >
                     <button
                       style={{
                         color: "blue",

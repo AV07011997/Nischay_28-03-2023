@@ -2035,6 +2035,310 @@ def bank_entity_kpi(request):
     return HttpResponse(pydict)
 
 
+from django.http import JsonResponse
+from pandas import DataFrame
+
+
+def extract_rows_data(request):
+    # Assuming you received the QueryDict from the request object
+    query_dict = request.POST
+
+    # Initialize lists to store rows data
+    rows_data_list = []
+
+    # Get the total number of rows, assuming the keys follow the pattern 'RowsData[i][key]'
+    num_rows = len([key for key in query_dict if key.startswith('RowsData[')])
+
+    # Iterate over the rows and extract the data
+    for i in range(num_rows):
+        # index = query_dict.get(f'RowsData[selectedRowsData][{i}][index]')
+        if (query_dict.get(f'RowsData[selectedRowsData][{i}][entity]')):
+            entity = query_dict.get(f'RowsData[selectedRowsData][{i}][entity]')
+            group_no = query_dict.get(f'RowsData[selectedRowsData][{i}][group_no]')
+
+
+        # Add more fields as needed
+
+        # Create a dictionary for each row and append it to the list
+        row_data = {
+
+            'entity': entity,
+            'group_no':group_no,
+
+            # Add more fields as needed
+        }
+        rows_data_list.append(row_data)
+
+    # Convert the list of dictionaries to a DataFrame
+    df = DataFrame(rows_data_list)
+    df=df.drop_duplicates()
+
+    # Perform any additional processing or calculations if needed
+
+    # Return the DataFrame as JSON response
+    return df
+
+
+def bank_entity_kpi_merge(request):
+    n4 = "p"
+    z = ""
+
+    if request.method == "POST":
+        lead_id = ''
+        lead_id = lead_id.join(request.POST.getlist('leadID'))
+        lead_id = lead_id.rstrip()
+        group_no = ''
+        group_no = group_no.join(request.POST.getlist('group_no'))
+        group_no = group_no.rstrip()
+
+
+        acc_no = request.POST.get('optbank')
+
+        selected_rows_data = extract_rows_data(request)
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT *  FROM mysite_mergerowslist")
+            data_1 = dictfetchall(cursor)
+            data_rows=pd.DataFrame(data_1)
+            if not data_rows.empty:
+                data_rows['entity'] = data_rows['entity'].str.strip()
+
+        if not data_rows.empty:
+            lastIndex=data_rows.index[-1]
+
+            c = data_rows.loc[lastIndex, 'group_no']
+
+            k=int(c)
+            k=k+1
+            c=str(k)
+        else:
+            c='1'
+
+
+
+        # if not selected_rows_data.empty:
+        #     for index, row in selected_rows_data.iterrows():
+        #         entity = str(row['entity'])
+        #         group_no=str(row['group_no'])
+        #         with connection.cursor() as cursor:
+        #             sql_query = "INSERT INTO a5_kit.mysite_mergerowslist (group_no, lead_id, account_number, entity) VALUES (%s, %s, %s, %s);"
+        #             cursor.execute(sql_query, (c, lead_id, acc_no, entity))
+
+
+        if not selected_rows_data.empty:
+            for index, row in selected_rows_data.iterrows():
+                entity = str(row['entity'])
+                group_no=str(row['group_no'])
+                if group_no == "" or group_no=="None":
+                    with connection.cursor() as cursor:
+                        sql_query = "INSERT INTO a5_kit.mysite_mergerowslist (group_no, lead_id, account_number, entity) VALUES (%s, %s, %s, %s);"
+                        cursor.execute(sql_query, (c, lead_id, acc_no, entity))
+                else:
+                    with connection.cursor() as cursor:
+                        sql_query = "UPDATE a5_kit.mysite_mergerowslist SET group_no = %s WHERE group_no = %s;"
+                        cursor.execute(sql_query, (c, group_no))
+
+        if not group_no=="":
+            with connection.cursor() as cursor:
+                sql_query = "DELETE FROM a5_kit.mysite_mergerowslist WHERE group_no = %s AND lead_id = %s AND account_number = %s;"
+                cursor.execute(sql_query, (group_no, lead_id, acc_no))
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT *  FROM mysite_mergerowslist")
+            data_1 = dictfetchall(cursor)
+            data_rows=pd.DataFrame(data_1)
+            if not data_rows.empty:
+                data_rows['entity'] = data_rows['entity'].str.strip()
+
+
+
+
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT account_number, bank_name, min(txn_date) as from_date, max(txn_date) as to_date, COUNT(DISTINCT(entity)) as num_entities  FROM mysite_bank_bank WHERE lead_id = " + lead_id + " GROUP BY account_number " + ";")
+            data = dictfetchall(cursor)
+            # print(data)
+            for date in data:
+                date['from_date'] = date['from_date'].strftime('%d/%m/%Y')
+                date['to_date'] = date['to_date'].strftime('%d/%m/%Y')
+
+        if request.method == "POST":
+            n = request.POST.get('optbank')
+            z = n;
+            n4 = "q"
+
+            if n is not None:
+                n1 = n[1:-1]
+
+                n = "'%" + n[1:-1] + "%'"
+                # print(n)
+                with connection.cursor() as cursor1:
+                    cursor1.execute("SELECT * FROM mysite_bank_bank WHERE account_number like " + n + ";")
+                    data1 = dictfetchall(cursor1)
+                    data1 = pd.DataFrame(data1)
+                    data1 = data1[data1['lead_id'] == lead_id]
+                    data1['entity'] = data1['entity'].str.strip()
+
+                    # Assuming 'lead_id', 'account_number', and 'entity' are common columns in both data1 and data_rows DataFrames
+
+                    # Merge the two DataFrames on the common columns
+                    if not data_rows.empty:
+                        merged_data = data1.merge(data_rows, on=['lead_id', 'account_number','entity'],how="left")
+                    # Assuming you have a DataFrame named 'merged_data' with columns 'entity' and 'group_no'
+
+                        # merged_data.sort_values(by='entity', inplace=True)
+                    # Create a new column 'first_entity' that holds the first entity name in each group
+                    # merged_data['first_entity'] = merged_data.groupby('group_no')['entity'].transform('first')
+                        data_rows['first_entity'] = data_rows.groupby('group_no')['entity'].transform('first')
+                        merged_data=merged_data.merge(data_rows, on=['entity','lead_id','account_number'],how='left')
+                        # Replace the 'entity' column with the 'first_entity' column within each group
+                        merged_data.loc[~merged_data['first_entity'].isna(), 'entity'] = merged_data['first_entity']
+
+                        # Drop the 'first_entity' column if it's no longer needed
+                        merged_data.drop(columns='first_entity', inplace=True)
+
+                        # Display the modified DataFrame
+                        print(merged_data)
+                        merged_data['count'] = 0
+
+                        data_rows['count'] = data_rows.groupby('group_no')['group_no'].transform(lambda x: x.count())
+
+                        KPI = bek(merged_data)
+
+                        KPI = KPI.merge(data_rows, on='entity', how='left')
+                        KPI.drop(columns='first_entity', inplace=True)
+                        KPI.drop(columns='lead_id', inplace=True)
+                        KPI.drop(columns='account_number', inplace=True)
+
+                        KPI.drop_duplicates(subset='entity', keep='first', inplace=True)
+                        # KPI.reset_index(inplace=True)
+
+                    else:
+                        KPI = bek(data1)
+
+
+
+
+
+
+
+
+
+
+
+
+                    KPI['debits'] = KPI['debits'].fillna(0)
+                    KPI['debits'] = KPI['debits'].astype('int64')
+                    KPI['credits'] = KPI['credits'].fillna(0)
+                    KPI['credits'] = KPI['credits'].astype('int64')
+
+                    KPI['debited_amt_total'] = KPI['debited_amt_total'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI['debited_amt_total'] = KPI['debited_amt_total'].apply(lambda x: round(x))
+                    KPI['debited_amt_total'] = KPI['debited_amt_total'].apply(
+                        lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI['debited_amt_total'] = KPI['debited_amt_total'].apply(lambda x: str(x).split('.')[0])
+
+                    # KPI['credited_amt_total'] = KPI['credited_amt_total'].apply(lambda x: round(x) if pd.notnull(x) else 0)
+                    # KPI['credited_amt_total'] = KPI['credited_amt_total'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    # KPI['credited_amt_total'] = KPI['credited_amt_total'].apply(lambda x: str(x).split('.')[0])
+
+                    KPI['credited_amt_total'] = KPI['credited_amt_total'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI['credited_amt_total'] = KPI['credited_amt_total'].apply(lambda x: round(x))
+                    KPI['credited_amt_total'] = KPI['credited_amt_total'].apply(
+                        lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI['credited_amt_total'] = KPI['credited_amt_total'].apply(lambda x: str(x).split('.')[0])
+
+                    # KPI['max_debit'] = KPI['max_debit'].apply(lambda x: round(x) if pd.notnull(x) else 0)
+                    # KPI['max_debit'] = KPI['max_debit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    # KPI['max_debit'] = KPI['max_debit'].apply(lambda x: str(x).split('.')[0])
+
+                    KPI['max_debit'] = KPI['max_debit'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI['max_debit'] = KPI['max_debit'].apply(lambda x: round(x))
+                    KPI['max_debit'] = KPI['max_debit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI['max_debit'] = KPI['max_debit'].apply(lambda x: str(x).split('.')[0])
+
+                    # KPI['max_credit'] = KPI['max_credit'].apply(lambda x: round(x) if pd.notnull(x) else 0)
+                    # KPI['max_credit'] = KPI['max_credit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    # KPI['max_credit'] = KPI['max_credit'].apply(lambda x: str(x).split('.')[0])
+
+                    KPI['max_credit'] = KPI['max_credit'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI['max_credit'] = KPI['max_credit'].apply(lambda x: round(x))
+                    KPI['max_credit'] = KPI['max_credit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI['max_credit'] = KPI['max_credit'].apply(lambda x: str(x).split('.')[0])
+
+                    # KPI['min_credit'] = KPI['min_credit'].apply(lambda x: round(x) if pd.notnull(x) else 0)
+                    # KPI['min_credit'] = KPI['min_credit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    # KPI['min_credit'] = KPI['min_credit'].apply(lambda x: str(x).split('.')[0])
+
+                    KPI['min_credit'] = KPI['min_credit'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI['min_credit'] = KPI['min_credit'].apply(lambda x: round(x))
+                    KPI['min_credit'] = KPI['min_credit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI['min_credit'] = KPI['min_credit'].apply(lambda x: str(x).split('.')[0])
+
+                    # KPI['min_debit'] = KPI['min_debit'].apply(lambda x: round(x) if pd.notnull(x) else 0)
+                    # KPI['min_debit'] = KPI['min_debit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    # KPI['min_debit'] = KPI['min_debit'].apply(lambda x: str(x).split('.')[0])
+
+                    KPI['min_debit'] = KPI['min_debit'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI['min_debit'] = KPI['min_debit'].apply(lambda x: round(x))
+                    KPI['min_debit'] = KPI['min_debit'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI['min_debit'] = KPI['min_debit'].apply(lambda x: str(x).split('.')[0])
+
+                    # KPI['debited_amt_mthly'] = KPI['debited_amt_mthly'].apply(lambda x: round(x) if pd.notnull(x) else 0)
+                    # KPI['debited_amt_mthly'] = KPI['debited_amt_mthly'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    # KPI['debited_amt_mthly'] = KPI['debited_amt_mthly'].apply(lambda x: str(x).split('.')[0])
+
+                    KPI['debited_amt_mthly'] = KPI['debited_amt_mthly'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI['debited_amt_mthly'] = KPI['debited_amt_mthly'].apply(lambda x: round(x))
+                    KPI['debited_amt_mthly'] = KPI['debited_amt_mthly'].apply(
+                        lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI['debited_amt_mthly'] = KPI['debited_amt_mthly'].apply(lambda x: str(x).split('.')[0])
+
+                    # KPI['credited_amt_mthly'] = KPI['credited_amt_mthly'].apply(lambda x: round(x) if pd.notnull(x) else 0)
+                    # KPI['credited_amt_mthly'] = KPI['credited_amt_mthly'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    # KPI['credited_amt_mthly'] = KPI['credited_amt_mthly'].apply(lambda x: str(x).split('.')[0])
+
+                    KPI['credited_amt_mthly'] = KPI['credited_amt_mthly'].apply(lambda x: x if pd.notnull(x) else 0)
+                    KPI['credited_amt_mthly'] = KPI['credited_amt_mthly'].apply(lambda x: round(x))
+                    KPI['credited_amt_mthly'] = KPI['credited_amt_mthly'].apply(
+                        lambda x: format_currency(x, 'INR', locale='en_IN'))
+                    KPI['credited_amt_mthly'] = KPI['credited_amt_mthly'].apply(lambda x: str(x).split('.')[0])
+
+                    KPI['oldest_txn'] = KPI['oldest_txn'].apply(
+                        lambda x: x.strftime('%d/%m/%Y') if pd.notnull(x) else '')
+                    KPI['latest_txn'] = KPI['latest_txn'].apply(
+                        lambda x: x.strftime('%d/%m/%Y') if pd.notnull(x) else '')
+
+                    KPI1 = KPI[KPI['entity'] == 'Overall']
+                    KPI = KPI[KPI['entity'] != 'Overall']
+                    KPI = KPI.replace('₹', '', regex=True)
+
+                    KPI = KPI[KPI['entity'] != 'Other Transactions']
+
+                    json_records = KPI.reset_index().to_json(orient='records', date_format='iso')
+                    data1 = json.loads(json_records)
+
+                    json_records = KPI1.reset_index().to_json(orient='records', date_format='iso')
+                    data2 = json.loads(json_records)
+
+                    data3 = pd.DataFrame(list([data, data1, data2, n1, n4, z]))
+                    data3 = data3.to_dict('split')
+                    pydict = json.dumps([data3])
+                    return HttpResponse(pydict)
+
+
+                    # return render(request, "bek.html",
+                    #               {'data': data, 'data1': data1, 'data2': data2, 'n': n1, 'n4': n4, 'z': z})
+    # return render(request, "bek.html", {'data': data, 'n4': n4, 'z': z})
+    data3 = pd.DataFrame(list([data]))
+    data3 = data3.to_dict('split')
+    pydict = json.dumps([data3])
+    return HttpResponse(pydict)
+
+
 def bck_popup(request):
     status = {}
     if "deal_id" not in request.session or "customer_id" not in request.session:

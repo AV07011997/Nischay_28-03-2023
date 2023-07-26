@@ -180,25 +180,87 @@ def job():
         fstype = bank_extraction(files[i])
 
         if fstype == 'HDFC':
+
             str(files[i])
             print('hdfc')
             file_path = hdfc_digitization(files[i])
+
             file_name = files[i].split('\\')[-1][:-4]
-            lead_id = file_name.split("\\")[0][:6]
+            split_string = file_name.split('&')
+            lead_id=split_string[0]
+            upload_count=split_string[1]
+            name=split_string[2]
+            file_name_with_pdf=split_string[3]+".pdf"
+            current_datetime = datetime.now()
+            formatted_datetime = current_datetime.strftime('%m/%d/%Y %H:%M:%S')
+            formatted_datetime_str = str(current_datetime)
+
+            with connection.cursor() as cursor:
+                # Perform the update operation
+                # SQL query
+                sql_query = "INSERT INTO a5_kit.mysite_downloaded_file_details (lead_id, file_name, date, name) VALUES ('" + lead_id + "', '" + file_name_with_pdf + "', '" + formatted_datetime_str + "', '" + name + "')"
+
+                # Execute the query using your SQL library
+                cursor.execute(sql_query)
 
 
 
 
-
-            u = downloaded_file_details(lead_id=lead_id,file_name=file_name, date=datetime.now())
-            u.save()
+            # u = downloaded_file_details(lead_id=lead_id,file_name=file_name_with_pdf, date=datetime.now(),name=name)
+            # u.save()
             os.remove(files[i])
+
+            with connection.cursor() as cursor:
+
+                query = "UPDATE a5_kit.mysite_upload_file_details SET date_of_action = %s WHERE file_name LIKE %s AND (lead_id = %s AND name =%s) AND status != 'Deleted' ;"
+                pattern = '%' + file_name_with_pdf + '%'
+                cursor.execute(query, [formatted_datetime_str, pattern, lead_id,name])
+
+            with connection.cursor() as cursor:
+                # Perform the update operation
+                # query = "UPDATE a5_kit.mysite_upload_file_details SET status = 'Deleted' WHERE file_name LIKE %s;"
+                query = "UPDATE a5_kit.mysite_upload_file_details SET status = 'Digitized' WHERE file_name LIKE %s AND (lead_id = %s AND name=%s) AND status != 'Deleted' ;"
+
+                pattern = '%' + file_name_with_pdf + '%'  # Replace 'substring' with your desired pattern
+                # cursor.execute(query, [pattern])
+                cursor.execute(query, [pattern, lead_id,name])
 
         else:
             file_name = files[i].split('\\')[-1][:-4]
-            lead_id = file_name.split("\\")[0][:6]
-            u = failed_digitization(lead_id=lead_id, file_name=file_name)
-            u.save()
+            split_string = file_name.split('&')
+            lead_id = split_string[0]
+            upload_count = split_string[1]
+            name = split_string[2]
+            file_name_with_pdf = split_string[3] + ".pdf"
+            current_datetime = datetime.now()
+            formatted_datetime = current_datetime.strftime('%m/%d/%Y %H:%M:%S')
+            formatted_datetime_str = str(current_datetime)
+
+            with connection.cursor() as cursor:
+                # Perform the update operation
+                # SQL query
+                sql_query = "INSERT INTO a5_kit.mysite_failed_digitization (lead_id, file_name, date, name) VALUES ('" + lead_id + "', '" + file_name_with_pdf + "', '" + formatted_datetime_str + "', '" + name + "')"
+
+                # Execute the query using your SQL library
+                cursor.execute(sql_query)
+
+            with connection.cursor() as cursor:
+
+                query = "UPDATE a5_kit.mysite_upload_file_details SET date_of_action = %s WHERE file_name LIKE %s AND (lead_id = %s AND name =%s) AND status != 'Deleted' ;"
+                pattern = '%' + file_name_with_pdf + '%'
+                cursor.execute(query, [formatted_datetime_str, pattern, lead_id,name])
+
+            with connection.cursor() as cursor:
+                # Perform the update operation
+                # query = "UPDATE a5_kit.mysite_upload_file_details SET status = 'Deleted' WHERE file_name LIKE %s;"
+                query = "UPDATE a5_kit.mysite_upload_file_details SET status = 'Failed' WHERE file_name LIKE %s AND (lead_id = %s AND name=%s) AND status != 'Deleted' ;"
+
+                pattern = '%' + file_name_with_pdf + '%'  # Replace 'substring' with your desired pattern
+                # cursor.execute(query, [pattern])
+                cursor.execute(query, [pattern, lead_id,name])
+
+            # u = failed_digitization(lead_id=lead_id, file_name=file_name)
+            # u.save()
             os.remove(files[i])
 
 
@@ -221,11 +283,21 @@ def job():
                         timestamp.strftime('%Y-%m-%d')
                         print(row[0])
 
+
+                        split_string = file_name.split('&')
+                        lead_id = split_string[0]
+                        upload_count = split_string[1]
+                        name = split_string[2]
+                        file_name_with_pdf = split_string[3]
+                        current_datetime = datetime.now()
+                        formatted_datetime = current_datetime.strftime('%m/%d/%Y %H:%M:%S')
+                        formatted_datetime_str = str(current_datetime)
+
                         u = bank_bank(txn_date=new_date, description=row[1], cheque_number=row[2], debit=row[3],
                                       credit=row[4], balance=row[5], account_name=row[6], account_number=row[7],
                                       mode=row[8], entity=row[9], source_of_trans=row[10], sub_mode=row[11],
                                       transaction_type=row[12], bank_name=row[13], lead_id=lead_id,
-                                      creation_time=timestamp, file_name=file_name)
+                                      creation_time=timestamp, file_name=file_name_with_pdf)
 
                         u.save()
 
@@ -236,9 +308,9 @@ def job():
                 os.remove(file_location)
 
 
-schedule.every(1).minutes.do(job)  ### frequency of code execution
+schedule.every(1.5).minutes.do(job)  ### frequency of code execution
 
 while True:
     schedule.run_pending()
-    time.sleep(1) 
+    time.sleep(1.5)
 

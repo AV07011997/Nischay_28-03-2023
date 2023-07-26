@@ -902,6 +902,7 @@ def update_upload_list(request):
     #         UPDATE a5_kit.mysite_upload_file_details AS u
     #         SET status = 'failed'
     #         WHERE EXISTS (
+    #         WHERE EXISTS (
     #             SELECT 1
     #             FROM a5_kit.mysite_failed_digitization AS f
     #             WHERE u.file_name LIKE CONCAT('%', f.file_name, '%')

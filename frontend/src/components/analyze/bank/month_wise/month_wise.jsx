@@ -105,7 +105,7 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
   const [buttonClicked, setbuttonClicked] = useState("closed");
   const [src, setSrc] = useState();
   const [src2, setSrc2] = useState();
-
+  const [len, setlen] = useState();
   var Amount_pop_up = 0;
 
   const tableheaders = [
@@ -129,10 +129,11 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
 
   console.log(localStorage.getItem("leadID"));
 
-  function handledata(data, acc_number) {
+  function handledata(data, acc_number, table1) {
     console.log(acc_number);
     setacc_number(acc_number);
     setoptbank(data);
+    settable1(table1);
   }
   useEffect(() => {
     setSrc("./staticfiles/" + String(acc_number) + "bcmk_fig.png");
@@ -191,6 +192,17 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
   const maxColumns = 12;
 
   console.log(optbank);
+
+  useEffect(() => {
+    if (table1) {
+      window.scrollTo({
+        top: 260 + 30 * (table1["columns"].length - 1), // Replace with the desired pixel height - 140*2 -140/4
+        behavior: "smooth", // This enables smooth scrolling
+      });
+    }
+  }, [optbank]);
+
+  console.log(table1);
 
   return (
     <div>

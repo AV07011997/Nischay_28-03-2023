@@ -1,8 +1,10 @@
+/* Common styles for the highlighted headers */
 .highlighted_headers {
   background-color: black;
   color: white;
 }
 
+/* Styles for the monthwise table */
 .table1_monthwise {
   border: 1px solid black;
   width: 90%;
@@ -12,29 +14,40 @@
   margin-top: 30px;
   font-size: medium;
 }
+
+/* Styles for table cells and headers */
 .table1_monthwise,
-td,
-th {
+.table1_monthwise td,
+.table1_monthwise th {
   border: 1px solid grey;
 }
+
+/* Styles for the table header row */
 .thead_table1_monthwise {
   background-color: black;
   color: white;
 }
-.table1_monthwise,
-th {
-  padding: 1px;
+
+/* Padding for table headers and cells */
+.table1_monthwise th {
+  padding: 5px; /* Adjust as needed */
 }
-.table1_monthwise,
-td {
-  padding: 2px;
+
+.table1_monthwise td {
+  padding: 5px; /* Adjust as needed */
 }
+
+/* Styles for monthwise graph */
 .graph_monthwise {
   width: 50%;
 }
+
+/* Styles for the max credit link */
 .maxCreditLink {
   width: auto;
 }
+
+/* Styles for the button */
 .button_monthwise {
   background: transparent;
   color: blue;

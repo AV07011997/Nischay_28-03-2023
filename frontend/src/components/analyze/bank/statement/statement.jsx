@@ -5,6 +5,8 @@ import "./statement.css";
 import { APIADDRESS } from "../../../../constants/constants";
 import { Loader } from "rsuite";
 import { useRef } from "react";
+import { toast } from "react-toastify";
+
 const AnalyzeStatement = ({ setUser }) => {
   setUser(localStorage.getItem("user"));
 
@@ -13,10 +15,11 @@ const AnalyzeStatement = ({ setUser }) => {
   const [table2, settable2] = useState();
   const [from, setfrom] = useState();
   const [to, setto] = useState();
+
   const debitFromInputRef = useRef(null);
   const debitToInputRef = useRef(null);
-  const txnFromInputRef = useRef(null);
-  const txnToInputRef = useRef(null);
+  var txnFromInputRef = useRef("");
+  var txnToInputRef = useRef("");
   const creditFromInputRef = useRef(null);
   const creditToInputRef = useRef(null);
   const balFromInputRef = useRef(null);
@@ -25,8 +28,8 @@ const AnalyzeStatement = ({ setUser }) => {
   const resetForm = () => {
     debitFromInputRef.current.value = ""; // Resetting the input value directly
     debitToInputRef.current.value = ""; // Resetting the input value directly
-    txnFromInputRef.current.value = ""; // Resetting the input value directly
-    txnToInputRef.current.value = ""; // Resetting the input value directly
+    txnFromInputRef.current.value = fromFormatted; // Resetting the input value directly
+    txnToInputRef.current.value = toFormatted; // Resetting the input value directly
     creditFromInputRef.current.value = ""; // Resetting the input value directly
     creditToInputRef.current.value = ""; // Resetting the input value directly
     balFromInputRef.current.value = ""; // Resetting the input value directly
@@ -43,13 +46,16 @@ const AnalyzeStatement = ({ setUser }) => {
     });
   }, []);
 
+  function replaceDateFormat(text) {
+    text = String(text);
+    const pattern = /\b(\d{2})\/(\d{2})\/(\d{4})\b/g;
+    const updatedText = text.replace(pattern, "$1-$2-$3");
+    return updatedText;
+  }
+
   const fetchvariables = () => {
-    // console.log("called_submit");
-    // console.log(from, to);
     var txn_from = from;
     var txn_to = to;
-
-    // console.log(txn_from, txn_to);
 
     const dataDuplicate = table2;
     const convertedData = dataDuplicate?.map((item) => {
@@ -59,12 +65,10 @@ const AnalyzeStatement = ({ setUser }) => {
     });
     if (document.getElementById("txn_date_from").value) {
       txn_from = document.getElementById("txn_date_from").value;
-      // console.log(txn_from);
     }
     if (document.getElementById("txn_date_to").value) {
       txn_to = document.getElementById("txn_date_to").value;
     }
-    // console.log(typeof document.getElementById("txn_date_to").value);
 
     var debit_from = "0.0";
     if (document?.getElementById("debit_amount_from").value) {
@@ -90,8 +94,6 @@ const AnalyzeStatement = ({ setUser }) => {
       return creditValue > max ? creditValue : max;
     }, -Infinity);
 
-    // console.log(credit_to);
-
     if (document?.getElementById("credit_amount_to").value) {
       credit_to = document?.getElementById("credit_amount_to").value;
     }
@@ -115,8 +117,6 @@ const AnalyzeStatement = ({ setUser }) => {
         "closing_balance_amount_to"
       ).value;
     }
-    // console.log(debit_from, debit_to);
-    console.log(txn_from, txn_to);
 
     var parts_from;
 
@@ -132,7 +132,6 @@ const AnalyzeStatement = ({ setUser }) => {
     // parts_from = parts_from.replace(/-/g, "/");
     // const newDateString = `${parts_from[0]}/${parts_from[1]}/${parts_from[2]}`;
 
-    console.log(parts_from);
     var parts_to;
     if (txn_to.includes("/")) {
       parts_to = txn_to.split("/");
@@ -145,23 +144,16 @@ const AnalyzeStatement = ({ setUser }) => {
         year.toString(),
       ];
     }
-    console.log(parts_to);
-    // const parts_to = txn_to.split("/");
-    // console.log(parts_to[0]);
-    // console.log(parts_from[0]);
-
-    // console.log(debit_from, debit_to);
-    // console.log(credit_from, credit_to);
-    // console.log(txn_from, txn_to);
-    // console.log(closing_bal_from, closing_bal_to);
 
     const filteredData = [];
 
-    if (txn_from && txn_to) {
-      // console.log(parts_from, parts_to);
+    if (
+      txn_from &&
+      txn_to &&
+      txn_from >= fromFormatted &&
+      txn_to <= toFormatted
+    ) {
       for (let item of convertedData) {
-        // console.log(parts_from, parts_to);
-
         const parts = item.txn_date.split("-");
         const formattedDate = `${parts[0]}-${parts[1]}-${parts[2]}`;
         const actualDate = new Date(formattedDate);
@@ -182,24 +174,16 @@ const AnalyzeStatement = ({ setUser }) => {
           dateArrayTo[1] - 1,
           dateArrayTo[0]
         );
-        console.log(dateArrayTo);
-
-        // console.log(actualDateFrom, actualDateTo);
-        // console.log(formattedDate);
-        // console.log(formattedDateFrom, formattedDateTo);
 
         if (actualDate >= actualDateFrom && actualDate <= actualDateTo) {
-          console.log("ok");
           filteredData.push(item);
         }
       }
-      // console.log(filteredData);
       var convertedDataFinal = filteredData.map((item) => {
         const [year, month, day] = item.txn_date.split("-");
         const convertedDate = `${day}/${month}/${year}`;
         return { ...item, txn_date: convertedDate };
       });
-      // console.log(convertedDataFinal);
       if (
         (document?.getElementById("debit_amount_from").value ||
           document?.getElementById("debit_amount_to").value) &&
@@ -264,10 +248,6 @@ const AnalyzeStatement = ({ setUser }) => {
         document?.getElementById("debit_amount_from").value ||
         document?.getElementById("debit_amount_to").value
       ) {
-        console.log("called");
-        console.log(convertedDataFinal);
-        // console.log(debit_from, debit_to);
-
         const convertedDataFinalDebit = filterOnDebit(
           debit_from,
           debit_to,
@@ -288,31 +268,22 @@ const AnalyzeStatement = ({ setUser }) => {
         document?.getElementById("closing_balance_amount_from").value ||
         document?.getElementById("closing_balance_amount_to").value
       ) {
-        // console.log("called");
         const convertedDataFinalBalance = filterOnBalance(
           closing_bal_from,
           closing_bal_to,
           convertedDataFinal
         );
-        // console.log(convertedDataFinalBalance);
         convertedDataFinal = convertedDataFinalBalance;
       }
 
-      // console.log(convertedDataFinal);
-      // console.log(debit_from, debit_to);
-
-      // console.log(credit_from, credit_to);
-
-      // console.log(convertedDataFinal);
-
       settable1(convertedDataFinal);
+    } else {
+      // toast.error("Please select date in the range of transactions");
+      window.alert("Please select date in the range of transactions");
     }
-    // console.log(table1);
-
-    // filterOnBalance(closing_bal_from, closing_bal_to);
-    // filterOnDebit(debit_from, debit_to);
-    // filterOnCredit(credit_from, credit_to);
   };
+
+  // ????????????????????????????????????????????????????????????????????????????????????????????????????????
 
   const setdate = (from, to) => {
     setfrom(from);
@@ -324,7 +295,6 @@ const AnalyzeStatement = ({ setUser }) => {
     const from = parseFloat(credit_from);
     const to = parseFloat(credit_to);
     const tempData = data;
-    console.log(from, to);
 
     tempData.forEach((element) => {
       if (
@@ -336,8 +306,7 @@ const AnalyzeStatement = ({ setUser }) => {
         finalData.push(element);
       }
     });
-    // settable1(finalData);
-    // console.log(finalData);
+
     return finalData;
   };
 
@@ -345,10 +314,7 @@ const AnalyzeStatement = ({ setUser }) => {
     const finalData = [];
     const from = parseFloat(debitFrom);
     const to = parseFloat(debitTo);
-    // console.log(from, to);
     const tempData = data;
-    // console.log(tempData);
-    console.log(from, to);
 
     tempData.forEach((element) => {
       if (
@@ -357,12 +323,9 @@ const AnalyzeStatement = ({ setUser }) => {
         // ||
         // parseFloat(element.credit.replace(/,/g, "")) > 0
       ) {
-        // console.log(element);
         finalData.push(element);
       }
     });
-    // console.log(finalData);
-    // settable1(finalData);
     return finalData;
   };
   const filterCreditDebit = (
@@ -377,9 +340,7 @@ const AnalyzeStatement = ({ setUser }) => {
     const to = parseFloat(debitTo);
     const from1 = parseFloat(creditfrom);
     const to1 = parseFloat(creditto);
-    // console.log(from, to);
     const tempData = data;
-    // console.log(tempData);
 
     tempData.forEach((element) => {
       if (
@@ -390,12 +351,9 @@ const AnalyzeStatement = ({ setUser }) => {
         // ||
         // parseFloat(element.credit.replace(/,/g, "")) > 0
       ) {
-        // console.log(element);
         finalData.push(element);
       }
     });
-    // console.log(finalData);
-    // settable1(finalData);
     return finalData;
   };
 
@@ -411,9 +369,7 @@ const AnalyzeStatement = ({ setUser }) => {
     const to = parseFloat(debitTo);
     const from1 = parseFloat(balancefrom);
     const to1 = parseFloat(balanceto);
-    // console.log(from, to);
     const tempData = data;
-    // console.log(tempData);
 
     tempData.forEach((element) => {
       if (
@@ -424,11 +380,9 @@ const AnalyzeStatement = ({ setUser }) => {
         // ||
         // parseFloat(element.credit.replace(/,/g, "")) > 0
       ) {
-        // console.log(element);
         finalData.push(element);
       }
     });
-    // console.log(finalData);
     // settable1(finalData);
     return finalData;
   };
@@ -444,9 +398,7 @@ const AnalyzeStatement = ({ setUser }) => {
     const to = parseFloat(CreditTo);
     const from1 = parseFloat(balancefrom);
     const to1 = parseFloat(balanceto);
-    // console.log(from, to);
     const tempData = data;
-    // console.log(tempData);
 
     tempData.forEach((element) => {
       if (
@@ -457,11 +409,9 @@ const AnalyzeStatement = ({ setUser }) => {
         // ||
         // parseFloat(element.credit.replace(/,/g, "")) > 0
       ) {
-        // console.log(element);
         finalData.push(element);
       }
     });
-    // console.log(finalData);
     // settable1(finalData);
     return finalData;
   };
@@ -481,9 +431,7 @@ const AnalyzeStatement = ({ setUser }) => {
     const to1 = parseFloat(creditto);
     const from2 = parseFloat(balfrom);
     const to2 = parseFloat(balto);
-    // console.log(from, to);
     const tempData = data;
-    // console.log(tempData);
 
     tempData.forEach((element) => {
       if (
@@ -497,23 +445,17 @@ const AnalyzeStatement = ({ setUser }) => {
         // ||
         // parseFloat(element.credit.replace(/,/g, "")) > 0
       ) {
-        // console.log(element);
         finalData.push(element);
       }
     });
-    // console.log(finalData);
     // settable1(finalData);
     return finalData;
   };
   const filterOnBalance = (balance_from, balance_to, data) => {
-    // console.log(data);
-    // console.log(table1);
-
     const finalData = [];
     const from = parseFloat(balance_from);
     const to = parseFloat(balance_to);
     const tempData = data;
-    // console.log(tempData);
 
     tempData.forEach((element) => {
       if (
@@ -523,13 +465,11 @@ const AnalyzeStatement = ({ setUser }) => {
         finalData.push(element);
       }
     });
-    // console.log(finalData);
     // settable1(finalData);
     return finalData;
   };
 
   const getData = (accountNumber, from, to) => {
-    // console.log("called");
     postApi("analyze/" + APIADDRESS.ANALYZESTATEMENTS, {
       leadID: localStorage.getItem("leadID"),
       account_number: accountNumber,
@@ -538,7 +478,33 @@ const AnalyzeStatement = ({ setUser }) => {
       settable2(res[0]);
     });
   };
-  // console.log(table1);
+
+  useEffect(() => {
+    if (table) {
+      window.scrollTo({
+        top: 260 + 30 * (table.length - 1), // Replace with the desired pixel height - 140*2 -140/4
+        behavior: "smooth", // This enables smooth scrolling
+      });
+    }
+  }, [table1]);
+
+  const [fromFormatted, setfromFormatted] = useState();
+  const [toFormatted, settoFormatted] = useState();
+
+  console.log(from, to);
+
+  useEffect(() => {
+    if (from) {
+      console.log(from);
+      const [day, month, year] = from.split("/");
+
+      setfromFormatted(`${year}-${month}-${day}`);
+      const [day2, month2, year2] = to.split("/");
+
+      settoFormatted(`${year2}-${month2}-${day2}`);
+    }
+  }, [from]);
+  console.log(fromFormatted, toFormatted);
 
   return (
     <div>
@@ -616,6 +582,11 @@ const AnalyzeStatement = ({ setUser }) => {
               style={{ width: "25.5%" }}
               type="date"
               id="txn_date_from"
+              // defaultValue={fromFormatted}
+              key={fromFormatted} // Add a key prop based on the fromFormatted variable
+              defaultValue={fromFormatted}
+              min={fromFormatted}
+              max={toFormatted}
               ref={txnFromInputRef}
             ></input>
             <span>&nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;</span>
@@ -623,7 +594,11 @@ const AnalyzeStatement = ({ setUser }) => {
               style={{ width: "25.5%" }}
               type="date"
               id="txn_date_to"
+              key={toFormatted}
+              defaultValue={toFormatted}
               ref={txnToInputRef}
+              min={fromFormatted}
+              max={toFormatted}
             ></input>
           </div>
           <div className="filter_element">
@@ -707,13 +682,15 @@ const AnalyzeStatement = ({ setUser }) => {
       )}
 
       {table1 && (
-        <div
-          className="div_table1_monthwise"
-          style={{ overflowY: "auto", height: "700px" }}
-        >
+        <div className="div_table1_monthwise">
           <table
             className="table1_monthwise"
-            style={{ width: "91%", marginLeft: "5%" }}
+            style={{
+              width: "91%",
+              marginLeft: "5%",
+              overflowY: "auto",
+              height: "700px",
+            }}
           >
             <thead className="thead_table1_monthwise">
               <tr style={{ position: "sticky", top: "0", background: "black" }}>

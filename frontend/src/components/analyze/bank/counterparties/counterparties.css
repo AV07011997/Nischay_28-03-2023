@@ -1,8 +1,8 @@
 .headingCounterPartiesTable {
   text-align: center;
   /* border: 1px solid #575757; */
-  width: 95%;
-  margin-left: auto;
+  width: auto;
+  margin-left: 21px;
   margin-right: auto;
   /* background-color: #575757; */
   color: black;
@@ -11,16 +11,18 @@
   align-items: center;
 }
 .table1_counterparties {
-  border: 1px solid #575757;
+  /* border: 1px solid #575757; */
   margin-left: auto;
   margin-right: auto;
   width: 95%;
   text-align: center;
   font-size: medium;
+  /* border: 1px solid black */
 }
 .table2_headers_counterparties {
   background-color: black;
   color: white;
+  /* border: 1px solid #575757; */
 }
 .filterButton_counterparties {
   background: black;
@@ -40,4 +42,7 @@
 }
 .gray {
   color: gray;
+}
+.selected {
+  background-color: #f0f0f0;
 }

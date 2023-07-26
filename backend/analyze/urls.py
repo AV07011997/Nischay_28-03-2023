@@ -20,6 +20,8 @@ urlpatterns = [
     path('bureau_customer_kpi/', analyze_views.bureau_customer_kpi, name="bureau_customer_kpi"),
     path('bureau_customer_month_kpi/', analyze_views.bureau_customer_month_kpi, name="bureau_customer_month_kpi"),
     path('bank_entity_kpi/', analyze_views.bank_entity_kpi, name="bank_entity_kpi"),
+    path('bank_entity_kpi_merge/', analyze_views.bank_entity_kpi_merge, name="bank_entity_kpi_merge"),
+
     path('itr/', analyze_views.itr, name="itr"),
     path('fishy/', analyze_views.fishy, name="fishy"),
     path('statement/', analyze_views.statement, name="statement"),

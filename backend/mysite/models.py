@@ -32,6 +32,7 @@ class downloaded_file_details(models.Model):
     lead_id = models.CharField(max_length=200)
     file_name = models.CharField(max_length=200)
     date = models.CharField(max_length=500)
+    name=models.CharField(max_length=100)
 
     # def __str__(self):
     #     return(self.lead_id)

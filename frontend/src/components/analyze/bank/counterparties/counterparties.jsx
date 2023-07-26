@@ -7,9 +7,14 @@ import SELECTBANKCUSTOMER from "../../../../utilities/selectBankCustomer/selectB
 import "./counterparties.css";
 import { postApi } from "../../../../callapi";
 
+import { BsFillFileMinusFill } from "react-icons/bs";
+
+import { BsFillFilePlusFill } from "react-icons/bs";
+
+import MyTable from "../../../../utilities/selectTable";
+
 function PopUpComponent(props) {
   const { data } = props;
-  // console.log(data);
   const headers = [
     "Transaction Date",
     "Description",
@@ -19,7 +24,6 @@ function PopUpComponent(props) {
     "Cheque no",
     "Entity",
   ];
-  // console.log(data);
 
   return (
     <div>
@@ -82,6 +86,8 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
 
   var [optbank, setoptbank] = useState();
   var [optbank2, setoptbank2] = useState();
+  var [optbank3, setoptbank3] = useState();
+
   const [pagestate, setpagestate] = useState(0);
   const [buttonClicked, setbuttonClicked] = useState("closed");
 
@@ -89,12 +95,68 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
   const [popupData, setPopUpData] = useState();
   const [selection, setSelection] = useState(0);
   const [index, setIndex] = useState();
+  const [firstSelectedRowIndex, setFirstSelectedRowIndex] = useState(null);
+
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRowsData, setSelectedRowsData] = useState();
+
+  const handleRowClick = (rowId, event) => {
+    if (event.ctrlKey && event.altKey) {
+      const selectedLength = selectedRows.length - 1;
+      const firstSelectedRowIndex = parseInt(selectedRows[selectedLength]);
+      const lastSelectedRowIndex = parseInt(rowId);
+
+      if (firstSelectedRowIndex === null) {
+        setFirstSelectedRowIndex(rowId);
+      }
+
+      const start = Math.min(firstSelectedRowIndex, lastSelectedRowIndex);
+      const end = Math.max(firstSelectedRowIndex, lastSelectedRowIndex);
+
+      var localAray = [];
+
+      for (let i of optbank) {
+        if (i["index"] >= start && i["index"] <= end) {
+          localAray.push(i);
+        }
+      }
+
+      for (let i of selectedRows) {
+        let item = optbank[i];
+        localAray.push(item);
+      }
+
+      setSelectedRows(localAray.map((row) => row.index));
+    } else if (event.ctrlKey) {
+      setSelectedRows((prevSelectedRows) => {
+        if (prevSelectedRows.includes(rowId)) {
+          return prevSelectedRows.filter((id) => id !== rowId);
+        } else {
+          return [...prevSelectedRows, rowId];
+        }
+        if (firstSelectedRowIndex === null) {
+          setFirstSelectedRowIndex(rowId);
+        }
+      });
+    } else {
+      setSelectedRows([rowId]);
+      setFirstSelectedRowIndex(rowId);
+    }
+  };
+
+  function removeObjectByEntity(arr, entityValue) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].entity === entityValue) {
+        arr.splice(i, 1);
+        break; // Stop searching after the first match is found
+      }
+    }
+  }
 
   function handledata(data, acc_number) {
     setacc_number(acc_number);
     setoptbank(data);
     setoptbank2(data);
-    // setpagestate(0);
   }
   useEffect(() => {
     setpagestate(0);
@@ -117,8 +179,9 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
 
   const sub_headers = [
     { variable: "entity", column_name: "Entity" },
-    { variable: "latest_txn", column_name: "From" },
-    { variable: "oldest_txn", column_name: "To" },
+    { variable: "oldest_txn", column_name: "From" },
+
+    { variable: "latest_txn", column_name: "To" },
     { variable: "debits", column_name: "Dr" },
     { variable: "credits", column_name: "Cr" },
     { variable: "debited_amt_total", column_name: "Total" },
@@ -142,11 +205,12 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
   }
 
   const filterData = (sortVariable, index) => {
-    const databackup = optbank2;
+    console.log(index);
+    var databackup = optbank2;
     setIndex(index);
-    // Comparator function for sorting in ascending order
-    // console.log(index, sortVariable);
-    // console.log(databackup);
+
+    console.log(databackup);
+
     if (index >= 5) {
       if (pagestate % 2 == 0) {
         databackup.sort((a, b) => {
@@ -173,7 +237,6 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
     }
 
     if (index === 3 || index === 4) {
-      // console.log("1");
       if (pagestate % 2 == 0) {
         setoptbank(
           databackup?.sort((a, b) => b[sortVariable] - a[sortVariable])
@@ -186,8 +249,6 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
     }
 
     if (index === 0) {
-      // console.log("2");
-
       if (pagestate % 2 === 0) {
         setoptbank(
           databackup.sort((a, b) =>
@@ -203,42 +264,38 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
       }
     }
 
+    function parseDate(dateString) {
+      const [day, month, year] = dateString.split("/");
+      return new Date(`${year}-${month}-${day}`);
+    }
+
     if (index === 1 || index === 2) {
-      if (pagestate % 2 == 0) {
+      console.log(databackup);
+
+      if (pagestate % 2 === 0) {
         databackup.sort((a, b) => {
-          if (!a[sortVariable]) return 1; // Move null, undefined, and empty string to the end
-          if (!b[sortVariable]) return -1; // Move null, undefined, and empty string to the end
-
-          const [dayA, monthA, yearA] = a[sortVariable].split("/");
-          const [dayB, monthB, yearB] = b[sortVariable].split("/");
-
-          const dateA = new Date(yearA, monthA - 1, dayA);
-          const dateB = new Date(yearB, monthB - 1, dayB);
-
-          if (isNaN(dateA)) return 1; // Move invalid date strings to the end
-          if (isNaN(dateB)) return -1; // Move invalid date strings to the end
+          console.log(a[sortVariable]);
+          const dateA = parseDate(a[sortVariable]);
+          const dateB = parseDate(b[sortVariable]);
 
           return dateA - dateB;
         });
-        setoptbank(databackup);
-      } else if (pagestate % 2 != 0) {
+      } else if (pagestate % 2 !== 0) {
         databackup.sort((a, b) => {
-          if (!a[sortVariable]) return 1; // Move null, undefined, and empty string to the end
-          if (!b[sortVariable]) return -1; // Move null, undefined, and empty string to the end
+          const dateA = parseDate(a[sortVariable]);
+          const dateB = parseDate(b[sortVariable]);
 
-          const [dayA, monthA, yearA] = a[sortVariable].split("/");
-          const [dayB, monthB, yearB] = b[sortVariable].split("/");
-
-          const dateA = new Date(yearA, monthA - 1, dayA);
-          const dateB = new Date(yearB, monthB - 1, dayB);
-
-          if (isNaN(dateA)) return 1; // Move invalid date strings to the end
-          if (isNaN(dateB)) return -1; // Move invalid date strings to the end
+          // Handle null/undefined date strings
+          if (!dateA && !dateB) return 0;
+          if (!dateA) return 1;
+          if (!dateB) return -1;
 
           return dateB - dateA;
         });
-        setoptbank(databackup);
       }
+      console.log(databackup);
+
+      setoptbank(databackup);
     }
 
     setpagestate(pagestate + 1);
@@ -246,7 +303,6 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
 
   function openWindow(entity) {
     const getPopUpData = async () => {
-      // console.log("hello");
       const response = await postApi(
         "analyze/" + APIADDRESS.ANALYZECOUNTERPARTIESPOPUP,
         {
@@ -255,7 +311,6 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
           account_number: acc_number,
         }
       );
-      // console.log(response);
       setPopUpData(response);
     };
 
@@ -263,10 +318,6 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
   }
 
   useEffect(() => {
-    // console.log("called");
-    // console.log(popupData);
-    // console.log(buttonClicked);
-
     if (popupData && buttonClicked === "open") {
       const newWindow = window.open("", "_blank");
       newWindow.document.title = "New Window";
@@ -280,32 +331,109 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
       setbuttonClicked("closed");
     }
   }, [popupData]);
-  // console.log(pagestate);
-  console.log(optbank);
+
+  useEffect(() => {
+    var localArray = [];
+
+    if (optbank && selectedRows) {
+      for (let i of optbank) {
+        for (let j of selectedRows) {
+          if (i["index"] === j) {
+            localArray.push(i);
+          }
+        }
+      }
+    }
+    const uniqueArray = removeDuplicateObjects(localArray, "index");
+
+    setSelectedRowsData(uniqueArray);
+  }, [selectedRows]);
+
+  const removeDuplicateObjects = (array, key) => {
+    const uniqueMap = new Map();
+    array.forEach((item) => {
+      const value = item[key];
+      if (!uniqueMap.has(value)) {
+        uniqueMap.set(value, item);
+      }
+    });
+    return Array.from(uniqueMap.values());
+  };
+
+  var [mergeRowsList, setMergeRowsList] = useState();
+
+  const mergeRows = async (group_no) => {
+    console.log(selectedRows);
+    if (group_no) {
+      const response = await postApi(
+        "analyze/" + APIADDRESS.ANALYZECOUNTERPARTIESMERGE,
+        {
+          leadID: localStorage.getItem("leadID"),
+          optbank: acc_number,
+          group_no: group_no,
+        }
+      );
+      setoptbank(response[0]["data"][1]);
+      const newArrayWithMinimum = keepOnlyMinimum(selectedRows);
+      setSelectedRows(newArrayWithMinimum);
+      setFirstSelectedRowIndex(newArrayWithMinimum);
+    } else {
+      const response = await postApi(
+        "analyze/" + APIADDRESS.ANALYZECOUNTERPARTIESMERGE,
+        {
+          leadID: localStorage.getItem("leadID"),
+          optbank: acc_number,
+          RowsData: { selectedRowsData },
+        }
+      );
+      setoptbank(response[0]["data"][1]);
+      const newArrayWithMinimum = keepOnlyMinimum(selectedRows);
+      setSelectedRows(newArrayWithMinimum);
+      setFirstSelectedRowIndex(newArrayWithMinimum);
+    }
+  };
+
+  function keepOnlyMinimum(arr) {
+    if (arr.length === 0) {
+      return []; // Return an empty array if the input array is empty
+    }
+
+    const minValue = Math.min(...arr); // Find the minimum value in the array
+    return [minValue]; // Create a new array containing only the minimum value
+  }
+
+  var entityWidth = "26em";
 
   return (
     <div>
       <NavBar></NavBar>
       <SELECTBANKCUSTOMER
         onData={handledata}
-        apiaddress={APIADDRESS.ANALYZECOUNTERPARTIES}
+        apiaddress={APIADDRESS.ANALYZECOUNTERPARTIESMERGE}
         headers={"Counterparties"}
       ></SELECTBANKCUSTOMER>
       <br></br>
 
-      {optbank && (
+      {optbank && optbank.length > 0 && (
         <div className="div_table1_counterparties">
           <h4 className="headingCounterPartiesTable">
             Summary of transactions by Payer-Payee{" "}
           </h4>
+
           <table className="table1_counterparties">
             <thead className="table2_headers_counterparties">
               <tr>
+                <th
+                  style={{
+                    width: "10px",
+                    // border: "0px solid white",
+                    background: "white",
+                  }}
+                ></th>
                 {mainHeader.map((item, i) => {
                   var headerWidth = "auto";
                   if (item.header === "") {
                     headerWidth = "26em";
-                    console.log(headerWidth);
                   } else if (item.header === "Number of Transactions") {
                     headerWidth = "30em";
                   } else {
@@ -315,7 +443,11 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                     <th
                       className="sticky-main_header"
                       colSpan={item.col_span}
-                      style={{ width: headerWidth, textAlign: "center" }}
+                      style={{
+                        width: headerWidth,
+                        textAlign: "center",
+                        border: "1px solid #575757",
+                      }}
                     >
                       {item.header}
                     </th>
@@ -324,6 +456,13 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
               </tr>
 
               <tr>
+                <th
+                  style={{
+                    width: "10px",
+                    border: "0px solid white",
+                    background: "white",
+                  }}
+                ></th>
                 {sub_headers.map((item, i) => {
                   var columnWidth = "";
                   if (item.column_name === "Monthly Average") {
@@ -334,7 +473,10 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                   return (
                     <th
                       className="sticky-sub_header"
-                      style={{ width: columnWidth }}
+                      style={{
+                        width: columnWidth,
+                        border: "1px solid #575757",
+                      }}
                     >
                       {item.column_name}{" "}
                       <button
@@ -354,6 +496,8 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                             <span className="gray">⇅</span>
                           ))}
                         {i !== 0 &&
+                          i !== 3 &&
+                          i !== 4 &&
                           pagestate !== 0 &&
                           (i === index ? (
                             pagestate % 2 !== 0 ? (
@@ -364,52 +508,292 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                           ) : (
                             <span className="gray">⇅</span>
                           ))}
+                        {(i === 3 || i === 4) &&
+                          pagestate !== 0 &&
+                          (i === index ? (
+                            pagestate % 2 !== 0 ? (
+                              <span>🔽</span>
+                            ) : (
+                              <span>🔼</span>
+                            )
+                          ) : (
+                            <span className="gray">⇅</span>
+                          ))}
                       </button>
                     </th>
                   );
                 })}
               </tr>
             </thead>
-            <tbody>
-              {optbank?.map((item, i) => {
-                return (
-                  <tr key={i}>
-                    <td style={{ textAlign: "left" }}>
-                      <button
-                        className="button_monthwise"
-                        onClick={() => {
-                          setbuttonClicked("open");
+            {optbank && (
+              <tbody>
+                {optbank?.map((item, i) => {
+                  return (
+                    <tr
+                      key={item.index}
+                      onClick={(event) => handleRowClick(item.index, event)}
+                      className={
+                        selectedRows.includes(item.index) ? "selected" : ""
+                      }
+                      // style={{
+                      // background: item.count > 0 ? "#f0f0f0" : "white",
+                      // }}
+                    >
+                      <td
+                        style={{
+                          width: "10px",
+                          border: "0px solid white",
+                          background: "white",
+                          color: "white",
+                          padding: "3px",
 
-                          openWindow(item.entity);
+                          margin: "0",
                         }}
                       >
-                        {item?.entity}
-                      </button>
-                    </td>
-                    <td>{item?.oldest_txn}</td>
-                    <td>{item?.latest_txn}</td>
-                    <td style={{ textAlign: "right" }}>{item?.debits}</td>
-                    <td style={{ textAlign: "right" }}>{item?.credits}</td>
-                    <td style={{ textAlign: "right" }}>
-                      {item?.debited_amt_total}
-                    </td>
-                    <td style={{ textAlign: "right" }}>
-                      {item?.debited_amt_mthly}
-                    </td>
-                    <td style={{ textAlign: "right" }}>{item?.min_debit}</td>
-                    <td style={{ textAlign: "right" }}>{item?.max_debit}</td>
-                    <td style={{ textAlign: "right" }}>
-                      {item?.credited_amt_total}
-                    </td>
-                    <td style={{ textAlign: "right" }}>
-                      {item?.credited_amt_mthly}
-                    </td>
-                    <td style={{ textAlign: "right" }}>{item?.min_credit}</td>
-                    <td style={{ textAlign: "right" }}>{item?.max_credit}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
+                        {firstSelectedRowIndex === item.index ? (
+                          <button
+                            style={{
+                              width: "14px",
+                              color: "black",
+                              background: "transparent",
+                              padding: "0",
+                              border: "0",
+                              margin: "0",
+                            }}
+                            onClick={() => {
+                              if (selectedRows.length > 1) {
+                                mergeRows();
+                              }
+                            }}
+                          >
+                            <BsFillFileMinusFill
+                              size={"20"}
+                            ></BsFillFileMinusFill>
+                            {/* {"(-)"} */}
+                          </button>
+                        ) : (
+                          ""
+                        )}
+                      </td>
+
+                      {/* <td
+                        style={{
+                          border: "1px solid #575757",
+                        }}
+                      >
+                        <button
+                          style={{
+                            textAlign: "left",
+                            alignItems: "left",
+                          }}
+                          className="button_monthwise"
+                          onClick={() => {
+                            setbuttonClicked("open");
+                            openWindow(item.entity);
+                          }}
+                        >
+                          <span>{item?.entity}</span>
+                        </button>
+                        {item.count > 0 && (
+                          <span>
+                            {"("}
+                            {item.count}
+                            {")"}
+                          </span>
+                        )}
+                        {item?.count > 0 && (
+                          <button
+                            style={{
+                              color: "black",
+                              background: "transparent",
+                              padding: "0",
+                              border: "0",
+                              margin: "0",
+                              textAlign: "right",
+                            }}
+                            onClick={() => {
+                              mergeRows(item.group_no);
+                            }}
+                          >
+                            {"(+)"}
+                          </button>
+                        )}
+                      </td> */}
+
+                      <td
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          border: "1px solid #575757",
+                          borderTop: "1px solid white",
+                          padding: "3px",
+                          height: "31px",
+                        }}
+                      >
+                        <button
+                          className="button_monthwise"
+                          onClick={() => {
+                            setbuttonClicked("open");
+                            openWindow(item.entity);
+                          }}
+                        >
+                          <span>{item?.entity}</span>
+                          {item.count > 0 && (
+                            <span
+                              style={{ color: "black", fontWeight: "bold" }}
+                            >
+                              {" "}
+                              {"("}
+                              {item.count}
+                              {")"}
+                            </span>
+                          )}
+                        </button>
+
+                        {item?.count > 0 && (
+                          <button
+                            style={{
+                              color: "black",
+                              background: "transparent",
+                              padding: "0",
+                              border: "0",
+                              margin: "0",
+                              textAlign: "right",
+                            }}
+                            onClick={() => {
+                              mergeRows(item.group_no);
+                            }}
+                          >
+                            {"(+)"}
+                          </button>
+                        )}
+                      </td>
+
+                      <td
+                        style={{
+                          height: "30px",
+                          border: "1px solid #575757",
+                          padding: "3px",
+                        }}
+                      >
+                        {item?.oldest_txn}
+                      </td>
+                      <td
+                        style={{
+                          height: "30px",
+
+                          border: "1px solid #575757",
+                          padding: "3px",
+                        }}
+                      >
+                        {item?.latest_txn}
+                      </td>
+                      <td
+                        style={{
+                          textAlign: "right",
+                          height: "30px",
+                          border: "1px solid #575757",
+                          padding: "3px",
+                        }}
+                      >
+                        {item?.debits}
+                      </td>
+                      <td
+                        style={{
+                          textAlign: "right",
+                          height: "30px",
+                          border: "1px solid #575757",
+                          padding: "3px",
+                        }}
+                      >
+                        {item?.credits}
+                      </td>
+                      <td
+                        style={{
+                          textAlign: "right",
+                          height: "30px",
+                          border: "1px solid #575757",
+                          padding: "3px",
+                        }}
+                      >
+                        {item?.debited_amt_total}
+                      </td>
+                      <td
+                        style={{
+                          textAlign: "right",
+                          height: "30px",
+                          border: "1px solid #575757",
+                          padding: "3px",
+                        }}
+                      >
+                        {item?.debited_amt_mthly}
+                      </td>
+                      <td
+                        style={{
+                          textAlign: "right",
+                          height: "30px",
+                          border: "1px solid #575757",
+                          padding: "3px",
+                        }}
+                      >
+                        {item?.min_debit}
+                      </td>
+                      <td
+                        style={{
+                          textAlign: "right",
+                          height: "30px",
+                          border: "1px solid #575757",
+                          padding: "3px",
+                        }}
+                      >
+                        {item?.max_debit}
+                      </td>
+                      <td
+                        style={{
+                          textAlign: "right",
+                          height: "30px",
+                          border: "1px solid #575757",
+                          padding: "3px",
+                        }}
+                      >
+                        {item?.credited_amt_total}
+                      </td>
+                      <td
+                        style={{
+                          textAlign: "right",
+                          height: "30px",
+                          border: "1px solid #575757",
+                          padding: "3px",
+                        }}
+                      >
+                        {item?.credited_amt_mthly}
+                      </td>
+                      <td
+                        style={{
+                          textAlign: "right",
+                          height: "30px",
+                          border: "1px solid #575757",
+                          padding: "3px",
+                        }}
+                      >
+                        {item?.min_credit}
+                      </td>
+                      <td
+                        style={{
+                          textAlign: "right",
+                          height: "30px",
+                          border: "1px solid #575757",
+                          padding: "3px",
+                        }}
+                      >
+                        {item?.max_credit}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            )}
           </table>
         </div>
       )}

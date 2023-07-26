@@ -21,6 +21,10 @@ import { AiOutlineFilePdf } from "react-icons/ai";
 import { AiFillDelete, AiOutlineFileAdd } from "react-icons/ai";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+// import CustomDateInput from "../../utilities/customDate";
+import dateInout from "../../utilities/customDate";
+import DateInput from "../../utilities/customDate";
+import { DateMilisec } from "../../constants/DateConvertFromMilisec";
 
 const Upload = ({ setUser }) => {
   setUser(localStorage.getItem("user"));
@@ -51,16 +55,25 @@ const Upload = ({ setUser }) => {
     getApi(
       APIADDRESS.UPLOADSTATEMENT + localStorage.getItem("leadID") + "/"
     ).then((response) => {
+      console.log(response[0]);
       if (response) {
         // console.log(response);
-        if (response[1]) {
-          table = objectFunction(response[1]);
-          settable(table);
+        if (response[0]) {
+          table = DateMilisec(response[0]);
+          const updatedArray = response[0].map((obj) => {
+            if ("date_of_action" in obj && obj.date_of_action instanceof Date) {
+              obj.date_of_action = obj.date_of_action.toLocaleString();
+            }
+            return obj;
+          });
+          console.log(updatedArray);
+
+          settable(response[0]);
         }
 
-        const table1 = objectFunction(response[0]);
+        // const table1 = objectFunction(response[0]);
 
-        settable1(table1);
+        settable1(response[0]);
       }
     });
   }, []);
@@ -92,8 +105,8 @@ const Upload = ({ setUser }) => {
   const state = {
     columns: [
       { title: "File Name", field: "file_name" },
-      { title: "Date", field: "date" },
-      { title: "Status", field: "status" },
+      { title: "Action", field: "status" },
+      { title: "Date of Action", field: "date_of_action" },
     ],
   };
 
@@ -144,9 +157,9 @@ const Upload = ({ setUser }) => {
       alert(repeatfiles.join("\n"));
     }
     if (repeatnumber == 0) {
-      formData.append("lead_id", radiovalue);
-      formData.append("name", name);
-      formData.append("lead_id__count", uploadcount);
+      formData.append("lead_id", localStorage.getItem("leadID"));
+      formData.append("name", localStorage.getItem("name"));
+      formData.append("lead_id__count", localStorage.getItem("uploadcount"));
       for (let files in mergefiles) {
         formData.append(files, mergefiles[files][0]);
       }
@@ -180,16 +193,18 @@ const Upload = ({ setUser }) => {
       "upload_file/" + APIADDRESS.UPLOADEDFILESDELETE,
       {
         data: jsonData,
+        leadId: localStorage.getItem("leadID"),
+        name: localStorage.getItem("name"),
       }
     );
     // console.log(response);
+
     if (response == 1) {
       alert("File(s) successfully deleted");
       window.location.reload();
     }
   };
 
-  postApi(APIADDRESS.UPDATEUPLOADLIST, {}).then((res) => {});
   console.log(table);
 
   useEffect(() => {
@@ -235,13 +250,18 @@ const Upload = ({ setUser }) => {
     });
   }, [mergefiles]);
 
+  console.log(table);
+
   return (
     <div>
       <div>
-        <NavBar radiovalue={radiovalue}></NavBar>
+        <NavBar radiovalue={localStorage.getItem("leadID")}></NavBar>
       </div>
       <div>
-        <Pageinfo leadId={radiovalue} name={name}></Pageinfo>
+        <Pageinfo
+          leadId={localStorage.getItem("leadID")}
+          name={localStorage.getItem("name")}
+        ></Pageinfo>
       </div>
 
       <input

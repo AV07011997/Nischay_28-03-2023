@@ -13,7 +13,6 @@ const SELECTBANKCUSTOMER = (props) => {
   const api_address = props.apiaddress;
 
   const headers_select_customer = props.headers;
-  // console.log(headers_select_customer);
 
   var headers = [];
   if (headers_select_customer) {
@@ -36,7 +35,6 @@ const SELECTBANKCUSTOMER = (props) => {
       const response = await postApi("analyze/" + api_address, {
         leadID: localStorage.getItem("leadID"),
       });
-      // console.log(response);
       settable1(response[0]);
     };
 
@@ -45,25 +43,23 @@ const SELECTBANKCUSTOMER = (props) => {
 
   const table2 = (optbank) => {
     setacc_number(optbank);
-    // console.log("called");
     const getTable = async () => {
       const response = await postApi("analyze/" + api_address, {
         leadID: localStorage.getItem("leadID"),
         optbank: optbank,
       });
-      // console.log(response);
       setoptbank(response[0]["data"][1]);
     };
 
     getTable();
   };
-  // console.log(optbank);
 
-  function sendData(data, acc_number) {
-    props.onData(data, acc_number);
+  function sendData(data, acc_number, table1) {
+    props.onData(data, acc_number, table1);
   }
-
-  sendData(optbank, acc_number);
+  useEffect(() => {
+    sendData(optbank, acc_number, table1);
+  }, [optbank]);
 
   return (
     <div className="div_table1_monthwise">
@@ -87,7 +83,6 @@ const SELECTBANKCUSTOMER = (props) => {
             {table1["data"][0]?.map((item, i) => {
               {
                 if (item) {
-                  // console.log(item);
                   return (
                     <tr key={i}>
                       <td>
