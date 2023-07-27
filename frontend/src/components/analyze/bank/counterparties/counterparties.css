@@ -46,3 +46,7 @@
 .selected {
   background-color: #f0f0f0;
 }
+.blue {
+  background-color: #ddebf7;
+  /* Add a contrasting text color if needed */
+}

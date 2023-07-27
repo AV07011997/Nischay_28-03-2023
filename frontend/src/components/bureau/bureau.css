@@ -5,6 +5,10 @@
   margin-right: auto;
   width: 95%;
   padding: 8px;
+  border: 1px solid #575757;
+}
+.table_bureau_td {
+  border: 1px solid #575575;
 }
 .table_bureau_thead {
   background-color: black;
@@ -21,13 +25,19 @@
 }
 .table_bureau_text {
   padding: 8px;
+  border: 1px solid #575757;
 }
 
 .bureau_input_design {
   width: 70px;
   text-align: center;
+  border: 1px solid #575757;
 }
 .bureau_dropdown {
   width: 120px;
   text-align: center;
+}
+
+.bureau_border {
+  border: 1px solid #575757;
 }

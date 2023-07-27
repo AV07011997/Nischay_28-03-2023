@@ -218,6 +218,7 @@ const Bureau = ({ info }) => {
                             <th
                               key={"bureau_tenure_input" + i.toString()}
                               id={"bureau_tenure_input" + i.toString()}
+                              className="bureau_border"
                             >
                               <input
                                 ref={inputValueTenure}
@@ -238,6 +239,7 @@ const Bureau = ({ info }) => {
                             <th
                               key={"bureau_tenure_input" + i.toString()}
                               id={"bureau_tenure_input" + i.toString()}
+                              className="bureau_border"
                             >
                               <input
                                 ref={inputValueTenure}
@@ -258,6 +260,7 @@ const Bureau = ({ info }) => {
                           <th
                             key={"bureau_tenure_input" + i.toString()}
                             id={"bureau_tenure_input" + i.toString()}
+                            className="bureau_border"
                           >
                             <input
                               ref={inputValueTenure}
@@ -276,6 +279,7 @@ const Bureau = ({ info }) => {
                             <th
                               key={"bureau_ROI_input" + i.toString()}
                               id={"bureau_ROI_input" + i.toString()}
+                              className="bureau_border"
                             >
                               <input
                                 ref={inputValueTenure}
@@ -297,6 +301,7 @@ const Bureau = ({ info }) => {
                             <th
                               key={"bureau_ROI_input" + i.toString()}
                               id={"bureau_ROI_input" + i.toString()}
+                              className="bureau_border"
                             >
                               <input
                                 ref={inputValueTenure}
@@ -331,7 +336,10 @@ const Bureau = ({ info }) => {
                         );
                       } else if (coloumn.field == "valueType") {
                         return (
-                          <th key={"dropdown" + i.toString()}>
+                          <th
+                            key={"dropdown" + i.toString()}
+                            className="bureau_border"
+                          >
                             <select
                               name="Value Type"
                               id="valuetype"
