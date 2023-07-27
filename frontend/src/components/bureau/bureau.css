@@ -25,7 +25,9 @@
 
 .bureau_input_design {
   width: 70px;
+  text-align: center;
 }
 .bureau_dropdown {
   width: 120px;
+  text-align: center;
 }
