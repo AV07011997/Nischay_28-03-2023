@@ -6,6 +6,8 @@ import { useParams } from "react-router-dom";
 import { APIADDRESS, BUREAUPAGECOLUMNS } from "../../constants/constants";
 import { postApi } from "../../callapi";
 import { useState } from "react";
+import numeral from "numeral";
+import NavBar1 from "../../utilities/navbar/navbar1";
 
 const Bureau = ({ info }) => {
   const params = useParams();
@@ -16,12 +18,17 @@ const Bureau = ({ info }) => {
   const [emiDataArray, setEmiDataArray] = useState();
   const [selectedValueType, setSelectedValueType] = useState();
   const [emiValues, setEMIValues] = useState();
-
+  const [isButtonDisabled, setButtonDisabled] = useState(true);
+  function formatIndianCurrency(num) {
+    // Use the toLocaleString() method with appropriate options
+    return num.toLocaleString("en-IN");
+  }
   var { radiovalue } = params;
   const state = BUREAUPAGECOLUMNS;
   useEffect(() => {
     var selectedvalueArray = [];
 
+    localStorage.setItem("bureauSave", "true");
     postApi(APIADDRESS.BUREAUDATA, {
       leadID: localStorage.getItem("leadID"),
     }).then((res) => {
@@ -96,7 +103,7 @@ const Bureau = ({ info }) => {
         roi.value,
         tenure.value
       );
-      emiArray.push(currentEMI);
+      emiArray.push(formatIndianCurrency(currentEMI));
     }
     setEMIValues(emiArray);
   };
@@ -106,7 +113,8 @@ const Bureau = ({ info }) => {
 
     var temp = [...selectedValueType];
     temp[i] = "edited";
-
+    localStorage.setItem("bureauSave", "false");
+    setButtonDisabled(false);
     // console.log(temp)
     setSelectedValueType(temp);
 
@@ -125,6 +133,8 @@ const Bureau = ({ info }) => {
   };
 
   const handleValueTypeChange = ([index, value]) => {
+    localStorage.setItem("bureauSave", "false");
+    setButtonDisabled(false);
     var temp = [...selectedValueType];
     temp[index] = value;
     setSelectedValueType(temp);
@@ -156,7 +166,7 @@ const Bureau = ({ info }) => {
 
   const saveButtonClickHandler = () => {
     const payload = tableData[0];
-
+    localStorage.setItem("bureauSave", "true");
     for (let i = 0; i < tableData[0].length; i++) {
       payload[i]["selectedValue"] = selectedValueType[i];
     }
@@ -170,14 +180,14 @@ const Bureau = ({ info }) => {
 
   return (
     <div>
-      <NavBar radiovalue={radiovalue}></NavBar>
+      <NavBar1 radiovalue={radiovalue}></NavBar1>
       <div>
         <div>
           <button
             onClick={() => window.location.reload(false)}
             className="button_bureau"
           >
-            Refresh
+            Reset
           </button>
         </div>
         <table className="table_bureau">
@@ -208,6 +218,7 @@ const Bureau = ({ info }) => {
                             <th
                               key={"bureau_tenure_input" + i.toString()}
                               id={"bureau_tenure_input" + i.toString()}
+                              className="bureau_border"
                             >
                               <input
                                 ref={inputValueTenure}
@@ -228,6 +239,7 @@ const Bureau = ({ info }) => {
                             <th
                               key={"bureau_tenure_input" + i.toString()}
                               id={"bureau_tenure_input" + i.toString()}
+                              className="bureau_border"
                             >
                               <input
                                 ref={inputValueTenure}
@@ -248,6 +260,7 @@ const Bureau = ({ info }) => {
                           <th
                             key={"bureau_tenure_input" + i.toString()}
                             id={"bureau_tenure_input" + i.toString()}
+                            className="bureau_border"
                           >
                             <input
                               ref={inputValueTenure}
@@ -266,6 +279,7 @@ const Bureau = ({ info }) => {
                             <th
                               key={"bureau_ROI_input" + i.toString()}
                               id={"bureau_ROI_input" + i.toString()}
+                              className="bureau_border"
                             >
                               <input
                                 ref={inputValueTenure}
@@ -287,6 +301,7 @@ const Bureau = ({ info }) => {
                             <th
                               key={"bureau_ROI_input" + i.toString()}
                               id={"bureau_ROI_input" + i.toString()}
+                              className="bureau_border"
                             >
                               <input
                                 ref={inputValueTenure}
@@ -321,7 +336,10 @@ const Bureau = ({ info }) => {
                         );
                       } else if (coloumn.field == "valueType") {
                         return (
-                          <th key={"dropdown" + i.toString()}>
+                          <th
+                            key={"dropdown" + i.toString()}
+                            className="bureau_border"
+                          >
                             <select
                               name="Value Type"
                               id="valuetype"
@@ -347,6 +365,30 @@ const Bureau = ({ info }) => {
                             {emiValues?.[i]}
                           </th>
                         );
+                      } else if (coloumn.field == "Disbursed_amount") {
+                        return (
+                          <th
+                            className="table_bureau_text"
+                            id={[coloumn.field] + i.toString()}
+                            key={[coloumn.field] + i.toString()}
+                          >
+                            {item[coloumn.field] != null
+                              ? formatIndianCurrency(item[coloumn.field])
+                              : 0}
+                          </th>
+                        );
+                      } else if (coloumn.field == "Current Balance") {
+                        return (
+                          <th
+                            className="table_bureau_text"
+                            id={[coloumn.field] + i.toString()}
+                            key={[coloumn.field] + i.toString()}
+                          >
+                            {item[coloumn.field] != null
+                              ? formatIndianCurrency(item[coloumn.field])
+                              : 0}
+                          </th>
+                        );
                       }
                       return (
                         <th
@@ -368,10 +410,18 @@ const Bureau = ({ info }) => {
 
         <div style={{ width: "100%", marginTop: "1.3em" }}>
           <button
-            style={{ marginLeft: "50em", marginRight: "auto" }}
             onClick={saveButtonClickHandler}
+            disabled={isButtonDisabled}
+            style={{
+              marginLeft: "50em",
+              marginRight: "auto",
+              padding: "8px",
+              width: "90px",
+              backgroundColor: "black",
+              color: "white",
+            }}
           >
-            Save
+            <span style={{ fontWeight: "1000" }}>Save</span>
           </button>
         </div>
 
@@ -382,11 +432,12 @@ const Bureau = ({ info }) => {
               <th> Loan Type</th>
               <th> Loan Status</th>
               <th> Issue Date</th>
-              <th>High Credit Amount</th>
-              <th> Current Balance </th>
+              <th>High Credit Amount (₹)</th>
+              <th> Current Balance (₹)</th>
               <th>Last DPD </th>
-              <th> Overdue Amount </th>
+              <th> Overdue Amount (₹) </th>
               <th> Source </th>
+              <th>Value Type</th>
             </tr>
           </thead>
 
@@ -403,10 +454,13 @@ const Bureau = ({ info }) => {
                     {item["Disbursal_date"]}
                   </th>
                   <th className="table_bureau_text">
-                    {item["Disbursed_amount"]}
+                    {formatIndianCurrency(150000 * (index + 1))}
                   </th>
                   <th className="table_bureau_text">
-                    {item["Current Balance"]}
+                    {formatIndianCurrency(item["Current Balance"])}
+                  </th>
+                  <th className="table_bureau_text">
+                    {item["DPD"] === 0 ? item["DPD"] : "NR"}
                   </th>
                   <th className="table_bureau_text">{item["DPD"]}</th>
                   <th className="table_bureau_text">

@@ -623,12 +623,35 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                           <span>{item?.entity}</span>
                           {item.count > 0 && (
                             <span
-                              style={{ color: "black", fontWeight: "bold" }}
+                              style={{
+                                color: "black",
+                                // fontWeight: "bold",
+                                fontStyle: "italic",
+                              }}
                             >
-                              {" "}
-                              {"("}
-                              {item.count}
-                              {")"}
+                              {" ("}
+                            </span>
+                          )}
+                          {item.count > 0 && (
+                            <span
+                              style={{
+                                color: "black",
+                                fontWeight: "bold",
+                                fontStyle: "italic",
+                              }}
+                            >
+                              {item.count}{" "}
+                            </span>
+                          )}
+                          {item.count > 0 && (
+                            <span
+                              style={{
+                                color: "black",
+                                // fontWeight: "bold",
+                                fontStyle: "italic",
+                              }}
+                            >
+                              {" entities merged)"}
                             </span>
                           )}
                         </button>
@@ -642,6 +665,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                               border: "0",
                               margin: "0",
                               textAlign: "right",
+                              fontWeight: "bold",
                             }}
                             onClick={() => {
                               mergeRows(item.group_no);
