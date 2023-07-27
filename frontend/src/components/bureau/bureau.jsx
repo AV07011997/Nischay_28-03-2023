@@ -322,6 +322,7 @@ const Bureau = ({ info }) => {
                           <th
                             key={"bureau_ROI_input" + i.toString()}
                             id={"bureau_ROI_input" + i.toString()}
+                            className="bureau_border"
                           >
                             <input
                               ref={inputValueROI}
