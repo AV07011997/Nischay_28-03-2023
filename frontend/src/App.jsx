@@ -11,7 +11,8 @@ import { useState } from "react";
 import AnalyzeBankSummary from "./components/analyze/bank/summary/summary";
 import AnalyzeBankMonthWise from "./components/analyze/bank/month_wise/month_wise";
 import AnalyzeStatement from "./components/analyze/bank/statement/statement";
-import ANALYZECOUNTERPARTIES from "./components/analyze/bank/counterParties/counterparties";
+// import ANALYZECOUNTERPARTIES from "./components/analyze/bank/counterParties/counterparties";
+import ANALYZECOUNTERPARTIES from "./components/analyze/bank/counterparties/counterparties";
 import { useEffect } from "react";
 import BureauMonthwise from "./components/analyze/Bureau/Bureau_Monthwise/bureauMonthwise";
 

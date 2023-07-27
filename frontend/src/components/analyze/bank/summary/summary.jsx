@@ -784,9 +784,10 @@ const AnalyzeBankSummary = ({ setUser }) => {
                         );
                       }}
                     >
-                      {info.data4.Min_Amt_Chq_Bounce
-                        ? info.data4.Min_Amt_Chq_Bounce
-                        : "N/A"}{" "}
+                     {info.data4.Min_Amt_Chq_Bounce
+  ? `₹ ${info.data4.Min_Amt_Chq_Bounce}`
+  : "N/A"}{" "}
+
                     </button>
                   </td>
                 </tr>

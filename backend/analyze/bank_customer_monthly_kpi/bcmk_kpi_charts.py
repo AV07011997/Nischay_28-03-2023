@@ -166,11 +166,11 @@ def bcmk_charts(data):
     plt.yticks(fontsize=12)
     plt.axhline(0, color='black', linewidth=1)
     for xitem, yitem in np.nditer([x, y], flags=(["refs_ok"]), op_flags=["readwrite"]):
-        ax.text(xitem, yitem, int(yitem), dict(size=9, color='blue'), ha="left",fontsize=10,fontweight='bold')
+        ax.text(xitem, yitem, int(yitem), dict(size=9, color='blue'), ha="left",fontweight='bold')
     for xitem, y2item in np.nditer([x, y2], flags=(["refs_ok"]), op_flags=["readwrite"]):
-        ax.text(xitem, y2item, int(y2item), dict(size=9, color='orange'), ha="right",fontsize=10,fontweight='bold')
+        ax.text(xitem, y2item, int(y2item), dict(size=9, color='orange'), ha="right",fontweight='bold')
     for xitem, y3item in np.nditer([x, y3], flags=(["refs_ok"]), op_flags=["readwrite"]):
-        ax.text(xitem, y3item, int(y3item), dict(size=9, color='green'), ha="right",fontsize=10,fontweight='bold')
+        ax.text(xitem, y3item, int(y3item), dict(size=9, color='green'), ha="right",fontweight='bold')
     plt.legend([a, b, c], ['Month-End Balance', 'Net Inflows', 'EMI'], loc="lower center", mode="expand", ncol=3,
                bbox_to_anchor=(0.25, -0.15, 0.5, .102))
 
@@ -203,9 +203,9 @@ def bcmk_charts(data):
     ax.set_yticklabels([])
 
     for xitem, yitem in np.nditer([x1, y1], flags=(["refs_ok"]), op_flags=["readwrite"]):
-        ax.text(xitem, yitem, int(yitem), dict(size=10, color='#ee8a11'), ha="left",fontsize=10,fontweight='bold')
+        ax.text(xitem, yitem, int(yitem), dict(size=10, color='#ee8a11'), ha="left",fontweight='bold')
     for xitem, y2item in np.nditer([x1, y2], flags=(["refs_ok"]), op_flags=["readwrite"]):
-        ax.text(xitem, y2item, int(y2item), dict(size=10, color='#3776ab'), ha="right",fontsize=10,fontweight='bold')
+        ax.text(xitem, y2item, int(y2item), dict(size=10, color='#3776ab'), ha="right",fontweight='bold')
 
     plt.legend([a, b], ['Cash Credits', 'Cash Debits'], loc="lower center", mode="expand", ncol=2,
                bbox_to_anchor=(0.25, -0.15, 0.5, .102))

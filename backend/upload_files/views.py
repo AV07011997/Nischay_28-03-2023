@@ -12,6 +12,8 @@ from django.contrib import messages
 from mysite.models import *
 import json
 import os
+from CONSTANT import path_pdf_files_folder
+
 
 from django.db import connection
 from datetime import datetime
@@ -152,7 +154,9 @@ def uploadBankStatments(request):
             uploaded_file = request.FILES[str(item)]
             key = cutFile(uploaded_file)
             try:
-                pdfs = r'C:\Users\Abhishek\Desktop\pdf_files'  ## pdf storage path
+                pdfs = r''+path_pdf_files_folder  ## pdf storage path
+
+                # pdfs = r'C:\Users\Abhishek\Desktop\pdf_files'  ## pdf storage path
                 os.makedirs(pdfs, exist_ok=True)
                 file_path = os.path.join(pdfs, f'{lead_id}&{next_count}&{lead_name}&{key}')
                 with open(file_path, 'wb') as f:

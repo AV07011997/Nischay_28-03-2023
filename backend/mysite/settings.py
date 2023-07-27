@@ -91,8 +91,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         # 'NAME': 'a3_kit',
         'NAME': 'a5_kit',
+
         'USER': 'root',
-        'PASSWORD': 'Knowlvers@555',
+        'PASSWORD': 'Knowlvers1@1',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"}

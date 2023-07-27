@@ -5,6 +5,7 @@
   margin-right: auto;
   width: 95%;
   padding: 8px;
+
 }
 .table_bureau_thead {
   background-color: black;
@@ -21,6 +22,7 @@
 }
 .table_bureau_text {
   padding: 8px;
+  border: 1px solid #575757
 }
 
 .bureau_input_design {

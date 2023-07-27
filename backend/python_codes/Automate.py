@@ -22,7 +22,7 @@ import numpy_financial as npf
 
 #______________________________________________________________________________________________________________________________________
 
-conn = pymysql.connect(host = 'localhost', port = 3306, user = 'root', passwd = 'Knowlvers@555', charset = 'utf8', db='a3_kit')
+conn = pymysql.connect(host = 'localhost', port = 3306, user = 'root', passwd = 'Knowlvers1@1', charset = 'utf8', db='a3_kit')
 
 sql1 = "SELECT e.DEAL_ID AS deal_id, e.CUSTOMER_ID AS cust_id, e.BUREAU_ID AS report_id, e.BUREAU_DATE AS date_issued, e.DATE_OF_BIRTH AS DOB, e.NAME AS name, " \
        "e.PAN_NO AS PAN, v.SCORE, v.source FROM a3_kit.bureau_ref_dtl e LEFT JOIN a3_kit.bureau_score_segment v ON v.BUREAU_ID = e.BUREAU_ID AND v.CUSTOMER_ID = e.CUSTOMER_ID AND v.source = e.source "

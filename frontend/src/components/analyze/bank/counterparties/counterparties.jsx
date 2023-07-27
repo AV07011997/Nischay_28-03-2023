@@ -142,6 +142,21 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
       setSelectedRows([rowId]);
       setFirstSelectedRowIndex(rowId);
     }
+    const rowWithCountPositive = optbank.find(
+      (item) => item.index === rowId && item.count > 0
+    );
+    if (rowWithCountPositive) {
+      const index = selectedRows.indexOf(rowId);
+      if (index === -1) {
+        setSelectedRows((prevSelectedRows) => [...prevSelectedRows, rowId]);
+        setFirstSelectedRowIndex(rowId);
+      } else {
+        setSelectedRows((prevSelectedRows) =>
+          prevSelectedRows.filter((id) => id !== rowId)
+        );
+        setFirstSelectedRowIndex(null);
+      }
+    }
   };
 
   function removeObjectByEntity(arr, entityValue) {
@@ -403,6 +418,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
   }
 
   var entityWidth = "26em";
+  console.log(optbank);
 
   return (
     <div>
@@ -528,16 +544,26 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
             {optbank && (
               <tbody>
                 {optbank?.map((item, i) => {
+                  const isCountPositive = item.count > 0;
+                  const isSelected = selectedRows.includes(item.index);
+                  var rowClassName = "";
+
+                  if (isCountPositive && isSelected) {
+                    rowClassName = "blue";
+                  } else if (isCountPositive) {
+                    rowClassName = "selected";
+                  } else if (isSelected) {
+                    rowClassName = "blue";
+                  }
+
                   return (
                     <tr
                       key={item.index}
                       onClick={(event) => handleRowClick(item.index, event)}
-                      className={
-                        selectedRows.includes(item.index) ? "selected" : ""
-                      }
-                      // style={{
-                      // background: item.count > 0 ? "#f0f0f0" : "white",
-                      // }}
+                      // className={
+                      //   selectedRows.includes(item.index) ? "selected" : ""
+                      // }
+                      className={rowClassName}
                     >
                       <td
                         style={{
@@ -576,59 +602,15 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                         )}
                       </td>
 
-                      {/* <td
-                        style={{
-                          border: "1px solid #575757",
-                        }}
-                      >
-                        <button
-                          style={{
-                            textAlign: "left",
-                            alignItems: "left",
-                          }}
-                          className="button_monthwise"
-                          onClick={() => {
-                            setbuttonClicked("open");
-                            openWindow(item.entity);
-                          }}
-                        >
-                          <span>{item?.entity}</span>
-                        </button>
-                        {item.count > 0 && (
-                          <span>
-                            {"("}
-                            {item.count}
-                            {")"}
-                          </span>
-                        )}
-                        {item?.count > 0 && (
-                          <button
-                            style={{
-                              color: "black",
-                              background: "transparent",
-                              padding: "0",
-                              border: "0",
-                              margin: "0",
-                              textAlign: "right",
-                            }}
-                            onClick={() => {
-                              mergeRows(item.group_no);
-                            }}
-                          >
-                            {"(+)"}
-                          </button>
-                        )}
-                      </td> */}
-
                       <td
                         style={{
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "space-between",
                           border: "1px solid #575757",
-                          borderTop: "1px solid white",
+                          borderTop: "0px solid white",
                           padding: "3px",
-                          height: "31px",
+                          height: "35px",
                         }}
                       >
                         <button
@@ -669,19 +651,20 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                           </button>
                         )}
                       </td>
-
                       <td
                         style={{
-                          height: "30px",
+                          height: "auto",
+
                           border: "1px solid #575757",
                           padding: "3px",
                         }}
                       >
                         {item?.oldest_txn}
                       </td>
+
                       <td
                         style={{
-                          height: "30px",
+                          height: "auto",
 
                           border: "1px solid #575757",
                           padding: "3px",
@@ -692,7 +675,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                       <td
                         style={{
                           textAlign: "right",
-                          height: "30px",
+                          height: "auto",
                           border: "1px solid #575757",
                           padding: "3px",
                         }}
@@ -702,7 +685,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                       <td
                         style={{
                           textAlign: "right",
-                          height: "30px",
+                          height: "auto",
                           border: "1px solid #575757",
                           padding: "3px",
                         }}
@@ -712,7 +695,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                       <td
                         style={{
                           textAlign: "right",
-                          height: "30px",
+                          height: "auto",
                           border: "1px solid #575757",
                           padding: "3px",
                         }}
@@ -722,7 +705,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                       <td
                         style={{
                           textAlign: "right",
-                          height: "30px",
+                          height: "auto",
                           border: "1px solid #575757",
                           padding: "3px",
                         }}
@@ -732,7 +715,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                       <td
                         style={{
                           textAlign: "right",
-                          height: "30px",
+                          height: "auto",
                           border: "1px solid #575757",
                           padding: "3px",
                         }}
@@ -742,7 +725,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                       <td
                         style={{
                           textAlign: "right",
-                          height: "30px",
+                          height: "auto",
                           border: "1px solid #575757",
                           padding: "3px",
                         }}
@@ -752,7 +735,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                       <td
                         style={{
                           textAlign: "right",
-                          height: "30px",
+                          height: "auto",
                           border: "1px solid #575757",
                           padding: "3px",
                         }}
@@ -762,7 +745,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                       <td
                         style={{
                           textAlign: "right",
-                          height: "30px",
+                          height: "auto",
                           border: "1px solid #575757",
                           padding: "3px",
                         }}
@@ -772,7 +755,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                       <td
                         style={{
                           textAlign: "right",
-                          height: "30px",
+                          height: "auto",
                           border: "1px solid #575757",
                           padding: "3px",
                         }}

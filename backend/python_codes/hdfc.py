@@ -4,6 +4,9 @@ from tabula import read_pdf
 from re import findall
 from datetime import datetime as dt
 from django.db import connection
+from CONSTANT import path_digitized_folder,path_pdf_files_folder
+
+
 
 
 
@@ -1068,9 +1071,11 @@ def hdfc_digitization(pdf_path):
 
     final['lid'] = file_name.split('_')[0]
 
-    final.to_csv(r'C:\Users\Abhishek\Desktop\digitized_files\{}_b.csv'.format(file_name), index=False)
+    # final.to_csv(r'C:\Users\Abhishek\Desktop\digitized_files\{}_b.csv'.format(file_name), index=False)
+    final.to_csv(r''+ path_digitized_folder+'{}_b.csv'.format(file_name), index=False)
 
-    return r'C:\Users\Abhishek\Desktop\digitized_files\{}_b.csv'.format(file_name)
+    # return r'C:\Users\Abhishek\Desktop\digitized_files\{}_b.csv'.format(file_name)
+    return r''+ path_digitized_folder+'{}_b.csv'.format(file_name)
 
 
 # try :
