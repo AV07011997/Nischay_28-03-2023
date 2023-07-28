@@ -30,11 +30,11 @@
 
 /* Padding for table headers and cells */
 .table1_monthwise th {
-  padding: 5px; /* Adjust as needed */
+  padding: 2px; /* Adjust as needed */
 }
 
 .table1_monthwise td {
-  padding: 5px; /* Adjust as needed */
+  padding: 2px; /* Adjust as needed */
 }
 
 /* Styles for monthwise graph */

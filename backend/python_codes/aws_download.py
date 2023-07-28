@@ -37,8 +37,6 @@ from mysite.models import failed_digitization
 from mysite.models import bank_bank
 import pandas as pd
 from django.db.models import Min, Max
-from CONSTANT import path_pdf_files_folder,path_static_files,path_digitized_folder
-
 
 
 
@@ -55,13 +53,13 @@ def job():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',  ###connect to database
-        password='Knowlvers1@1',
+        password='Knowlvers@555',
         database="a5_kit"
     )
 
     mycursor = mydb.cursor()
-    file_path = r'G:/IT Data/Nischay/pdf_files/'  ## Here the pdf is stored after uploading it into the web
-    csv_path = r'G:/IT Data/Nischay/digitized_files/'  ##  Here we will store the csv after digitisation
+    file_path = r'C:\Users\Abhishek\Desktop\pdf_files'  ## Here the pdf is stored after uploading it into the web
+    csv_path = r'C:\Users\Abhishek\Desktop\digitized_files'  ##  Here we will store the csv after digitisation
 
     # with open(csv_path, newline='') as csvfile:
     #     # Create a reader object to iterate over the rows
@@ -173,8 +171,7 @@ def job():
     #     print(name)
 
 
-    # files = glob.glob(r"C:\Users\Abhishek\Desktop\pdf_files\*.pdf")
-    files = glob.glob(r''+path_pdf_files_folder+'*.pdf')
+    files = glob.glob(r"C:\Users\Abhishek\Desktop\pdf_files\*.pdf")
 
     file_name=''
 
@@ -307,15 +304,12 @@ def job():
 
                         # Combine the file path and name
 
-                # file_location = os.path.join('C:/Users/Abhishek/Desktop/digitized_files/', filename)
-                file_location = os.path.join(path_digitized_folder, filename)
-
+                file_location = os.path.join('C:/Users/Abhishek/Desktop/digitized_files/', filename)
                 os.remove(file_location)
 
 
-schedule.every(1).minutes.do(job)  ### frequency of code execution
+schedule.every(1.5).minutes.do(job)  ### frequency of code execution
 
 while True:
     schedule.run_pending()
-    time.sleep(1)
-
+    time.sleep(1.5)

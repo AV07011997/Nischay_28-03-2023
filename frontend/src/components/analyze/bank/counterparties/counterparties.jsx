@@ -87,6 +87,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
   var [optbank, setoptbank] = useState();
   var [optbank2, setoptbank2] = useState();
   var [optbank3, setoptbank3] = useState();
+  var [table1, settable1] = useState();
 
   const [pagestate, setpagestate] = useState(0);
   const [buttonClicked, setbuttonClicked] = useState("closed");
@@ -168,7 +169,8 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
     }
   }
 
-  function handledata(data, acc_number) {
+  function handledata(data, acc_number, table1) {
+    settable1(table1);
     setacc_number(acc_number);
     setoptbank(data);
     setoptbank2(data);
@@ -178,11 +180,14 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
   }, [acc_number]);
 
   useEffect(() => {
-    window.scrollTo({
-      top: 300, // Replace with the desired pixel height
-      behavior: "smooth", // This enables smooth scrolling
-    });
+    if (table1) {
+      window.scrollTo({
+        top: 260 + 30 * (table1["columns"].length - 1), // Replace with the desired pixel height - 140*2 -140/4
+        behavior: "smooth", // This enables smooth scrolling
+      });
+    }
   }, [optbank]);
+  console.log(table1);
 
   const mainHeader = [
     { header: "", col_span: 1 },

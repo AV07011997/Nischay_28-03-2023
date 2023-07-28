@@ -1,5 +1,5 @@
-// export const backendaddress = "http://127.0.0.1:8000/";
-export const backendaddress = "http://192.168.1.198:8000/";
+export const backendaddress = "http://127.0.0.1:8000/";
+// export const backendaddress = "http://192.168.1.198:8000/";
 
 export const staticImagesPath =
   "/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles";
