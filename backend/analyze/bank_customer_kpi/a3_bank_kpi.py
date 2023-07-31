@@ -168,7 +168,7 @@ def bck(data):
   ax.set_yticklabels([])
   # ax.get_yaxis().get_major_formatter().set_scientific(False)
   annotate_plot(df3, 'Closing Balance', 'Closing Balance')
-  plt.title('Closing Balance Monthly Trend',fontdict={'fontsize': 20, 'fontweight': 'bold'})
+  plt.title('Closing Balance Monthly Trend',fontdict={'fontsize': 15, 'fontweight': 'bold'})
   # plt.xlabel('Month-Year', fontsize=14)
   plt.ylabel('Closing Balance', fontsize=14)
   plt.xticks(fontsize=12)
@@ -203,7 +203,7 @@ def bck(data):
   df10.plot.barh(figsize=(12,6))
   plt.xticks(fontsize=12)
   plt.yticks(fontsize=12)
-  plt.title('Count of Transactions by Mode',fontdict={'fontsize': 20, 'fontweight': 'bold'})
+  plt.title('Count of Transactions by Mode',fontdict={'fontsize': 15, 'fontweight': 'bold'})
   plt.legend(['Debit', 'Credit'], loc='lower right')
 
   for i, (debit, credit) in enumerate(zip(df10['debit'], df10['credit'])):

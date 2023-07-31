@@ -199,9 +199,9 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
 
   const sub_headers = [
     { variable: "entity", column_name: "Entity" },
-    { variable: "oldest_txn", column_name: "From" },
+    { variable: "oldest_txn", column_name: "From", width: "78px" },
 
-    { variable: "latest_txn", column_name: "To" },
+    { variable: "latest_txn", column_name: "To", width: "78px" },
     { variable: "debits", column_name: "Dr" },
     { variable: "credits", column_name: "Cr" },
     { variable: "debited_amt_total", column_name: "Total" },
@@ -437,16 +437,22 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
 
       {optbank && optbank.length > 0 && (
         <div className="div_table1_counterparties">
-          <h4 className="headingCounterPartiesTable">
+          <h4
+            className="headingCounterPartiesTable"
+            style={{ fontSize: "18px" }}
+          >
             Summary of transactions by Payer-Payee{" "}
           </h4>
 
           <table className="table1_counterparties">
-            <thead className="table2_headers_counterparties">
+            <thead
+              className="table2_headers_counterparties"
+              style={{ fontSize: "15px" }}
+            >
               <tr>
                 <th
                   style={{
-                    width: "10px",
+                    // width: "10px",
                     // border: "0px solid white",
                     background: "white",
                   }}
@@ -465,9 +471,10 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                       className="sticky-main_header"
                       colSpan={item.col_span}
                       style={{
-                        width: headerWidth,
+                        // width: headerWidth,
                         textAlign: "center",
                         border: "1px solid #575757",
+                        padding: "5px",
                       }}
                     >
                       {item.header}
@@ -479,7 +486,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
               <tr>
                 <th
                   style={{
-                    width: "10px",
+                    // width: "10px",
                     border: "0px solid white",
                     background: "white",
                   }}
@@ -487,7 +494,15 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                 {sub_headers.map((item, i) => {
                   var columnWidth = "";
                   if (item.column_name === "Monthly Average") {
-                    columnWidth = "4.5em";
+                    columnWidth = "6em";
+                  } else if (item.column_name === "From") {
+                    columnWidth = "80px";
+                  } else if (item.column_name === "To") {
+                    columnWidth = "78px";
+                  } else if (item.column_name === "Dr") {
+                    columnWidth = "40px";
+                  } else if (item.column_name === "Cr") {
+                    columnWidth = "40px";
                   } else {
                     columnWidth = "auto";
                   }
@@ -547,7 +562,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
               </tr>
             </thead>
             {optbank && (
-              <tbody>
+              <tbody style={{ fontSize: "14px" }}>
                 {optbank?.map((item, i) => {
                   const isCountPositive = item.count > 0;
                   const isSelected = selectedRows.includes(item.index);
@@ -572,12 +587,11 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                     >
                       <td
                         style={{
-                          width: "10px",
+                          // width: "auto",
                           border: "0px solid white",
                           background: "white",
                           color: "white",
-                          padding: "3px",
-
+                          padding: "1px",
                           margin: "0",
                         }}
                       >
@@ -616,6 +630,7 @@ const ANALYZECOUNTERPARTIES = ({ setUser }) => {
                           borderTop: "0px solid white",
                           padding: "3px",
                           height: "35px",
+                          width: "auto",
                         }}
                       >
                         <button

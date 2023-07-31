@@ -65,7 +65,10 @@ const SELECTBANKCUSTOMER = (props) => {
     <div className="div_table1_monthwise">
       {table1 ? (
         <table style={{ width: "90%" }} className="table1_monthwise">
-          <thead className="thead_table1_monthwise">
+          <thead
+            className="thead_table1_monthwise"
+            style={{ fontSize: "15px" }}
+          >
             <tr>
               <th rowSpan={2}>Account Number</th>
               <th rowSpan={2}>Bank Name</th>
@@ -79,7 +82,7 @@ const SELECTBANKCUSTOMER = (props) => {
               <th>To</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody style={{ fontSize: "14px" }}>
             {table1["data"][0]?.map((item, i) => {
               {
                 if (item) {

@@ -438,7 +438,7 @@ const Bureau = ({ info }) => {
               <th>Last DPD </th>
               <th> Overdue Amount (₹) </th>
               <th> Source </th>
-              <th>Value Type</th>
+              {/* <th>Value Type</th> */}
             </tr>
           </thead>
 
@@ -463,7 +463,7 @@ const Bureau = ({ info }) => {
                   <th className="table_bureau_text">
                     {item["DPD"] === 0 ? item["DPD"] : "NR"}
                   </th>
-                  <th className="table_bureau_text">{item["DPD"]}</th>
+                  {/* <th className="table_bureau_text">{item["DPD"]}</th> */}
                   <th className="table_bureau_text">
                     {item["Overdue amount"]}
                   </th>

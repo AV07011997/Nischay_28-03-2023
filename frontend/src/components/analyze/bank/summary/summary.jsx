@@ -207,7 +207,10 @@ const AnalyzeBankSummary = ({ setUser }) => {
       <div className="div_table1_monthwise">
         {table ? (
           <table className="table1_monthwise">
-            <thead className="thead_table1_monthwise">
+            <thead
+              className="thead_table1_monthwise"
+              style={{ fontSize: "15px" }}
+            >
               <tr>
                 <th rowSpan={2}>Account Number</th>
                 <th rowSpan={2}>Bank Name </th>
@@ -220,7 +223,7 @@ const AnalyzeBankSummary = ({ setUser }) => {
                 <th>To</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody style={{ fontSize: "15px" }}>
               {table?.map((item, i) => {
                 {
                   if (item) {
@@ -274,6 +277,7 @@ const AnalyzeBankSummary = ({ setUser }) => {
             marginLeft: "27%",
             borderCollapse: "collapse",
             border: "none",
+            fontSize: "15px",
           }}
           className="tableSmallTableUpload"
         >
@@ -375,47 +379,7 @@ const AnalyzeBankSummary = ({ setUser }) => {
           </tbody>
         </table>
       </div>
-      {/* <div
-        style={{ paddingTop: "2em", paddingLeft: "12em", paddingRight: "12em" }}
-      >
-        <div
-          style={{
-            marginLeft: "8%",
-            width: "80%",
-            backgroundColor: "#f0f0f0",
-            padding: "2px",
-            display: "flex",
-            color: "black",
-            justifyContent: "space-between",
-          }}
-        >
-          <span style={{ marginLeft: "10px" }}>Statement Duration</span>
 
-          <span>{info?.data[0].from_date}</span>
-          <span>To</span>
-          <span style={{ marginRight: "10px" }}>{info?.data[0].to_date}</span>
-        </div>
-        <div
-          style={{
-            marginLeft: "8%",
-            width: "80%",
-            backgroundColor: "#e0e0e0",
-            padding: "1px",
-            display: "flex",
-            color: "black",
-            justifyContent: "space-between",
-          }}
-        >
-          <span style={{ marginLeft: "10px" }}>Balance</span>
-          <span style={{ marginLeft: "63px" }}>
-            {info?.data5.Opening_Balance}
-          </span>
-          <span style={{ marginLeft: "18px" }}>-</span>
-          <span style={{ marginRight: "10px" }}>
-            {info?.data5.Closing_Balance}
-          </span>
-        </div>
-      </div> */}
       <div style={{ display: "flex" }}>
         <div style={{ width: "65%" }}>
           <div
@@ -448,7 +412,7 @@ const AnalyzeBankSummary = ({ setUser }) => {
         <div style={{ color: "black" }}>
           <table style={{ marginTop: "4em", width: "100%" }}>
             {info && (
-              <tbody>
+              <tbody style={{ fontSize: "14px" }}>
                 <tr>
                   <td
                     style={{
@@ -560,7 +524,7 @@ const AnalyzeBankSummary = ({ setUser }) => {
 
           <table style={{ marginTop: "4em", width: "100%" }}>
             {info && (
-              <tbody>
+              <tbody style={{ fontSize: "14px" }}>
                 <tr>
                   <td
                     style={{
@@ -710,7 +674,7 @@ const AnalyzeBankSummary = ({ setUser }) => {
             }}
           >
             {info && (
-              <tbody>
+              <tbody style={{ fontSize: "14px" }}>
                 <tr>
                   <td
                     style={{
@@ -784,10 +748,9 @@ const AnalyzeBankSummary = ({ setUser }) => {
                         );
                       }}
                     >
-                     {info.data4.Min_Amt_Chq_Bounce
-  ? `₹ ${info.data4.Min_Amt_Chq_Bounce}`
-  : "N/A"}{" "}
-
+                      {info.data4.Min_Amt_Chq_Bounce
+                        ? `₹ ${info.data4.Min_Amt_Chq_Bounce}`
+                        : "N/A"}{" "}
                     </button>
                   </td>
                 </tr>
@@ -936,35 +899,6 @@ const AnalyzeBankSummary = ({ setUser }) => {
               </tbody>
             )}
           </table>
-
-          {/* <table style={{ marginTop: "4em", width: "100%" }}>
-            {info && (
-              <tbody>
-                <tr>
-                  <td
-                    style={{
-                      width: "16em",
-                      height: "3em",
-                    }}
-                  >
-                    Num_Credit_Tnx
-                  </td>
-                  <td>{info.data2.Num_Credit_Tnx}</td>
-                </tr>
-                <tr>
-                  <td
-                    style={{
-                      width: "16em",
-                      height: "3em",
-                    }}
-                  >
-                    Num_Debit_Tnx
-                  </td>
-                  <td>{info.data2.Num_Debit_Tnx} </td>
-                </tr>
-              </tbody>
-            )}
-          </table> */}
         </div>
       </div>
     </div>

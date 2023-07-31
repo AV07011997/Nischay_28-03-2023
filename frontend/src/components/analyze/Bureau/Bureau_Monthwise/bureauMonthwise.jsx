@@ -84,6 +84,7 @@ const BureauMonthwise = () => {
                     background: "black",
                     color: "white",
                     width: "60px",
+                    border: "1px solid $575757",
                   }}
                 >
                   Year
@@ -93,6 +94,7 @@ const BureauMonthwise = () => {
                     background: "black",
                     color: "white",
                     width: "120px",
+                    border: "1px solid $575757",
                   }}
                 >
                   KPI
@@ -128,12 +130,13 @@ const BureauMonthwise = () => {
           </table>
         </div>
         <div style={{ width: "87%" }}>
-          <table style={{ height: "50px" }}>
+          <table style={{ height: "50px", border: "1px solid #575757" }}>
             <thead
               style={{
                 height: "23.8px",
                 background: "black",
                 color: "white",
+                border: "1px solid #575757",
               }}
             >
               <th>DEC</th>

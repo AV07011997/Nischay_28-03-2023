@@ -101,6 +101,12 @@ const NavBar1 = (props) => {
                       <Dropdown.Item>
                         <a
                           onClick={() => {
+                            if (
+                              localStorage.getItem("bureauSave") === "false"
+                            ) {
+                              toast.error("Editing done, please Save!");
+                              return;
+                            }
                             navigate("/bank_customer_kpi");
                           }}
                         >
@@ -110,6 +116,12 @@ const NavBar1 = (props) => {
                       <Dropdown.Item>
                         <a
                           onClick={() => {
+                            if (
+                              localStorage.getItem("bureauSave") === "false"
+                            ) {
+                              toast.error("Editing done, please Save!");
+                              return;
+                            }
                             navigate("/analyzeMonthWise");
                           }}
                         >
@@ -119,6 +131,12 @@ const NavBar1 = (props) => {
                       <Dropdown.Item>
                         <a
                           onClick={() => {
+                            if (
+                              localStorage.getItem("bureauSave") === "false"
+                            ) {
+                              toast.error("Editing done, please Save!");
+                              return;
+                            }
                             navigate("/analyzeCounterparties");
                           }}
                         >
@@ -128,6 +146,12 @@ const NavBar1 = (props) => {
                       <Dropdown.Item>
                         <a
                           onClick={() => {
+                            if (
+                              localStorage.getItem("bureauSave") === "false"
+                            ) {
+                              toast.error("Editing done, please Save!");
+                              return;
+                            }
                             navigate("/analyzestatement");
                           }}
                         >

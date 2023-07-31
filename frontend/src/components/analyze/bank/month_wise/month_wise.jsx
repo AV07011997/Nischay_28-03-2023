@@ -224,7 +224,10 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
             }}
             className="table1_monthwise"
           >
-            <thead className="thead_table1_monthwise">
+            <thead
+              className="thead_table1_monthwise"
+              style={{ fontSize: "15px" }}
+            >
               <tr>
                 <th colSpan={3}></th>
                 {optbank.map((item) => {
@@ -239,10 +242,10 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 ))} */}
               </tr>
             </thead>
-            <tbody>
+            <tbody style={{ fontSize: "14px" }}>
               <tr>
                 <td
-                  style={{ width: "80px" }}
+                  style={{ width: "80px", fontSize: "15px" }}
                   className="highlighted_headers"
                   rowSpan={10}
                 >
@@ -338,7 +341,11 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 })}
               </tr>
               <tr>
-                <td className="highlighted_headers" rowSpan={13}>
+                <td
+                  className="highlighted_headers"
+                  rowSpan={13}
+                  style={{ fontSize: "15px" }}
+                >
                   {" "}
                   Debits
                 </td>
@@ -570,7 +577,11 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 })}
               </tr>
               <tr>
-                <td className="highlighted_headers" colSpan={3}>
+                <td
+                  className="highlighted_headers"
+                  colSpan={3}
+                  style={{ fontSize: "15px" }}
+                >
                   Minimum Balance{" (₹)"}
                 </td>
                 {optbank.map((item) => {
@@ -582,7 +593,11 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 })}
               </tr>
               <tr>
-                <td className="highlighted_headers" colSpan={3}>
+                <td
+                  className="highlighted_headers"
+                  colSpan={3}
+                  style={{ fontSize: "15px" }}
+                >
                   Maximum Balance{" (₹)"}
                 </td>
                 {optbank.map((item) => {
@@ -594,7 +609,11 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 })}
               </tr>
               <tr>
-                <td className="highlighted_headers" colSpan={3}>
+                <td
+                  className="highlighted_headers"
+                  colSpan={3}
+                  style={{ fontSize: "15px" }}
+                >
                   Average Balance{" (₹)"}
                 </td>
                 {optbank.map((item) => {
@@ -608,7 +627,11 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 })}
               </tr>
               <tr>
-                <td className="highlighted_headers" colSpan={3}>
+                <td
+                  className="highlighted_headers"
+                  colSpan={3}
+                  style={{ fontSize: "15px" }}
+                >
                   Month End Balance{" (₹)"}
                 </td>
                 {optbank.map((item) => {
@@ -622,7 +645,11 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 })}
               </tr>
               <tr>
-                <td className="highlighted_headers" colSpan={3}>
+                <td
+                  className="highlighted_headers"
+                  colSpan={3}
+                  style={{ fontSize: "15px" }}
+                >
                   Max Credit Amount{" (₹)"}
                 </td>
                 {optbank.map((item) => {
@@ -653,7 +680,11 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
               </tr>
 
               <tr>
-                <td className="highlighted_headers" colSpan={3}>
+                <td
+                  className="highlighted_headers"
+                  colSpan={3}
+                  style={{ fontSize: "15px" }}
+                >
                   Max Debit Amount{" (₹)"}
                 </td>
                 {optbank.map((item) => {
@@ -685,7 +716,11 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
               </tr>
 
               <tr>
-                <td className="highlighted_headers" colSpan={3}>
+                <td
+                  className="highlighted_headers"
+                  colSpan={3}
+                  style={{ fontSize: "15px" }}
+                >
                   Month End Balance{" (₹)"}
                 </td>
                 {optbank.map((item) => {
@@ -699,7 +734,11 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 })}
               </tr>
               <tr>
-                <td className="highlighted_headers" colSpan={3}>
+                <td
+                  className="highlighted_headers"
+                  colSpan={3}
+                  style={{ fontSize: "15px" }}
+                >
                   Net Inflow Amount{" (₹)"}
                 </td>
                 {optbank.map((item) => {
@@ -709,7 +748,11 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                 })}
               </tr>
               <tr>
-                <td className="highlighted_headers" colSpan={3}>
+                <td
+                  className="highlighted_headers"
+                  colSpan={3}
+                  style={{ fontSize: "15px" }}
+                >
                   EMI{" (₹)"}
                 </td>
                 {optbank.map((item) => {

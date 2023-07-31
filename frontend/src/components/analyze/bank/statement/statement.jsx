@@ -514,10 +514,13 @@ const AnalyzeStatement = ({ setUser }) => {
         <div className="div_table1_monthwise">
           {table ? (
             <table className="table1_monthwise">
-              <thead className="thead_table1_monthwise">
+              <thead
+                className="thead_table1_monthwise"
+                style={{ fontSize: "15px" }}
+              >
                 <tr>
                   <th rowSpan={2}>Account Number</th>
-                  <th rowSpan={2}>Bank Name number</th>
+                  <th rowSpan={2}>Bank Name </th>
                   <th colSpan="2">Transactions</th>
                 </tr>
                 <tr>
@@ -527,7 +530,7 @@ const AnalyzeStatement = ({ setUser }) => {
                   <th>To</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody style={{ fontSize: "14px" }}>
                 {table?.map((item, i) => {
                   {
                     if (item) {
@@ -574,10 +577,16 @@ const AnalyzeStatement = ({ setUser }) => {
       {table1 && (
         <div className="filter_element_div_block">
           <div className="filter_element">
-            <h6 style={{ marginLeft: "50px", marginBottom: "10px" }}>
+            <h6
+              style={{
+                marginLeft: "50px",
+                marginBottom: "10px",
+                fontSize: "15px",
+              }}
+            >
               Transaction Date
             </h6>
-            <span>From&nbsp;&nbsp;&nbsp;</span>
+            <span style={{ fontSize: "14px" }}>From&nbsp;&nbsp;&nbsp;</span>
             <input
               style={{ width: "25.5%" }}
               type="date"
@@ -589,7 +598,9 @@ const AnalyzeStatement = ({ setUser }) => {
               max={toFormatted}
               ref={txnFromInputRef}
             ></input>
-            <span>&nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;</span>
+            <span style={{ fontSize: "14px" }}>
+              &nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;
+            </span>
             <input
               style={{ width: "25.5%" }}
               type="date"
@@ -602,17 +613,25 @@ const AnalyzeStatement = ({ setUser }) => {
             ></input>
           </div>
           <div className="filter_element">
-            <h6 style={{ marginLeft: "50px", marginBottom: "10px" }}>
+            <h6
+              style={{
+                marginLeft: "50px",
+                marginBottom: "10px",
+                fontSize: "15px",
+              }}
+            >
               {" "}
               Debited Amount
             </h6>
-            <span>From&nbsp;&nbsp;&nbsp;</span>
+            <span style={{ fontSize: "14px" }}>From&nbsp;&nbsp;&nbsp;</span>
             <input
               type="text"
               id="debit_amount_from"
               ref={debitFromInputRef}
             ></input>
-            <span>&nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;</span>
+            <span style={{ fontSize: "14px" }}>
+              &nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;
+            </span>
             <input
               type="text"
               id="debit_amount_to"
@@ -621,16 +640,24 @@ const AnalyzeStatement = ({ setUser }) => {
           </div>
 
           <div className="filter_element">
-            <h6 style={{ marginLeft: "50px", marginBottom: "10px" }}>
+            <h6
+              style={{
+                marginLeft: "50px",
+                marginBottom: "10px",
+                fontSize: "15px",
+              }}
+            >
               Credited Amount
             </h6>
-            <span>From&nbsp;&nbsp;&nbsp;</span>
+            <span style={{ fontSize: "14px" }}>From&nbsp;&nbsp;&nbsp;</span>
             <input
               type="text"
               id="credit_amount_from"
               ref={creditFromInputRef}
             ></input>
-            <span>&nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;</span>
+            <span style={{ fontSize: "14px" }}>
+              &nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;
+            </span>
             <input
               type="text"
               id="credit_amount_to"
@@ -639,17 +666,25 @@ const AnalyzeStatement = ({ setUser }) => {
           </div>
 
           <div className="filter_element">
-            <h6 style={{ marginLeft: "50px", marginBottom: "10px" }}>
+            <h6
+              style={{
+                marginLeft: "50px",
+                marginBottom: "10px",
+                fontSize: "15px",
+              }}
+            >
               {" "}
               Closing Balance Amount
             </h6>
-            <span>From&nbsp;&nbsp;&nbsp;</span>
+            <span style={{ fontSize: "14px" }}>From&nbsp;&nbsp;&nbsp;</span>
             <input
               type="text"
               id="closing_balance_amount_from"
               ref={balFromInputRef}
             ></input>
-            <span>&nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;</span>
+            <span style={{ fontSize: "14px" }}>
+              &nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;&nbsp;
+            </span>
             <input
               type="text"
               id="closing_balance_amount_to"
@@ -657,7 +692,7 @@ const AnalyzeStatement = ({ setUser }) => {
             ></input>
           </div>
           <br></br>
-          <div className="submit_statement">
+          <div className="submit_statement" style={{ fontSize: "15px" }}>
             <button
               className="button_statement"
               onClick={() => {
@@ -667,7 +702,7 @@ const AnalyzeStatement = ({ setUser }) => {
               Submit
             </button>
           </div>
-          <div>
+          <div style={{ fontSize: "14px" }}>
             <button
               // className="resetButton"
               className="custom-button"
@@ -681,50 +716,60 @@ const AnalyzeStatement = ({ setUser }) => {
         </div>
       )}
 
-      {table1 && (
-        <div className="div_table1_monthwise">
-          <table
-            className="table1_monthwise"
-            style={{
-              width: "91%",
-              marginLeft: "5%",
-              overflowY: "auto",
-              height: "700px",
-            }}
-          >
-            <thead className="thead_table1_monthwise">
-              <tr style={{ position: "sticky", top: "0", background: "black" }}>
-                <th>Transaction Date</th>
-                <th>Description</th>
-                <th>Cheque Number</th>
-                <th>Credit{" (₹)"}</th>
-                <th>Debit{" (₹)"}</th>
-                <th>Balance{" (₹)"}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {table1 && (
-                <>
-                  {table1?.map((item, i) => {
-                    return (
-                      <tr key={i}>
-                        <td>{item.txn_date}</td>
-                        <td style={{ textAlign: "left" }}>
-                          {item.description}
-                        </td>
-                        <td>{item.cheque_number}</td>
-                        <td style={{ textAlign: "right" }}>{item.credit}</td>
-                        <td style={{ textAlign: "right" }}>{item.debit}</td>
-                        <td style={{ textAlign: "right" }}>{item.balance}</td>
-                      </tr>
-                    );
-                  })}
-                </>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <div>
+        {table1 && (
+          <div className="div_table1_monthwise">
+            <table
+              className="table1_monthwise"
+              style={{
+                width: "91%",
+                marginLeft: "5%",
+                overflowY: "auto",
+                height: "700px",
+                fontSize: "medium",
+              }}
+            >
+              <thead className="thead_table1_monthwise">
+                <tr
+                  style={{
+                    position: "sticky",
+                    top: "0",
+                    background: "black",
+                    fontSize: "15px",
+                  }}
+                >
+                  <th>Transaction Date</th>
+                  <th>Description</th>
+                  <th>Cheque Number</th>
+                  <th>Credit{" (₹)"}</th>
+                  <th>Debit{" (₹)"}</th>
+                  <th>Balance{" (₹)"}</th>
+                </tr>
+              </thead>
+              <tbody style={{ fontSize: "14px" }}>
+                {table1 && (
+                  <>
+                    {table1?.map((item, i) => {
+                      return (
+                        <tr key={i}>
+                          <td>{item.txn_date}</td>
+                          <td style={{ textAlign: "left" }}>
+                            {item.description}
+                          </td>
+                          <td>{item.cheque_number}</td>
+                          <td style={{ textAlign: "right" }}>{item.credit}</td>
+                          <td style={{ textAlign: "right" }}>{item.debit}</td>
+                          <td style={{ textAlign: "right" }}>{item.balance}</td>
+                        </tr>
+                      );
+                    })}
+                  </>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
