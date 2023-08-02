@@ -1,0 +1,54 @@
+.bureau-analyze-circle-div {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  margin-top: 3em;
+}
+.circlesubtext {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+.circles {
+  border: 10px solid white;
+
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+
+  display: inline-block;
+  text-align: center;
+
+  width: 10em;
+  height: 10em;
+  line-height: 9em;
+  font-size: 15px;
+  font-weight: bold;
+
+  margin-top: 2em;
+
+  background-color: rgb(46, 46, 46);
+  color: white;
+}
+b {
+  font-size: 15px;
+}
+
+.header-table-bureau-analayze {
+  background-color: rgb(46, 46, 46);
+  color: white;
+}
+
+tr,
+th,
+td {
+  border: solid black 0.0625em;
+  color: black;
+  padding: 0.3125em;
+  width: 280px;
+  text-align: center;
+}
+table {
+  width: 100%;
+}

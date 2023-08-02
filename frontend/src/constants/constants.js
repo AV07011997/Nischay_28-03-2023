@@ -26,6 +26,7 @@ export const APIADDRESS = {
   UPDATEUPLOADLIST: "update_upload_list/",
   BUREAUMONTHWISE: "bureau_customer_month_kpi/",
   SAVEBUREAUDATA: "update_bureau_data/",
+  BUREAUANALYZE: "bureau_customer_kpi/",
 };
 
 export const BUREAUPAGECOLUMNS = {

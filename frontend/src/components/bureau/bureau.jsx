@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { APIADDRESS, BUREAUPAGECOLUMNS } from "../../constants/constants";
 import { postApi } from "../../callapi";
 import { useState } from "react";
-import numeral from "numeral";
+
 import NavBar1 from "../../utilities/navbar/navbar1";
 
 const Bureau = ({ info }) => {

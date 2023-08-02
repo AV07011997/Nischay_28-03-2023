@@ -29,6 +29,7 @@
     "mock-user-auth": "^1.0.15",
     "numeral": "^2.0.6",
     "pdfjs-dist": "^3.1.81",
+    "plotly": "^1.0.6",
     "react": "^18.2.0",
     "react-ajax": "^0.1.1",
     "react-bootstrap": "^2.6.0",

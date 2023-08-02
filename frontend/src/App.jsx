@@ -15,6 +15,7 @@ import ANALYZECOUNTERPARTIES from "./components/analyze/bank/counterParties/coun
 // import ANALYZECOUNTERPARTIES from "./components/analyze/bank/counterParties/counterparties";
 import { useEffect } from "react";
 import BureauMonthwise from "./components/analyze/Bureau/Bureau_Monthwise/bureauMonthwise";
+import BureauAnalyze from "./components/analyze/Bureau/Bureau_analyze/bureauAnalyze";
 
 function App() {
   const history = createBrowserHistory();
@@ -126,6 +127,16 @@ function App() {
             element={
               user ? (
                 <BureauMonthwise setUser={setUser} />
+              ) : (
+                <HomePage setUser={setUser} />
+              )
+            }
+          ></Route>
+          <Route
+            path="/bureauanalyze"
+            element={
+              user ? (
+                <BureauAnalyze setUser={setUser} />
               ) : (
                 <HomePage setUser={setUser} />
               )
