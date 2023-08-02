@@ -2799,31 +2799,31 @@ def bureau_customer_month_kpi(request):
 
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT * FROM bureau_ref_dtl WHERE CUSTOMER_ID = " + customer_id + ";")
+                "SELECT * FROM mysite_bureau_ref_dtl WHERE CUSTOMER_ID = " + customer_id + ";")
             bureau_ref_dtl = dictfetchall(cursor)
             bureau_ref_dtl = pd.DataFrame(bureau_ref_dtl)
 
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT * FROM bureau_account_segment_tl WHERE CUSTOMER_ID = " + customer_id + ";")
+                "SELECT * FROM mysite_bureau_account_segment_tl WHERE CUSTOMER_ID = " + customer_id + ";")
             bureau_account_segment_tl = dictfetchall(cursor)
             bureau_account_segment_tl = pd.DataFrame(bureau_account_segment_tl)
 
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT * FROM bureau_enquiry_segment_iq WHERE CUSTOMER_ID = " + customer_id + ";")
+                "SELECT * FROM mysite_bureau_enquiry_segment_iq WHERE CUSTOMER_ID = " + customer_id + ";")
             bureau_enquiry_segment_iq = dictfetchall(cursor)
             bureau_enquiry_segment_iq = pd.DataFrame(bureau_enquiry_segment_iq)
 
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT * FROM bureau_address_segment WHERE CUSTOMER_ID = " + customer_id + ";")
+                "SELECT * FROM mysite_bureau_address_segment WHERE CUSTOMER_ID = " + customer_id + ";")
             bureau_address_segment = dictfetchall(cursor)
             bureau_address_segment = pd.DataFrame(bureau_address_segment)
 
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT * FROM bureau_score_segment WHERE CUSTOMER_ID = " + customer_id + ";")
+                "SELECT * FROM mysite_bureau_score_segment WHERE CUSTOMER_ID = " + customer_id + ";")
             bureau_score_segment = dictfetchall(cursor)
             bureau_score_segment = pd.DataFrame(bureau_score_segment)
 
