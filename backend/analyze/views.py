@@ -2637,6 +2637,8 @@ def bureau_customer_month_kpi(request):
             data = KPI[0]
             data = data.drop_duplicates().reset_index(drop=True)
 
+
+
             data['Year'] = data['emi_month'].astype('str').apply(lambda x: x.split('-')[0])
             data['Month'] = data['emi_month'].astype('str').apply(lambda x: x.split('-')[1])
             data['Year'] = data['Year'].astype('int64')
@@ -2687,6 +2689,7 @@ def bureau_customer_month_kpi(request):
             fy1_1['valid_emi'] = fy1_1['valid_emi'].apply(lambda x: str(x).replace('₹', '₹ '))
 
             fy1_1['valid_emi'] = fy1_1['valid_emi'].astype(str).apply(lambda x: x.split('.')[0])
+            fy1_1['valid_emi'] = fy1_1['valid_emi'].replace('NaN', np.nan)
 
             fy1_1_1 = fy1_1[fy1_1['Month'] == 1]
             fy1_1_2 = fy1_1[fy1_1['Month'] == 2]
@@ -2747,6 +2750,8 @@ def bureau_customer_month_kpi(request):
             fy2_1['valid_emi'] = fy2_1['valid_emi'].apply(lambda x: str(x).replace('₹', '₹ '))
 
             fy2_1['valid_emi'] = fy2_1['valid_emi'].astype(str).apply(lambda x: x.split('.')[0])
+            fy2_1['valid_emi'] = fy2_1['valid_emi'].replace('NaN', np.nan)
+
 
             fy2_1_1 = fy2_1[fy2_1['Month'] == 1]
             fy2_1_2 = fy2_1[fy2_1['Month'] == 2]
@@ -2806,6 +2811,7 @@ def bureau_customer_month_kpi(request):
             fy3_1['valid_emi'] = fy3_1['valid_emi'].apply(lambda x: str(x).replace('₹', '₹ '))
 
             fy3_1['valid_emi'] = fy3_1['valid_emi'].astype(str).apply(lambda x: x.split('.')[0])
+            fy3_1 = fy3_1[pd.notna(fy3_1['valid_emi'])]
 
             fy3_1_1 = fy3_1[fy3_1['Month'] == 1]
             fy3_1_2 = fy3_1[fy3_1['Month'] == 2]
@@ -2869,6 +2875,7 @@ def bureau_customer_month_kpi(request):
                 fy4_1['valid_emi'] = fy4_1['valid_emi'].apply(lambda x: str(x).replace('₹', '₹ '))
 
                 fy4_1['valid_emi'] = fy4_1['valid_emi'].astype(str).apply(lambda x: x.split('.')[0])
+                fy4_1['valid_emi'] = fy4_1['valid_emi'].replace('NaN', "null")
 
                 fy4_1_1 = fy4_1[fy4_1['Month'] == 1]
 
@@ -3300,7 +3307,7 @@ def bureau_customer_month_kpi(request):
                 # finaldata = pd.DataFrame(list([payload]))
                 # finaldata = finaldata.to_dict('split')
                 # pydict = json.dumps(payload,payload_11,payload_12)
-                pydict = json.dumps([payload, payload_11, payload_12,payload_21,payload_22,payload_31,payload_32,payload_41,payload_41])
+                pydict = json.dumps([payload, payload_11, payload_12,payload_21,payload_22,payload_31,payload_32,payload_41,payload_42])
                 return HttpResponse(pydict)
 
                 # return render(request, "bureau_c_m_k.html", payload)

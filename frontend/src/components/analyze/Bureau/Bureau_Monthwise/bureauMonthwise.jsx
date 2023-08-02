@@ -3,6 +3,7 @@ import NavBar from "../../../../utilities/navbar/navbar";
 import NestedTable from "../../../../utilities/NestedTable/NestedTable";
 import { APIADDRESS } from "../../../../constants/constants";
 import { postApi } from "../../../../callapi";
+import "./bureauMinthwise.css";
 
 function removeCharactersFromKeys(obj) {
   const newObj = {};
@@ -84,7 +85,6 @@ const BureauMonthwise = () => {
                     background: "black",
                     color: "white",
                     width: "60px",
-                    border: "1px solid $575757",
                   }}
                 >
                   Year
@@ -94,7 +94,6 @@ const BureauMonthwise = () => {
                     background: "black",
                     color: "white",
                     width: "120px",
-                    border: "1px solid $575757",
                   }}
                 >
                   KPI
@@ -130,13 +129,12 @@ const BureauMonthwise = () => {
           </table>
         </div>
         <div style={{ width: "87%" }}>
-          <table style={{ height: "50px", border: "1px solid #575757" }}>
+          <table className="secondTable" style={{ height: "50px" }}>
             <thead
               style={{
                 height: "23.8px",
                 background: "black",
                 color: "white",
-                border: "1px solid #575757",
               }}
             >
               <th>DEC</th>
@@ -164,7 +162,7 @@ const BureauMonthwise = () => {
               <tr>
                 {data12 &&
                   Object.keys(data12).map((key) => (
-                    <td>{data12[key][0]?.cnt_active_accounts || "NR"}</td>
+                    <td>{data12[key][0]?.cnt_active_accounts || " "}</td>
                   ))}
               </tr>
               <tr>
@@ -192,7 +190,7 @@ const BureauMonthwise = () => {
                 {data22 &&
                   Object.keys(data22).map((key) => (
                     <td style={{ background: blueshade }}>
-                      {data22[key][0]?.cnt_active_accounts || "NR"}
+                      {data22[key][0]?.cnt_active_accounts || " "}
                     </td>
                   ))}
               </tr>
@@ -216,14 +214,18 @@ const BureauMonthwise = () => {
                 {data32 &&
                   Object.keys(data32).map((key) => (
                     <td style={{ height: "25px" }}>
-                      {data32[key][0]?.sum_emi}
+                      {/* {data32[key][0]?.sum_emi} */}
+                      {data32[key][0]?.sum_emi &&
+                      data32[key][0]?.sum_emi !== "₹ 0"
+                        ? data32[key][0]?.sum_emi
+                        : " "}
                     </td>
                   ))}
               </tr>
               <tr>
                 {data32 &&
                   Object.keys(data32).map((key) => (
-                    <td>{data32[key][0]?.cnt_active_accounts || "NR"}</td>
+                    <td>{data32[key][0]?.cnt_active_accounts || " "}</td>
                   ))}
               </tr>
               <tr>
@@ -242,15 +244,21 @@ const BureauMonthwise = () => {
                 {data42 &&
                   Object.keys(data42).map((key) => (
                     <td style={{ height: "25px", background: blueshade }}>
-                      {data42[key][0]?.sum_emi}
+                      {/* {data42[key][0]?.sum_emi} */}
+                      {data42[key][0]?.sum_emi &&
+                      data42[key][0]?.sum_emi !== "₹ 0"
+                        ? data42[key][0]?.sum_emi
+                        : " "}
                     </td>
                   ))}
               </tr>
               <tr>
                 {data42 &&
                   Object.keys(data42).map((key) => (
-                    <td style={{ background: blueshade }}>
-                      {data42[key][0]?.cnt_active_accounts || "NR"}
+                    <td style={{ background: blueshade, height: "24.5px" }}>
+                      {data42[key][0]?.cnt_active_accounts
+                        ? data42[key][0].cnt_active_accounts
+                        : " "}
                     </td>
                   ))}
               </tr>

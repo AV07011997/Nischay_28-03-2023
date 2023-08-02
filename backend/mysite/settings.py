@@ -89,8 +89,8 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'a3_kit',
-        # 'NAME': 'a5_kit',
+        # 'NAME': 'a3_kit',
+        'NAME': 'a5_kit',
 
         'USER': 'root',
         'PASSWORD': 'Knowlvers@555',

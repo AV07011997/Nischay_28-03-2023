@@ -35,7 +35,7 @@ const NavBar1 = (props) => {
     } else if (item == "HOME") {
       navigate("/home");
     }
-    // console.log(item);
+    console.log(item);
   };
 
   return (
@@ -94,7 +94,14 @@ const NavBar1 = (props) => {
                         <a>Summary</a>
                       </Dropdown.Item>
                       <Dropdown.Item>
-                        <a>Month-wise</a>
+                        {/* <a>Month-wise</a> */}
+                        <a
+                          onClick={() => {
+                            navigate("/bureaumonthwise");
+                          }}
+                        >
+                          Month-wise
+                        </a>
                       </Dropdown.Item>
                     </Dropdown.Menu>
                     <Dropdown.Menu title="BANK">

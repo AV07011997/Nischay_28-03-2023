@@ -126,6 +126,9 @@ def bureau_c_m_k(bureau_ref_dtl,bureau_score_segment,bureau_account_segment_tl,b
   "00":"Other"})
 
   data_loan_raw['account_type']=data_loan_raw['account_type'].fillna("Other")
+  data_loan_raw=data_loan_raw[data_loan_raw['account_type'] != "Credit Card"]
+
+
 
 
 
@@ -147,6 +150,7 @@ def bureau_c_m_k(bureau_ref_dtl,bureau_score_segment,bureau_account_segment_tl,b
   ###############################################################DPD table#############################################
   data_dpd=data_loan_raw[['deal_id','cust_id','source','report_id','loan_id','security_status','PAYMENT_HST_1', 'PAYMENT_HST_2', 'DATE_PAYMENT_HST_START',
          'DATE_PAYMENT_HST_END']]
+
   data_dpd=data_dpd.dropna(subset=['PAYMENT_HST_1'])
   data_dpd['PAYMENT_HST_2']=data_dpd['PAYMENT_HST_2'].fillna("XXX")
   data_dpd['payment']=data_dpd['PAYMENT_HST_1']+data_dpd['PAYMENT_HST_2']
@@ -592,6 +596,8 @@ def bureau_c_m_k(bureau_ref_dtl,bureau_score_segment,bureau_account_segment_tl,b
   tenure_by_acc_type_loan_amt['acc_type_new']=tenure_by_acc_type_loan_amt['acc_type'].astype(str).apply(lambda x:re.sub('[\W_]+','',x).lower())
   tenure_by_acc_type_for_missing['acc_type_new']=tenure_by_acc_type_for_missing['acc_type'].astype(str).apply(lambda x:re.sub('[\W_]+','',x).lower())
   loan_amt_bins_for_tenure['acc_type_new']=loan_amt_bins_for_tenure['acc_type'].astype(str).apply(lambda x:re.sub('[\W_]+','',x).lower())
+  loan_amt_bins_for_tenure['acc_type_new'] = loan_amt_bins_for_tenure['acc_type_new'].str.replace('â', '')
+
 
   ###############################################################################################################
   
@@ -684,8 +690,11 @@ def bureau_c_m_k(bureau_ref_dtl,bureau_score_segment,bureau_account_segment_tl,b
 
   #crif_cibil_dedup_4['emi_impute']=np.where(((crif_cibil_dedup_4['emi']<=500) | ((crif_cibil_dedup_4['emi']>crif_cibil_dedup_4['disbursed_amount']) & (crif_cibil_dedup_4['disbursed_amount']>0))),crif_cibil_dedup_4['emi_deflate'],crif_cibil_dedup_4['emi'])
   #crif_cibil_dedup_4['emi_impute']=np.where(crif_cibil_dedup_4['emi_impute']>500,crif_cibil_dedup_4['emi_impute'],np.nan)
+  crif_cibil_dedup_4['emi'] = crif_cibil_dedup_4['emi'].fillna(0)
+
 
   crif_cibil_dedup_4['emi_impute']=np.where(((crif_cibil_dedup_4['emi']<=500) | ((crif_cibil_dedup_4['emi']>=crif_cibil_dedup_4['disbursed_amount']) & (crif_cibil_dedup_4['disbursed_amount']>0))),crif_cibil_dedup_4['emi_deflate'],crif_cibil_dedup_4['emi'])
+
   #crif_cibil_dedup_4['emi_impute']=np.where(crif_cibil_dedup_4['emi_amount']<=500,crif_cibil_dedup_4['emi_deflate'],crif_cibil_dedup_4['emi_amount'])
 
   crif_cibil_dedup_5=crif_cibil_dedup_4[~crif_cibil_dedup_4['ownership'].isin(['Guarantor','Supl Card Holder'])]
@@ -1116,6 +1125,8 @@ def bureau_c_m_k(bureau_ref_dtl,bureau_score_segment,bureau_account_segment_tl,b
   data_for_emi_grid.loc[data_for_emi_grid["sum_emi"].notnull(),"sum_emi"]=data_for_emi_grid.loc[data_for_emi_grid["sum_emi"].notnull(),"sum_emi"].apply(lambda x:round(x))
   data_for_emi_grid["sum_emi"]=data_for_emi_grid["sum_emi"].fillna("NA")
   data_for_emi_grid['emi_month'] = pd.to_datetime(data_for_emi_grid['emi_month'], format = "%Y-%m-%d").apply(lambda x : x.date())
+
+  # data_for_emi_grid=data_for_emi_grid[data_for_emi_grid['sum_emi']!=0]
 
 
 

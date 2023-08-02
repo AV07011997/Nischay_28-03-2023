@@ -18,45 +18,53 @@ const NestedTable = (props) => {
           <thead>
             <tr>
               {cell_data.map((item) => {
-                return (
-                  <td style={{ height: "24px", padding: "0px" }}>
-                    {item.acc_type_new1}
-                  </td>
-                );
+                if (item.acc_type_new1 !== null) {
+                  return (
+                    <td style={{ height: "24px", padding: "0px" }}>
+                      {item.acc_type_new1}
+                    </td>
+                  );
+                }
               })}
             </tr>
           </thead>
           <tbody>
             <tr>
               {cell_data.map((item) => {
-                return (
-                  <td style={{ padding: "0px", height: "25px" }}>
-                    {item.valid_emi}
-                  </td>
-                );
+                if (item.valid_emi !== "nan") {
+                  return (
+                    <td style={{ padding: "0px", height: "25px" }}>
+                      {item.valid_emi}
+                    </td>
+                  );
+                }
               })}
             </tr>
             <tr>
               {cell_data.map((item) => {
-                return (
-                  <td style={{ padding: "0px", height: "24.5px" }}>
-                    {item.DPD}
-                  </td>
-                );
+                if (item.DPD !== null) {
+                  return (
+                    <td style={{ padding: "0px", height: "24.5px" }}>
+                      {item.DPD}
+                    </td>
+                  );
+                }
               })}
             </tr>
             <tr>
               {cell_data.map((item) => {
-                return (
-                  <td
-                    style={{
-                      padding: "0px",
-                      height: "25px",
-                    }}
-                  >
-                    {item.asset_classification}
-                  </td>
-                );
+                if (item.asset_classification !== null) {
+                  return (
+                    <td
+                      style={{
+                        padding: "0px",
+                        height: "25px",
+                      }}
+                    >
+                      {item.asset_classification}
+                    </td>
+                  );
+                }
               })}
             </tr>
           </tbody>
