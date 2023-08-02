@@ -147,6 +147,7 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
     data_dpd = data_dpd.replace('', None)
 
     data_dpd = data_dpd.dropna()
+    data_dpd = data_dpd[data_dpd['DATE_PAYMENT_HST_END'] != ""]
 
     data_dpd['date'] = data_dpd.apply(lambda row: list(pd.date_range(
         start=row['DATE_PAYMENT_HST_START'], end=row['DATE_PAYMENT_HST_END'], freq='-1MS')), axis=1)
@@ -568,10 +569,11 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
 
     # Loan Status Update
     temp = data_loan_final.copy()
-    temp = temp.replace('', None)
+    temp = temp.replace("", None)
+
 
     conditions = [(temp['active_status'].notna()),
-                  ((temp['active_status'].isna()) & (temp['date_closed'].isna()) & (temp['final_written_off_status'] == 0))]
+                  ((temp['active_status'].isna()) & (temp['date_closed_som'].isna()) & (temp['final_written_off_status'] == 0))]
     choices = [temp['active_status'], "Active"]
     temp['loan_status'] = np.select(conditions, choices, default="Closed")
     data_loan_final = temp.copy()

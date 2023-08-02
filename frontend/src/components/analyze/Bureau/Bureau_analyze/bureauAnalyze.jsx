@@ -34,6 +34,33 @@ const BureauAnalyze = () => {
 
     return result;
   }
+  // function convertToDpdFormat(inputString) {
+  //   // Split the inputString into days and month-year parts
+  //   const [dpdDays, monthYear] = inputString.split(",");
+
+  //   // Remove any leading/trailing spaces and convert dpdDays to a number
+  //   const formattedDpdDays = parseFloat(dpdDays.trim());
+
+  //   // Combine the formattedDpdDays and "DPD" on the first line
+  //   let result = `${formattedDpdDays} DPD`;
+
+  //   // Add the month-year part on the next line
+  //   result += `\n${monthYear.trim()}`;
+  //   console.log(result);
+
+  //   return result;
+  // }
+  var dpd;
+  var monthYear;
+
+  if (item) {
+    const [dpdDays1, monthYear1] = item.secured_max_dpd_status.split(",");
+    const formattedDpdDays = parseFloat(dpdDays1.trim());
+
+    dpd = formattedDpdDays;
+    monthYear = monthYear1.trim();
+  }
+
   function convertToDpdFormat(inputString) {
     // Split the inputString into days and month-year parts
     const [dpdDays] = inputString.split(",");
@@ -46,6 +73,7 @@ const BureauAnalyze = () => {
 
     return result;
   }
+
   return (
     <div>
       <NavBar></NavBar>
@@ -58,7 +86,9 @@ const BureauAnalyze = () => {
           </div>
         </div>
         <div className="circlesubtext">
-          <div className="circles">{item?.number_of_active_tradelines}</div>
+          <div className="circles" style={{ background: "#575757" }}>
+            {item?.number_of_active_tradelines}
+          </div>
           <div style={{ color: "black" }}>
             <b>Active tradelines</b>
             <div>Unsecured: 2</div>
@@ -79,7 +109,9 @@ const BureauAnalyze = () => {
           </div>
         </div>
         <div className="circlesubtext">
-          <div className="circles">{item?.sum_of_emi_of_active_loans}</div>
+          <div className="circles" style={{ background: "#575757" }}>
+            {item?.sum_of_emi_of_active_loans}
+          </div>
           <div style={{ color: "black" }}>
             <b>EMI</b>
             <div>Largest EMI: {item?.max_emi_of_active_loans}</div>
@@ -91,10 +123,14 @@ const BureauAnalyze = () => {
           <div className="circles">
             <div>
               <span style={{ display: "block" }}>
-                {" "}
-                {item?.secured_max_dpd_status
-                  ? convertToDpdFormat(item?.secured_max_dpd_status)
-                  : 0}{" "}
+                {item?.secured_max_dpd_status ? (
+                  <React.Fragment>
+                    <p>{dpd} DPD</p>
+                    <p>{monthYear}</p>
+                  </React.Fragment>
+                ) : (
+                  0
+                )}
               </span>
               <span style={{ display: "block" }}>
                 {" "}
@@ -122,7 +158,7 @@ const BureauAnalyze = () => {
           </div>
         </div>
         <div className="circlesubtext">
-          <div className="circles">
+          <div className="circles" style={{ background: "#575757" }}>
             {item?.secured_max_dpd_status
               ? convertToDpdFormat(item?.secured_max_dpd_status)
               : 0}{" "}
@@ -156,6 +192,7 @@ const BureauAnalyze = () => {
               marginRight: "1%",
               marginBottom: "10px",
             }}
+            className="BureayAnalyzeCell"
           >
             <tr>
               <th className="header-table-bureau-analayze">Age (in years)</th>
@@ -189,7 +226,7 @@ const BureauAnalyze = () => {
               <td className="num">{item?.last_reported_phone_no}</td>
             </tr>
           </table>
-          <table style={{ marginBottom: "10px" }}>
+          <table style={{ marginBottom: "10px" }} className="BureayAnalyzeCell">
             <tr>
               <th class="header-table-bureau-analayze">
                 # of enquiries in last 6 months
@@ -213,7 +250,7 @@ const BureauAnalyze = () => {
               <td>{item?.last_inquiry_year}</td>
             </tr>
           </table>
-          <table>
+          <table className="BureayAnalyzeCell">
             <tr>
               <th rowspan="4" className="header-table-bureau-analayze">
                 Oldest Loan Reported
@@ -265,7 +302,7 @@ const BureauAnalyze = () => {
           </table>
         </div>
         <div>
-          <table>
+          <table className="BureayAnalyzeCell">
             <tr>
               <th rowspan="3" className="header-table-bureau-analayze">
                 Largest Active Loan
@@ -337,7 +374,7 @@ const BureauAnalyze = () => {
               <td class="num">{item?.credit_utilization_ratio}%</td>
             </tr>
           </table>
-          <table style={{ marginTop: "10px" }}>
+          <table style={{ marginTop: "10px" }} className="BureayAnalyzeCell">
             <tr>
               <th className="header-table-bureau-analayze">Total overdue</th>
               <td class="num">{item?.total_overdue_amount}</td>

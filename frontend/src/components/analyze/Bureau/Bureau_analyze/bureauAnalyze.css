@@ -40,15 +40,21 @@ b {
   color: white;
 }
 
-tr,
-th,
-td {
+.BureayAnalyzeCell td {
   border: solid black 0.0625em;
   color: black;
   padding: 0.3125em;
   width: 280px;
   text-align: center;
 }
-table {
+.BureayAnalyzeCell th {
+  border: solid black 0.0625em;
+  color: white;
+  padding: 0.3125em;
+  width: 280px;
+  text-align: center;
+}
+
+.BureayAnalyzeCell table {
   width: 100%;
 }

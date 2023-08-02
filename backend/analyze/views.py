@@ -1043,170 +1043,170 @@ def bureau_customer_kpi(request):
             bureau_score_segment = dictfetchall(cursor)
             bureau_score_segment = pd.DataFrame(bureau_score_segment)
 
-        def gantt_chart_loan_timeline(df):
-            try:
-                os.remove(
-                    r'C:/Users/hardik\Documents/GitHub/Nischay_28-03-2023/frontend\staticfiles/plotly_chart.png')
-                os.remove(
-                    r'C:/Users/hardik\Documents/GitHub/Nischay_28-03-2023/frontend\staticfiles/plotly_chart2.png')
-            except:
-                pass
-            df = df.sort_values('HIGH_CREDIT_AMOUNT')
-            # df['DATE_CLOSED']=pd.to_datetime(df['DATE_CLOSED'])
-            df['security_status'] = np.where(df['ACCOUNT_TYPE'].isin(['5', '6', '8', '9', 10, '12',
-                                                                      '14', '16', '18', 19, 20, 35, 36, 37, 38, 39, 40,
-                                                                      41, 43, 44, 45, 51, 52,
-                                                                      53, 54, 55, 56, 57, 58, 61, 00]), "unsecured", "secured")
-
-            df['DATE_CLOSED'] = (pd.to_datetime(df['DATE_CLOSED']))
-            df['DATE_CLOSED'] = df['DATE_CLOSED'].apply(lambda x: x.date())
-            df['PAYMENT_HST_1'] = df['PAYMENT_HST_1'].astype(str)
-
-            df['status_check'] = 0
-
-            for i in range(len(df)):
-
-                if (pd.isnull(df['DATE_CLOSED'][i])):
-
-                    if ((df['PAYMENT_HST_1'][i][1:4] == '000') or (df['PAYMENT_HST_1'][i][1:4] == 'XXX') or (
-                            df['PAYMENT_HST_1'][i] == 'nan') or (df['PAYMENT_HST_1'][i] == None) or (
-                            df['PAYMENT_HST_1'][i] == 0) or df['PAYMENT_HST_1'][i][1:4] == ''):
-                        df['status_check'][i] = "Active Non Delinquent"
-                    else:
-                        df['status_check'][i] = "Active Delinquent"
-
-                else:
-                    df['status_check'][i] = "Closed Loan"
-
-            ###########
-
-            df['DATE_CLOSED'] = (pd.to_datetime(df['DATE_CLOSED']))
-            df['DATE_AC_DISBURSED'] = pd.to_datetime(df['DATE_AC_DISBURSED'])
-
-            start_dates = [i.date() for i in df['DATE_AC_DISBURSED']]
-
-            for j in range(len(df)):
-                if (pd.isnull(df['DATE_CLOSED'][j])):
-                    df['DATE_CLOSED'][j] = datetime.now()
-                    df['DATE_CLOSED'][j] = df['DATE_CLOSED'][j].date()
-                else:
-                    df['DATE_CLOSED'][j] = df['DATE_CLOSED'][j].date()
-
-            dfsecured = df[df['security_status'] == 'secured']
-            dfunsecured = df[df['security_status'] == 'unsecured']
-
-            amt1 = dfsecured['HIGH_CREDIT_AMOUNT']
-            start_dates1 = dfsecured['DATE_AC_DISBURSED']
-            end_dates1 = dfsecured['DATE_CLOSED']
-            types1 = dfsecured['status_check']
-
-            amt2 = dfunsecured['HIGH_CREDIT_AMOUNT']
-            start_dates2 = dfunsecured['DATE_AC_DISBURSED']
-            end_dates2 = dfunsecured['DATE_CLOSED']
-            types2 = dfunsecured['status_check']
-
-            # df_chart1 = pd.DataFrame(
-            #     {'Task': amt1, 'Start': start_dates1, 'Finish': end_dates1, 'Resource': types1})
-            # df_chart2 = pd.DataFrame(
-            #     {'Task': amt2, 'Start': start_dates2, 'Finish': end_dates2, 'Resource': types2})
-            # colors = {
-            #     "Active Non Delinquent": 'rgb(0, 255, 100)',
-            #     "Active Delinquent": 'rgb(255, 0, 0)',
-            #     "Closed Loan": 'rgb(255, 191, 0)',
-            # }
-            # fig1 = go.Figure()
-            # for i, row in df_chart1.iterrows():
-            #     fig1.add_trace(
-            #         go.Bar(
-            #             x=[(row['Start'], row['Finish'])],
-            #             y=[row['Resource']],
-            #             base=row['Task'],
-            #             name=row['Task'],
-            #             orientation='h',
-            #             marker=dict(color=colors[row['Resource']]),
-            #         )
-            #     )
-            # fig1.update_xaxes(tickformat='%Y')
-
-            # # Set showlegend=True to show the legend
-            # fig1.update_layout(showlegend=True)
-
-            # # Set the legend's position below the graph
-            # fig1.update_layout(legend=dict(orientation='h', y=-0.2))
-
-            # # Add Y-axis label
-            # fig1.update_layout(yaxis_title='Disbursed Amount')
-
-            # # Remove the timeline navigator
-            # fig1.update_layout(xaxis_rangeslider_visible=False)
-
-            # # Set the title
-            # fig1.update_layout(title='Secured Loan Timeline')
-
-            # # Save the plot as an image
-            # plotly.io.write_image(
-            #     fig1, r'C:\Users\hardik\Documents\GitHub\Nischay_28-03-2023\frontend\staticfiles\plotly_chart.png')
-
-            df_chart1 = pd.DataFrame()
-            df_chart1['Task'] = amt1.apply(
-                lambda x: format_currency(x, 'INR', locale='en_IN').replace('₹', ''))
-            df_chart1['Start'] = start_dates1
-            df_chart1['Finish'] = end_dates1
-            df_chart1['Resource'] = types1
-            colors = {"Active Non Delinquent": 'rgb(112, 173, 71)',
-                      "Active Delinquent": 'rgb(255,0,0)',
-                      "Closed Loan": 'rgb(255, 192, 0)'}
-
-            df_chart2 = pd.DataFrame()
-            df_chart2['Task'] = amt2.apply(
-                lambda x: format_currency(x, 'INR', locale='en_IN').replace('₹', ''))
-            df_chart2['Start'] = start_dates2
-            df_chart2['Finish'] = end_dates2
-            df_chart2['Resource'] = types2
-            colors = {"Active Non Delinquent": 'rgb(112, 173, 71)',
-                      "Active Delinquent": 'rgb(255,0,0)',
-                      "Closed Loan": 'rgb(255, 192, 0)'}
-
-            fig1 = ff.create_gantt(df_chart1, index_col='Resource', colors=colors,
-                                   showgrid_x=True, showgrid_y=False, title='Secured Loan Timeline',
-                                   show_colorbar=True, bar_width=0.25, )
-            fig1['layout']['title']['x'] = 0.5
-            fig1['layout']['title']['xanchor'] = 'center'
-            fig1.layout.xaxis.tickformat = '%Y'
-            fig1.update_layout(showlegend=True, font=dict(
-                color='black',
-
-            ))
-            fig1.update_layout(yaxis_title='Disbursed Amount (₹)')
-            fig1.update_layout(xaxis_rangeslider_visible=False)
-
-# Set the legend's position below the graph
-            fig1.update_layout(legend=dict(orientation='h', y=-0.1))
-
-            plotly.io.write_image(
-                fig1, r'C:\Users\hardik\Documents\GitHub\Nischay_28-03-2023\frontend\staticfiles\plotly_chart.png')
-
-            fig2 = ff.create_gantt(df_chart2, index_col='Resource', colors=colors,
-                                   showgrid_x=True, showgrid_y=False, title='Unsecured Loan Timeline',
-                                   show_colorbar=True, bar_width=0.25, )
-            fig2.update_layout(
-                title_text='Unsecured Loan Timeline',
-                title_x=0.5,
-                title_xanchor='center',
-                font=dict(
-                    color='black'
-                ),
-
-            )
-            fig2.layout.xaxis.tickformat = '%Y'
-            fig2.update_layout(showlegend=True)
-
-# Set the legend's position below the graph
-            fig2.update_layout(legend=dict(orientation='h', y=-0.1))
-            fig2.update_layout(xaxis_rangeslider_visible=False)
-            fig2.update_layout(yaxis_title='Disbursed Amount (₹)')
-            plotly.io.write_image(
-                fig2, r'C:\Users\hardik\Documents\GitHub\Nischay_28-03-2023\frontend\staticfiles\plotly_chart2.png')
+#         def gantt_chart_loan_timeline(df):
+#             try:
+#                 os.remove(
+#                     r'C:/Users/hardik\Documents/GitHub/Nischay_28-03-2023/frontend\staticfiles/plotly_chart.png')
+#                 os.remove(
+#                     r'C:/Users/hardik\Documents/GitHub/Nischay_28-03-2023/frontend\staticfiles/plotly_chart2.png')
+#             except:
+#                 pass
+#             df = df.sort_values('HIGH_CREDIT_AMOUNT')
+#             # df['DATE_CLOSED']=pd.to_datetime(df['DATE_CLOSED'])
+#             df['security_status'] = np.where(df['ACCOUNT_TYPE'].isin(['5', '6', '8', '9', 10, '12',
+#                                                                       '14', '16', '18', 19, 20, 35, 36, 37, 38, 39, 40,
+#                                                                       41, 43, 44, 45, 51, 52,
+#                                                                       53, 54, 55, 56, 57, 58, 61, 00]), "unsecured", "secured")
+#
+#             df['DATE_CLOSED'] = (pd.to_datetime(df['DATE_CLOSED']))
+#             df['DATE_CLOSED'] = df['DATE_CLOSED'].apply(lambda x: x.date())
+#             df['PAYMENT_HST_1'] = df['PAYMENT_HST_1'].astype(str)
+#
+#             df['status_check'] = 0
+#
+#             for i in range(len(df)):
+#
+#                 if (pd.isnull(df['DATE_CLOSED'][i])):
+#
+#                     if ((df['PAYMENT_HST_1'][i][1:4] == '000') or (df['PAYMENT_HST_1'][i][1:4] == 'XXX') or (
+#                             df['PAYMENT_HST_1'][i] == 'nan') or (df['PAYMENT_HST_1'][i] == None) or (
+#                             df['PAYMENT_HST_1'][i] == 0) or df['PAYMENT_HST_1'][i][1:4] == ''):
+#                         df['status_check'][i] = "Active Non Delinquent"
+#                     else:
+#                         df['status_check'][i] = "Active Delinquent"
+#
+#                 else:
+#                     df['status_check'][i] = "Closed Loan"
+#
+#             ###########
+#
+#             df['DATE_CLOSED'] = (pd.to_datetime(df['DATE_CLOSED']))
+#             df['DATE_AC_DISBURSED'] = pd.to_datetime(df['DATE_AC_DISBURSED'])
+#
+#             start_dates = [i.date() for i in df['DATE_AC_DISBURSED']]
+#
+#             for j in range(len(df)):
+#                 if (pd.isnull(df['DATE_CLOSED'][j])):
+#                     df['DATE_CLOSED'][j] = datetime.now()
+#                     df['DATE_CLOSED'][j] = df['DATE_CLOSED'][j].date()
+#                 else:
+#                     df['DATE_CLOSED'][j] = df['DATE_CLOSED'][j].date()
+#
+#             dfsecured = df[df['security_status'] == 'secured']
+#             dfunsecured = df[df['security_status'] == 'unsecured']
+#
+#             amt1 = dfsecured['HIGH_CREDIT_AMOUNT']
+#             start_dates1 = dfsecured['DATE_AC_DISBURSED']
+#             end_dates1 = dfsecured['DATE_CLOSED']
+#             types1 = dfsecured['status_check']
+#
+#             amt2 = dfunsecured['HIGH_CREDIT_AMOUNT']
+#             start_dates2 = dfunsecured['DATE_AC_DISBURSED']
+#             end_dates2 = dfunsecured['DATE_CLOSED']
+#             types2 = dfunsecured['status_check']
+#
+#             # df_chart1 = pd.DataFrame(
+#             #     {'Task': amt1, 'Start': start_dates1, 'Finish': end_dates1, 'Resource': types1})
+#             # df_chart2 = pd.DataFrame(
+#             #     {'Task': amt2, 'Start': start_dates2, 'Finish': end_dates2, 'Resource': types2})
+#             # colors = {
+#             #     "Active Non Delinquent": 'rgb(0, 255, 100)',
+#             #     "Active Delinquent": 'rgb(255, 0, 0)',
+#             #     "Closed Loan": 'rgb(255, 191, 0)',
+#             # }
+#             # fig1 = go.Figure()
+#             # for i, row in df_chart1.iterrows():
+#             #     fig1.add_trace(
+#             #         go.Bar(
+#             #             x=[(row['Start'], row['Finish'])],
+#             #             y=[row['Resource']],
+#             #             base=row['Task'],
+#             #             name=row['Task'],
+#             #             orientation='h',
+#             #             marker=dict(color=colors[row['Resource']]),
+#             #         )
+#             #     )
+#             # fig1.update_xaxes(tickformat='%Y')
+#
+#             # # Set showlegend=True to show the legend
+#             # fig1.update_layout(showlegend=True)
+#
+#             # # Set the legend's position below the graph
+#             # fig1.update_layout(legend=dict(orientation='h', y=-0.2))
+#
+#             # # Add Y-axis label
+#             # fig1.update_layout(yaxis_title='Disbursed Amount')
+#
+#             # # Remove the timeline navigator
+#             # fig1.update_layout(xaxis_rangeslider_visible=False)
+#
+#             # # Set the title
+#             # fig1.update_layout(title='Secured Loan Timeline')
+#
+#             # # Save the plot as an image
+#             # plotly.io.write_image(
+#             #     fig1, r'C:\Users\hardik\Documents\GitHub\Nischay_28-03-2023\frontend\staticfiles\plotly_chart.png')
+#
+#             df_chart1 = pd.DataFrame()
+#             df_chart1['Task'] = amt1.apply(
+#                 lambda x: format_currency(x, 'INR', locale='en_IN').replace('₹', ''))
+#             df_chart1['Start'] = start_dates1
+#             df_chart1['Finish'] = end_dates1
+#             df_chart1['Resource'] = types1
+#             colors = {"Active Non Delinquent": 'rgb(112, 173, 71)',
+#                       "Active Delinquent": 'rgb(255,0,0)',
+#                       "Closed Loan": 'rgb(255, 192, 0)'}
+#
+#             df_chart2 = pd.DataFrame()
+#             df_chart2['Task'] = amt2.apply(
+#                 lambda x: format_currency(x, 'INR', locale='en_IN').replace('₹', ''))
+#             df_chart2['Start'] = start_dates2
+#             df_chart2['Finish'] = end_dates2
+#             df_chart2['Resource'] = types2
+#             colors = {"Active Non Delinquent": 'rgb(112, 173, 71)',
+#                       "Active Delinquent": 'rgb(255,0,0)',
+#                       "Closed Loan": 'rgb(255, 192, 0)'}
+#
+#             fig1 = ff.create_gantt(df_chart1, index_col='Resource', colors=colors,
+#                                    showgrid_x=True, showgrid_y=False, title='Secured Loan Timeline',
+#                                    show_colorbar=True, bar_width=0.25, )
+#             fig1['layout']['title']['x'] = 0.5
+#             fig1['layout']['title']['xanchor'] = 'center'
+#             fig1.layout.xaxis.tickformat = '%Y'
+#             fig1.update_layout(showlegend=True, font=dict(
+#                 color='black',
+#
+#             ))
+#             fig1.update_layout(yaxis_title='Disbursed Amount (₹)')
+#             fig1.update_layout(xaxis_rangeslider_visible=False)
+#
+# # Set the legend's position below the graph
+#             fig1.update_layout(legend=dict(orientation='h', y=-0.1))
+#
+#             plotly.io.write_image(
+#                 fig1, r'C:\Users\hardik\Documents\GitHub\Nischay_28-03-2023\frontend\staticfiles\plotly_chart.png')
+#
+#             fig2 = ff.create_gantt(df_chart2, index_col='Resource', colors=colors,
+#                                    showgrid_x=True, showgrid_y=False, title='Unsecured Loan Timeline',
+#                                    show_colorbar=True, bar_width=0.25, )
+#             fig2.update_layout(
+#                 title_text='Unsecured Loan Timeline',
+#                 title_x=0.5,
+#                 title_xanchor='center',
+#                 font=dict(
+#                     color='black'
+#                 ),
+#
+#             )
+#             fig2.layout.xaxis.tickformat = '%Y'
+#             fig2.update_layout(showlegend=True)
+#
+# # Set the legend's position below the graph
+#             fig2.update_layout(legend=dict(orientation='h', y=-0.1))
+#             fig2.update_layout(xaxis_rangeslider_visible=False)
+#             fig2.update_layout(yaxis_title='Disbursed Amount (₹)')
+#             plotly.io.write_image(
+#                 fig2, r'C:\Users\hardik\Documents\GitHub\Nischay_28-03-2023\frontend\staticfiles\plotly_chart2.png')
 
         KPI = bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment_tl,
                               bureau_enquiry_segment_iq, bureau_address_segment, customer_id, deal_id, bureau_automated)
@@ -1220,7 +1220,7 @@ def bureau_customer_kpi(request):
             data2 = KPI[2]
             data3 = KPI[3]
             data4 = KPI[4]
-            gantt_chart_loan_timeline(bureau_account_segment_tl)
+            # gantt_chart_loan_timeline(bureau_account_segment_tl)
 
             # print('data', data)
             specifics = data[data['source'] == 'cibil']
