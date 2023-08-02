@@ -61,6 +61,13 @@ const BureauMonthwise = () => {
   console.log(data11);
   console.log(data12);
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 300, // Replace with the desired pixel height - 140*2 -140/4
+      behavior: "smooth", // This enables smooth scrolling
+    });
+  });
+
   return (
     <div>
       <NavBar></NavBar>
@@ -70,7 +77,7 @@ const BureauMonthwise = () => {
           display: "flex",
           marginLeft: "16px",
           textAlign: "center",
-          overflowX: "auto",
+          // overflowX: "auto",
           marginRight: "15px",
           marginTop: "20px",
           marginBottom: "20px",
@@ -128,7 +135,7 @@ const BureauMonthwise = () => {
             )}
           </table>
         </div>
-        <div style={{ width: "87%" }}>
+        <div style={{ width: "87%", overflowX: "auto" }}>
           <table className="secondTable" style={{ height: "50px" }}>
             <thead
               style={{
@@ -140,7 +147,7 @@ const BureauMonthwise = () => {
               <th>DEC</th>
               <th>NOV</th>
               <th>OCT</th>
-              <th>SEPT</th>
+              <th>SEP</th>
               <th>AUG</th>
               <th>JULY</th>
               <th>JUN</th>
