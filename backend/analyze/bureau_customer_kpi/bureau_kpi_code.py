@@ -146,7 +146,6 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
         subset=['DATE_PAYMENT_HST_END'], how='any', axis=0)
     data_dpd = data_dpd.replace('', None)
 
-# Drop rows containing None values
     data_dpd = data_dpd.dropna()
 
     data_dpd['date'] = data_dpd.apply(lambda row: list(pd.date_range(
@@ -569,6 +568,8 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
 
     # Loan Status Update
     temp = data_loan_final.copy()
+    temp = temp.replace('', None)
+
     conditions = [(temp['active_status'].notna()),
                   ((temp['active_status'].isna()) & (temp['date_closed'].isna()) & (temp['final_written_off_status'] == 0))]
     choices = [temp['active_status'], "Active"]
