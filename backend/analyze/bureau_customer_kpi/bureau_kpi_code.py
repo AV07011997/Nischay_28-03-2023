@@ -5,6 +5,7 @@ import plotly.express as px
 import plotly
 import datetime as dt
 import plotly.figure_factory as ff
+from datetime import datetime
 
 
 def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment_tl, bureau_enquiry_segment_iq, bureau_address_segment, customer_id, deal_id, bureau_automated):
@@ -140,6 +141,14 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
     data_dpd['payment'] = data_dpd['PAYMENT_HST_1']+data_dpd['PAYMENT_HST_2']
     data_dpd['payment_new'] = data_dpd['payment'].apply(
         lambda x: [x[i:i+3] for i in range(0, len(x), 3)])
+
+    data_dpd = data_dpd.dropna(
+        subset=['DATE_PAYMENT_HST_END'], how='any', axis=0)
+    data_dpd = data_dpd.replace('', None)
+
+# Drop rows containing None values
+    data_dpd = data_dpd.dropna()
+
     data_dpd['date'] = data_dpd.apply(lambda row: list(pd.date_range(
         start=row['DATE_PAYMENT_HST_START'], end=row['DATE_PAYMENT_HST_END'], freq='-1MS')), axis=1)
     data_dpd['combined'] = data_dpd.apply(lambda row: list(
@@ -716,6 +725,14 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
 
     temp['cust_id'] = temp['Customer_Id']
     temp['source'] = temp['Source']
+    temp = temp.replace('', 0.00)
+
+# Drop rows containing None values
+    temp = temp.dropna()
+    temp = temp.replace('', None)
+
+# Drop rows containing None values
+    temp = temp.dropna()
 
     temp = temp.groupby(['cust_id', 'source'])['EMI'].sum(
     ).reset_index(name="sum_of_emi_of_active_loans")

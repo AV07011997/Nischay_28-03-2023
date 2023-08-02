@@ -1366,14 +1366,18 @@ def bureau_customer_kpi(request):
                 lambda x: format_currency(x, 'INR', locale='en_IN'))
             specifics['sum_of_emi_of_active_loans'] = specifics['sum_of_emi_of_active_loans'].apply(
                 lambda x: str(x).split('.')[0])
-
-            specifics['max_emi_of_active_loans'] = specifics['max_emi_of_active_loans'].apply(
-                lambda x: format_currency(x, 'INR', locale='en_IN'))
+            try:
+                specifics['max_emi_of_active_loans'] = specifics['max_emi_of_active_loans'].apply(
+                    lambda x: format_currency(x, 'INR', locale='en_IN'))
+            except:
+                specifics['max_emi_of_active_loans'] = "NR"
             specifics['max_emi_of_active_loans'] = specifics['max_emi_of_active_loans'].apply(
                 lambda x: str(x).split('.')[0])
-
-            specifics['min_emi_of_active_loans'] = specifics['min_emi_of_active_loans'].apply(
-                lambda x: format_currency(x, 'INR', locale='en_IN'))
+            try:
+                specifics['min_emi_of_active_loans'] = specifics['min_emi_of_active_loans'].apply(
+                    lambda x: format_currency(x, 'INR', locale='en_IN'))
+            except:
+                specifics['min_emi_of_active_loans'] = "NR"
             specifics['min_emi_of_active_loans'] = specifics['min_emi_of_active_loans'].apply(
                 lambda x: str(x).split('.')[0])
 
