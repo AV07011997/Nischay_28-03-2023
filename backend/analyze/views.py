@@ -3548,7 +3548,7 @@ def bureau_customer_month_kpi(request):
                 # finaldata = finaldata.to_dict('split')
                 # pydict = json.dumps(payload,payload_11,payload_12)
                 pydict = json.dumps([payload, payload_11, payload_12, payload_21,
-                                    payload_22, payload_31, payload_32, payload_41, payload_41])
+                                    payload_22, payload_31, payload_32, payload_41, payload_42])
                 return HttpResponse(pydict)
 
                 # return render(request, "bureau_c_m_k.html", payload)

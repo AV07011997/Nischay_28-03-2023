@@ -37,6 +37,7 @@ from mysite.models import failed_digitization
 from mysite.models import bank_bank
 import pandas as pd
 from django.db.models import Min, Max
+from CONSTANT import path_digitized_folder,path_pdf_files_folder,path_static_files,path_for_digitization_pdf_read
 
 
 
@@ -53,14 +54,14 @@ def job():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',  ###connect to database
-        password='Knowlvers@555',
+        password='Knowlvers1@1',
         database="a5_kit"
     )
 
     mycursor = mydb.cursor()
     file_path = r'C:\Users\Abhishek\Desktop\pdf_files'  ## Here the pdf is stored after uploading it into the web
-    csv_path = r'C:\Users\Abhishek\Desktop\digitized_files'  ##  Here we will store the csv after digitisation
-
+    # csv_path = r'C:\Users\Abhishek\Desktop\digitized_files'  ##  Here we will store the csv after digitisation
+    csv_path=path_digitized_folder
     # with open(csv_path, newline='') as csvfile:
     #     # Create a reader object to iterate over the rows
     #     reader = csv.reader(csvfile)
@@ -99,6 +100,7 @@ def job():
     #
     #             passcode = ''mat(obj.key))
     #             append_files(file_path2, 'bank')
+    #
     #
     #         else:
     #             scanned_flag = 0
@@ -171,7 +173,7 @@ def job():
     #     print(name)
 
 
-    files = glob.glob(r"C:\Users\Abhishek\Desktop\pdf_files\*.pdf")
+    files = glob.glob(path_for_digitization_pdf_read)
 
     file_name=''
 
@@ -304,12 +306,12 @@ def job():
 
                         # Combine the file path and name
 
-                file_location = os.path.join('C:/Users/Abhishek/Desktop/digitized_files/', filename)
+                file_location = os.path.join(path_digitized_folder, filename)
                 os.remove(file_location)
 
 
-schedule.every(1.5).minutes.do(job)  ### frequency of code execution
+schedule.every(1).minutes.do(job)  ### frequency of code execution
 
 while True:
     schedule.run_pending()
-    time.sleep(1.5)
+    time.sleep(1)

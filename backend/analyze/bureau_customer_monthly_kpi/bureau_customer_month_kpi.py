@@ -785,22 +785,91 @@ def bureau_c_m_k(bureau_ref_dtl,bureau_score_segment,bureau_account_segment_tl,b
 
   #crif_cibil_dedup_37months_2=pysqldf('select *, case when date_disbursed_som_new<=date_som and date_reported_som_new>=date_som and (date_closed_som_new is null or date_closed_som_new>=date_som) then 1 else null end as ind_valid_account, case when date_disbursed_som_new<=date_som and date_reported_som_new>=date_som and (date_closed_som_new is null or date_closed_som_new>=date_som) then emi_impute else null end as valid_emi, case when date_disbursed_som_new<=date_som and date_reported_som_new>=date_som and (date_closed_som_new is null or date_closed_som_new>=date_som) then disbursed_amount else null end as valid_LN_amt from crif_cibil_dedup_37months_1 order by deal_id, cust_id, date_som')
   ### rows 9941028
-  global crif_cibil_dedup_36months_2
-  crif_cibil_dedup_36months_2=pysqldf('select *, case when date_disbursed_som_new<=date_som and max_date_of_issue_som>=date_som and (date_closed_som_new is null or date_closed_som_new>=date_som) then 1 else null end as ind_valid_account, case when date_disbursed_som_new<=date_som and max_date_of_issue_som>=date_som and (date_closed_som_new is null or date_closed_som_new>=date_som) and acc_type_orig not in ("corporatecreditcard", "creditcard","fleetcard","kisancreditcard","loanagainstcard","loanoncreditcard","securedcreditcard","overdraft", "primeministerjaandhanyojanaoverdraft","telcolandline","telcowireless","telcobroadband","autooverdraft") then emi_impute else null end as valid_emi, case when date_disbursed_som_new<=date_som and max_date_of_issue_som>=date_som and (date_closed_som_new is null or date_closed_som_new>=date_som) then account_type else null end as valid_acc_type from crif_cibil_dedup_36months_1 order by deal_id, cust_id, date_som')
 
-  
+  # global crif_cibil_dedup_36months_2
+  # crif_cibil_dedup_36months_2=pysqldf('select *, case when date_disbursed_som_new<=date_som and max_date_of_issue_som>=date_som and (date_closed_som_new is null or date_closed_som_new>=date_som) then 1 else null end as ind_valid_account, case when date_disbursed_som_new<=date_som and max_date_of_issue_som>=date_som and (date_closed_som_new is null or date_closed_som_new>=date_som) and acc_type_orig not in ("corporatecreditcard", "creditcard","fleetcard","kisancreditcard","loanagainstcard","loanoncreditcard","securedcreditcard","overdraft", "primeministerjaandhanyojanaoverdraft","telcolandline","telcowireless","telcobroadband","autooverdraft") then emi_impute else null end as valid_emi, case when date_disbursed_som_new<=date_som and max_date_of_issue_som>=date_som and (date_closed_som_new is null or date_closed_som_new>=date_som) then account_type else null end as valid_acc_type from crif_cibil_dedup_36months_1 order by deal_id, cust_id, date_som')
 
-  global crif_cibil_dedup_36months_3
+  # Assuming you have already loaded the data into a DataFrame called 'crif_cibil_dedup_36months_1'
 
-  crif_cibil_dedup_36months_3=pysqldf('select deal_id, cust_id, date_som, month_no, sum(ind_valid_account) as cnt_valid_accounts, sum(valid_emi) as sum_emi from crif_cibil_dedup_36months_2 group by deal_id, cust_id, date_som, month_no order by deal_id, cust_id, date_som, month_no')
-  ### rows 1455362
+  # Define the conditions and apply them to create new columns
+  def ind_valid_account(row):
+    if row['date_disbursed_som_new'] <= row['date_som'] and row['max_date_of_issue_som'] >= row['date_som'] and (
+            pd.isnull(row['date_closed_som_new']) or row['date_closed_som_new'] >= row['date_som']):
+      return 1
+    else:
+      return pd.NA
+
+  def valid_emi(row):
+    if row['date_disbursed_som_new'] <= row['date_som'] and row['max_date_of_issue_som'] >= row['date_som'] and (
+            pd.isnull(row['date_closed_som_new']) or row['date_closed_som_new'] >= row['date_som']) and row[
+      'acc_type_orig'] not in (
+    "corporatecreditcard", "creditcard", "fleetcard", "kisancreditcard", "loanagainstcard", "loanoncreditcard",
+    "securedcreditcard", "overdraft", "primeministerjaandhanyojanaoverdraft", "telcolandline", "telcowireless",
+    "telcobroadband", "autooverdraft"):
+      return row['emi_impute']
+    else:
+      return pd.NA
+
+  def valid_acc_type(row):
+    if row['date_disbursed_som_new'] <= row['date_som'] and row['max_date_of_issue_som'] >= row['date_som'] and (
+            pd.isnull(row['date_closed_som_new']) or row['date_closed_som_new'] >= row['date_som']):
+      return row['account_type']
+    else:
+      return pd.NA
+
+  # Apply the functions to create new columns in the DataFrame
+  crif_cibil_dedup_36months_1['ind_valid_account'] = crif_cibil_dedup_36months_1.apply(ind_valid_account, axis=1)
+  crif_cibil_dedup_36months_1['valid_emi'] = crif_cibil_dedup_36months_1.apply(valid_emi, axis=1)
+  crif_cibil_dedup_36months_1['valid_acc_type'] = crif_cibil_dedup_36months_1.apply(valid_acc_type, axis=1)
+
+  # Sort the DataFrame as required
+  crif_cibil_dedup_36months_2 = crif_cibil_dedup_36months_1.sort_values(by=['deal_id', 'cust_id', 'date_som'])
+
+  # If you want to reset the index
+  crif_cibil_dedup_36months_2.reset_index(drop=True, inplace=True)
+
+  # global crif_cibil_dedup_36months_3
+  #
+  # crif_cibil_dedup_36months_3=pysqldf('select deal_id, cust_id, date_som, month_no, sum(ind_valid_account) as cnt_valid_accounts, sum(valid_emi) as sum_emi from crif_cibil_dedup_36months_2 group by deal_id, cust_id, date_som, month_no order by deal_id, cust_id, date_som, month_no')
+  # Assuming crif_cibil_dedup_36months_2 is the DataFrame with your data
+  # Replace the following line with your actual data loading method if needed
+  # crif_cibil_dedup_36months_2 = pd.read_csv('your_data.csv')
+
+  # Group by the desired columns and calculate the aggregates
+  crif_cibil_dedup_36months_3 = crif_cibil_dedup_36months_2.groupby(['deal_id', 'cust_id', 'date_som', 'month_no']).agg(
+    cnt_valid_accounts=('ind_valid_account', 'sum'),
+    sum_emi=('valid_emi', 'sum')
+  ).reset_index()
+
+  # Sort the result by the specified columns
+  crif_cibil_dedup_36months_3 = crif_cibil_dedup_36months_3.sort_values(
+    by=['deal_id', 'cust_id', 'date_som', 'month_no'])
+
+  print(crif_cibil_dedup_36months_3)
+  # ### rows 1455362
   #nrow(crif_cibil_dedup_37months_3)
   #nrow(sqldf('select distinct deal_id from crif_cibil_dedup_7_cc_od'))*38
   ### both above should be same i.e. 1455362
 
   ######################### deal_id_level monthly data ##################################
 
-  crif_cibil_deal_level_monthly=pysqldf('select deal_id,cust_id,  max(case when month_no=0 then sum_emi else null end) as M0_emi, max(case when month_no=1 then sum_emi else null end) as M1_emi, max(case when month_no=2 then sum_emi else null end) as M2_emi, max(case when month_no=3 then sum_emi else null end) as M3_emi, max(case when month_no=4 then sum_emi else null end) as M4_emi, max(case when month_no=5 then sum_emi else null end) as M5_emi, max(case when month_no=6 then sum_emi else null end) as M6_emi, max(case when month_no=7 then sum_emi else null end) as M7_emi, max(case when month_no=8 then sum_emi else null end) as M8_emi, max(case when month_no=9 then sum_emi else null end) as M9_emi, max(case when month_no=10 then sum_emi else null end) as M10_emi, max(case when month_no=11 then sum_emi else null end) as M11_emi, max(case when month_no=12 then sum_emi else null end) as M12_emi, max(case when month_no=13 then sum_emi else null end) as M13_emi, max(case when month_no=14 then sum_emi else null end) as M14_emi, max(case when month_no=15 then sum_emi else null end) as M15_emi, max(case when month_no=16 then sum_emi else null end) as M16_emi, max(case when month_no=17 then sum_emi else null end) as M17_emi, max(case when month_no=18 then sum_emi else null end) as M18_emi, max(case when month_no=19 then sum_emi else null end) as M19_emi, max(case when month_no=20 then sum_emi else null end) as M20_emi, max(case when month_no=21 then sum_emi else null end) as M21_emi, max(case when month_no=22 then sum_emi else null end) as M22_emi, max(case when month_no=23 then sum_emi else null end) as M23_emi, max(case when month_no=24 then sum_emi else null end) as M24_emi, max(case when month_no=25 then sum_emi else null end) as M25_emi, max(case when month_no=26 then sum_emi else null end) as M26_emi,  max(case when month_no=27 then sum_emi else null end) as M27_emi, max(case when month_no=28 then sum_emi else null end) as M28_emi, max(case when month_no=29 then sum_emi else null end) as M29_emi, max(case when month_no=30 then sum_emi else null end) as M30_emi, max(case when month_no=31 then sum_emi else null end) as M31_emi, max(case when month_no=32 then sum_emi else null end) as M32_emi,  max(case when month_no=33 then sum_emi else null end) as M33_emi, max(case when month_no=34 then sum_emi else null end) as M34_emi,  max(case when month_no=35 then sum_emi else null end) as M35_emi from crif_cibil_dedup_36months_3 group by deal_id,cust_id')
+  # crif_cibil_deal_level_monthly=pysqldf('select deal_id,cust_id,  max(case when month_no=0 then sum_emi else null end) as M0_emi, max(case when month_no=1 then sum_emi else null end) as M1_emi, max(case when month_no=2 then sum_emi else null end) as M2_emi, max(case when month_no=3 then sum_emi else null end) as M3_emi, max(case when month_no=4 then sum_emi else null end) as M4_emi, max(case when month_no=5 then sum_emi else null end) as M5_emi, max(case when month_no=6 then sum_emi else null end) as M6_emi, max(case when month_no=7 then sum_emi else null end) as M7_emi, max(case when month_no=8 then sum_emi else null end) as M8_emi, max(case when month_no=9 then sum_emi else null end) as M9_emi, max(case when month_no=10 then sum_emi else null end) as M10_emi, max(case when month_no=11 then sum_emi else null end) as M11_emi, max(case when month_no=12 then sum_emi else null end) as M12_emi, max(case when month_no=13 then sum_emi else null end) as M13_emi, max(case when month_no=14 then sum_emi else null end) as M14_emi, max(case when month_no=15 then sum_emi else null end) as M15_emi, max(case when month_no=16 then sum_emi else null end) as M16_emi, max(case when month_no=17 then sum_emi else null end) as M17_emi, max(case when month_no=18 then sum_emi else null end) as M18_emi, max(case when month_no=19 then sum_emi else null end) as M19_emi, max(case when month_no=20 then sum_emi else null end) as M20_emi, max(case when month_no=21 then sum_emi else null end) as M21_emi, max(case when month_no=22 then sum_emi else null end) as M22_emi, max(case when month_no=23 then sum_emi else null end) as M23_emi, max(case when month_no=24 then sum_emi else null end) as M24_emi, max(case when month_no=25 then sum_emi else null end) as M25_emi, max(case when month_no=26 then sum_emi else null end) as M26_emi,  max(case when month_no=27 then sum_emi else null end) as M27_emi, max(case when month_no=28 then sum_emi else null end) as M28_emi, max(case when month_no=29 then sum_emi else null end) as M29_emi, max(case when month_no=30 then sum_emi else null end) as M30_emi, max(case when month_no=31 then sum_emi else null end) as M31_emi, max(case when month_no=32 then sum_emi else null end) as M32_emi,  max(case when month_no=33 then sum_emi else null end) as M33_emi, max(case when month_no=34 then sum_emi else null end) as M34_emi,  max(case when month_no=35 then sum_emi else null end) as M35_emi from crif_cibil_dedup_36months_3 group by deal_id,cust_id')
+  # Assuming crif_cibil_dedup_36months_3 is the DataFrame with your data
+  # Replace the following line with your actual data loading method if needed
+  # crif_cibil_dedup_36months_3 = pd.read_csv('your_data.csv')
+
+  # Create a pivot table to get the desired format
+  crif_cibil_deal_level_monthly = crif_cibil_dedup_36months_3.pivot_table(
+    index=['deal_id', 'cust_id'],
+    columns='month_no',
+    values='sum_emi',
+    aggfunc='max'
+  ).reset_index()
+
+  # Rename the columns to match the naming convention in the SQL query
+  crif_cibil_deal_level_monthly.columns = ['deal_id', 'cust_id'] + [f'M{i}_emi' for i in range(36)]
+
+  print(crif_cibil_deal_level_monthly)
   ### rows 38299
 
   ######################## loan information at deal_id level #####################
@@ -845,8 +914,28 @@ def bureau_c_m_k(bureau_ref_dtl,bureau_score_segment,bureau_account_segment_tl,b
   loan_sort=loan_sort.reset_index()
   loan_sort=loan_sort[['deal_id','cust_id','disbursed_amount']]
   loan_sort['loan_sort_id']=  loan_sort.groupby(['deal_id','cust_id']).cumcount()+1
-  loan_sort_final=pysqldf('select deal_id, cust_id, max(case when loan_sort_id=1 then disbursed_amount else null end) as closed_amount1, max(case when loan_sort_id=2 then disbursed_amount else null end) as closed_amount2, max(case when loan_sort_id=3 then disbursed_amount else null end) as closed_amount3 from loan_sort group by deal_id,cust_id')
-  
+  # loan_sort_final=pysqldf('select deal_id, cust_id, max(case when loan_sort_id=1 then disbursed_amount else null end) as closed_amount1, max(case when loan_sort_id=2 then disbursed_amount else null end) as closed_amount2, max(case when loan_sort_id=3 then disbursed_amount else null end) as closed_amount3 from loan_sort group by deal_id,cust_id')
+  # Assuming you have a DataFrame called 'loan_sort' with columns: 'deal_id', 'cust_id', 'loan_sort_id', 'disbursed_amount'
+
+  # Create a pivot table to get the closed_amount for each loan_sort_id
+  pivot_table = loan_sort.pivot_table(index=['deal_id', 'cust_id'], columns='loan_sort_id', values='disbursed_amount',
+                                      aggfunc='max')
+
+  # Rename the columns to match the required format ('closed_amount1', 'closed_amount2', 'closed_amount3')
+  pivot_table.columns = ['closed_amount' + str(col) for col in pivot_table.columns]
+
+  # Reset the index to get 'deal_id' and 'cust_id' back as regular columns
+  pivot_table.reset_index(inplace=True)
+
+  # If there are any missing values, replace them with 0 (assuming 0 is the appropriate value for missing data)
+  pivot_table.fillna(0, inplace=True)
+
+  # If needed, convert 'deal_id' and 'cust_id' back to their original data types
+
+  # Now the pivot_table DataFrame contains the required data
+  loan_sort_final = pivot_table
+
+
   crif_cibil_deal_level_loans_2=crif_cibil_deal_level_loans_2.merge(loan_sort_final,on=['deal_id','cust_id'],how='left')
 
 
@@ -1015,7 +1104,7 @@ def bureau_c_m_k(bureau_ref_dtl,bureau_score_segment,bureau_account_segment_tl,b
 
 
   temp1=temp.copy()
-  temp1['valid_emi']=temp1['valid_emi'].astype(str).replace("None",np.nan)
+  temp1['valid_emi']=temp1['valid_emi'].astype(str).replace("<NA>",np.nan)
   temp1['valid_emi']=temp1['valid_emi'].astype(float)
 
 
@@ -1109,8 +1198,26 @@ def bureau_c_m_k(bureau_ref_dtl,bureau_score_segment,bureau_account_segment_tl,b
 
   ######### DATA FOR EMI GRID ##################
 
-  data_for_emi_grid=pysqldf('select deal_id,cust_id, date_som, sum_emi, cnt_active_accounts, account_type,DPD,asset_classification from temp7 order by deal_id,cust_id, month_no')
-  data_for_emi_grid['date_som_temp']=data_for_emi_grid['date_som'].apply(lambda x: x[0:10])
+  # data_for_emi_grid=pysqldf('select deal_id,cust_id, date_som, sum_emi, cnt_active_accounts, account_type,DPD,asset_classification from temp7 order by deal_id,cust_id, month_no')
+  # Assuming you have a DataFrame named temp7 with the required columns
+
+  # Selecting the columns
+  selected_columns = ['deal_id', 'cust_id', 'date_som', 'sum_emi', 'cnt_active_accounts', 'account_type', 'DPD',
+                      'asset_classification']
+
+  # Sorting the DataFrame
+  sorted_data = temp7.sort_values(by=['deal_id', 'cust_id', 'month_no'])
+
+  # Selecting the desired columns and storing it in a new DataFrame
+  data_for_emi_grid = sorted_data[selected_columns]
+  # data_for_emi_grid['date_som_temp']=data_for_emi_grid['date_som'].apply(lambda x: x[0:10])
+  # Assuming you have the DataFrame 'data_for_emi_grid'
+
+  # Convert 'date_som' to Pandas Timestamp if it's not already in the correct format
+  data_for_emi_grid['date_som'] = pd.to_datetime(data_for_emi_grid['date_som'])
+
+  # Extract only the date part and store it in a new column 'date_som_temp'
+  data_for_emi_grid['date_som_temp'] = data_for_emi_grid['date_som'].dt.date
   data_for_emi_grid['deal_id_emi_month']=data_for_emi_grid['deal_id'].astype(str)+"+"+data_for_emi_grid['cust_id'].astype(str)+"+"+data_for_emi_grid['date_som_temp'].astype(str)
 
   #### paste0 is used so that there are no extra spaces while concatenating deal_id and date_som
