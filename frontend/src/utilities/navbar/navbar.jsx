@@ -34,7 +34,10 @@ const NavBar = (props) => {
       navigate(`/bureau/${navigatevalue}`);
     } else if (item == "HOME") {
       navigate("/home");
+    } else if (item == "SUMMARY") {
+      navigate("/executivesummary");
     }
+
     console.log(item);
   };
 

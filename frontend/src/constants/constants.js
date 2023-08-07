@@ -1,5 +1,5 @@
-// export const backendaddress = "http://127.0.0.1:8000/";
-export const backendaddress = "http://192.168.1.198:8000/";
+export const backendaddress = "http://127.0.0.1:8000/";
+// export const backendaddress = "http://192.168.1.198:8000/";
 
 export const staticImagesPath =
   "/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles";
@@ -27,6 +27,7 @@ export const APIADDRESS = {
   BUREAUMONTHWISE: "bureau_customer_month_kpi/",
   SAVEBUREAUDATA: "update_bureau_data/",
   BUREAUANALYZE: "bureau_customer_kpi/",
+  EXECUTIVESUMMARY: "executivesummary/",
 };
 
 export const BUREAUPAGECOLUMNS = {

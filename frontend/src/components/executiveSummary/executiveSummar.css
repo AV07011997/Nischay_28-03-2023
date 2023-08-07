@@ -1,0 +1,13 @@
+.innerbox {
+  background-color: lightgrey;
+  width: 300px;
+  border: 15px;
+  padding: 20px;
+  margin: 20px;
+}
+.innertxt {
+  text-align: center;
+}
+.values {
+  font-weight: 900;
+}

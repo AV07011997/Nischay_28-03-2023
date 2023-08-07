@@ -1,21 +1,21 @@
 # List of all constants used in the backend code
 
 
-## Present in Diffrent bank.py files
+# Present in Diffrent bank.py files
 OUTPUT_PATH = r'/Users/Abhishek/Desktop/digitised/'
 
-## Present in bank name extraction
+# Present in bank name extraction
 TESSERACT = "C:\\Users\\Abhishek\\AppData\\Local\\Tesseract-OCR\\tesseract.exe"
 
-##user id & password of your SQL database
+# user id & password of your SQL database
 
 # present in audit ->views.py , mysite -> views.py, aws download
 
 HOST = "localhost"
 USER = "root"
-PASSWORD = "Knowlvers1@1"
+PASSWORD = "Knowlvers@555"
 
-## analyze -> views
+# analyze -> views
 LOC1 = r"/Users/Abhishek/Desktop/a3_kit/templates/test1.html"
 LOC2 = r"/Users/Abhishek/Desktop/a3_kit/templates/test2.html"
 
@@ -23,13 +23,12 @@ LOC2 = r"/Users/Abhishek/Desktop/a3_kit/templates/test2.html"
 # path_digitized_folder='C:/Users/Abhishek/Desktop/digitized_files/'
 # path_pdf_files_folder='C:/Users/Abhishek/Desktop/pdf_files'
 
-path_static_files='G:/IT Data/Nischay/Nischay_28-03-2023/frontend/staticfiles/'
-path_digitized_folder='G:/IT Data/Nischay/digitized_files/'
-path_pdf_files_folder='G:/IT Data/Nischay/pdf_files/'
-path_for_digitization_pdf_read=r'G:\IT Data\Nischay\pdf_files\*.pdf'
+# path_static_files='G:/IT Data/Nischay/Nischay_28-03-2023/frontend/staticfiles/'
+# path_digitized_folder='G:/IT Data/Nischay/digitized_files/'
+# path_pdf_files_folder='G:/IT Data/Nischay/pdf_files/'
+# path_for_digitization_pdf_read=r'G:\IT Data\Nischay\pdf_files\*.pdf'
 
 
-
-# path_static_files='/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles'
-# path_digitized_folder='C:/Users/HardikBharadwaj/Desktop/digitized_files/'
-# path_pdf_files_folder='C:/Users/HardikBharadwaj/Desktop/pdf_files'
+path_static_files = '/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles'
+path_digitized_folder = 'C:/Users/HardikBharadwaj/Desktop/digitized_files/'
+path_pdf_files_folder = 'C:/Users/HardikBharadwaj/Desktop/pdf_files'

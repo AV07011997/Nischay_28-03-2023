@@ -4014,3 +4014,238 @@ def statements(request):
         data = json.loads(json_records)
         pydict = json.dumps([data])
         return HttpResponse(pydict)
+
+
+def executive_summary(request):
+
+    status = {}
+    if (0):
+        pass
+    else:
+        customer_id = str(5)
+        lead_id = ''
+        lead_id = lead_id.join(request.POST.getlist('leadID'))
+        lead_id = lead_id.rstrip()
+        deal_id = lead_id
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM a5_kit.mysite_bureau_ref_dtl WHERE CUSTOMER_ID = " + customer_id + ";")
+            bureau_ref_dtl = dictfetchall(cursor)
+            bureau_ref_dtl = pd.DataFrame(bureau_ref_dtl)
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM a5_kit.mysite_bureau_account_segment_tl WHERE CUSTOMER_ID = " + customer_id + "  ;")
+            bureau_account_segment_tl = dictfetchall(cursor)
+            bureau_account_segment_tl = pd.DataFrame(bureau_account_segment_tl)
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM a5_kit.mysite_bureau_table_data WHERE CUSTOMER_ID = " + customer_id + "  ;")
+            bureau_automated = dictfetchall(cursor)
+            bureau_automated = pd.DataFrame(bureau_automated)
+
+        # with connection.cursor() as cursor:
+        #     cursor.execute(
+        #         "SELECT * FROM lead_details.cr_deal_dtl WHERE did = " + str(deal_id) + "  ;")
+        #     findingleadid = dictfetchall(cursor)
+        #     findingleadid = pd.DataFrame(findingleadid)
+
+        # lead_id = findingleadid['lid'][0]
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM a5_kit.mysite_bureau_enquiry_segment_iq WHERE CUSTOMER_ID = " + customer_id + ";")
+            bureau_enquiry_segment_iq = dictfetchall(cursor)
+            bureau_enquiry_segment_iq = pd.DataFrame(bureau_enquiry_segment_iq)
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM a5_kit.mysite_bureau_address_segment WHERE CUSTOMER_ID = " + customer_id + ";")
+            bureau_address_segment = dictfetchall(cursor)
+            bureau_address_segment = pd.DataFrame(bureau_address_segment)
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM a5_kit.mysite_bureau_score_segment WHERE CUSTOMER_ID = " + customer_id + ";")
+            bureau_score_segment = dictfetchall(cursor)
+            bureau_score_segment = pd.DataFrame(bureau_score_segment)
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM a5_kit.mysite_bank_bank WHERE lead_id = " + lead_id + ";")
+            bank_bank = dictfetchall(cursor)
+            bank_bank = pd.DataFrame(bank_bank)
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM mysite_bank_bank WHERE lead_id = " + lead_id + ";")
+            bank_bank = dictfetchall(cursor)
+            bank_bank = pd.DataFrame(bank_bank)
+
+    bureau_details = {}
+
+    try:
+        bureau_details["creditscore"] = int(bureau_score_segment["SCORE"])
+    except:
+        bureau_details["creditscore"] = "No Credit Score"
+
+    try:
+        bureau_details["activeloans"] = len(
+            bureau_automated[bureau_automated['Loan_status'] == "Active"])
+    except:
+        bureau_details["activeloans"] = "No Active Loans."
+
+    try:
+        bureau_details["totalpos"] = (
+            int(bureau_automated["Current Balance"].sum()))
+    except:
+        bureau_details["totalpos"] = "Not Available"
+
+    try:
+        data_dpd = bureau_account_segment_tl
+        data_dpd = data_dpd.dropna(subset=['PAYMENT_HST_1'])
+        data_dpd['PAYMENT_HST_2'] = data_dpd['PAYMENT_HST_2'].fillna("XXX")
+        data_dpd['payment'] = data_dpd['PAYMENT_HST_1'] + \
+            data_dpd['PAYMENT_HST_2']
+        data_dpd['payment_new'] = data_dpd['payment'].apply(
+            lambda x: [x[i:i+3] for i in range(0, len(x), 3)])
+        data_dpd = data_dpd[data_dpd['DATE_PAYMENT_HST_END'] != ""]
+        data_dpd['date'] = data_dpd.apply(lambda row: list(pd.date_range(
+            start=row['DATE_PAYMENT_HST_START'], end=row['DATE_PAYMENT_HST_END'], freq='-1MS')), axis=1)
+        data_dpd['combined'] = data_dpd.apply(lambda row: list(
+            zip(row['payment_new'], row['date'])), axis=1)
+
+        data_dpd = data_dpd.reset_index()
+        data_dpd_final = pd.DataFrame(np.concatenate(data_dpd['combined']), columns=[
+                                      'DPD', 'DPD_month']).reset_index(drop=True)
+
+        temp1 = data_dpd_final.copy()
+        temp1['DPD'] = temp1['DPD'].replace("XXX", 0)
+        temp1['DPD'] = temp1['DPD'].replace("STD", 0)
+        temp1['DPD'] = temp1['DPD'].replace("SMA", 90)
+        temp1['DPD'] = temp1['DPD'].replace("LSS", 360)
+        temp1['DPD'] = temp1['DPD'].replace("DBT", 270)
+        temp1['DPD'] = temp1['DPD'].replace("SUB", 180)
+        temp1['DPD'] = pd.to_numeric(temp1['DPD'], errors="coerce")
+        bureau_details["maxdpd"] = str(temp1['DPD'].max())
+
+    except:
+
+        bureau_details["maxdpd"] = "Not Available"
+
+    try:
+
+        temp2 = temp1[temp1['DPD'] != 0]
+
+    except:
+        bureau_details['recentdpd'] = "Not Available"
+
+    # try:
+    #     bureau_account_segment_tl['DATE_CLOSED'] = pd.to_datetime(
+    #         bureau_account_segment_tl['DATE_CLOSED'])
+
+    #     recentlyclosedloandate = bureau_account_segment_tl['DATE_CLOSED'].max()
+    #     bureau_details['recentlyclosedloandate'] = (
+    #         dt.datetime.today()-recentlyclosedloandate)
+    #     bureau_details['recentlyclosedloandate'] = {
+    #         'days': bureau_details['recentlyclosedloandate'].days,
+    #         'seconds': bureau_details['recentlyclosedloandate'].seconds,
+    #         'microseconds': bureau_details['recentlyclosedloandate'].microseconds
+    #     }
+
+    #     if (pd.isnull(bureau_details['recentlyclosedloandate'])):
+    #         bureau_details['recentlyclosedloandate'] = "No Loans Closed"
+    # except:
+    #     pass
+
+    try:
+        bureau_details["Name"] = lmsdetails["CUSTOMER_NAME"][0]
+        lmsdetails["CUSTOMER_DOB"] = pd.to_datetime(lmsdetails["CUSTOMER_DOB"])
+        # bureau_details["Age"]=int((dt.date.today-lmsdetails["CUSTOMER_DOB"])/365)
+        bureau_details["Location"] = lmsdetails["DISTRICT"][0] + \
+            " ,"+lmsdetails["STATE"][0]
+        bureau_details["Deal_id"] = deal_id
+        bureau_details["Purpose"] = lmsdetails["LOAN_PURPOSE"][0]
+        bureau_details["Loan_amount"] = format_currency(
+            lmsdetails["LOAN_AMOUNT"][0], 'INR', locale='en_IN')
+        bureau_details["Tenure"] = lmsdetails["TENURE"][0]
+
+    except:
+        pass
+
+    try:
+
+        from datetime import timedelta
+        print(bank_bank)
+        closing_bal = bank_bank.balance[bank_bank.last_valid_index()]
+        bureau_details['closingbalance'] = closing_bal
+
+        df = bank_bank.reset_index()
+
+        start = df['txn_date'].min()
+        end = df['txn_date'].max()
+
+        df['txn_date'] = pd.to_datetime(df['txn_date'])
+
+        # Find the date of the last transaction
+        last_transaction_date = df['txn_date'].max()
+
+        # Calculate the date 3 months ago from the last transaction
+        three_months_ago = last_transaction_date - pd.DateOffset(months=3)
+
+        # Filter data for the last 3 months from the last transaction
+        filtered_df = df[(df['txn_date'] >= three_months_ago)
+                         & (df['txn_date'] <= last_transaction_date)]
+
+        # Calculate the sum of debit and credit for the last 3 months from the last transaction
+        filtered_df['debit'] = pd.to_numeric(
+            filtered_df['debit'], errors='coerce').fillna(0).astype(int)
+        filtered_df['credit'] = pd.to_numeric(
+            filtered_df['credit'], errors='coerce').fillna(0).astype(int)
+        total_debit = filtered_df['debit'].sum()
+        total_credit = filtered_df['credit'].sum()
+
+        # Calculate debit to credit ratio
+        # Calculate debit to credit ratio
+        bureau_details['dtocratio'] = round(total_debit / total_credit, 2)
+
+        start1 = start.date()
+        start1 = str(start1)
+        end1 = end.date()
+        end1 = str(end1)
+        df2 = pd.DataFrame(data={'date': pd.date_range(
+            start, end-timedelta(days=0), freq='d').tolist()})
+
+        df2 = df2.merge(df[['txn_date', 'balance']],
+                        left_on='date', right_on='txn_date', how='left')
+        df2.drop(columns=['txn_date'], inplace=True)
+        df2 = df2[df2['balance'].notna()]
+        df2['balance'].fillna(method='ffill', inplace=True)
+        df2['month_year'] = df2['date'].dt.month.astype(
+            str)+'-'+df2['date'].dt.year.astype(str)
+        df2['balance'] = df2['balance'].astype(float)
+
+        a = df2.groupby('month_year')['balance'].mean()
+        last_3_months_average = a.tail(3)
+        bureau_details['last3month'] = str(int(last_3_months_average.mean()))
+
+        try:
+            bureau_details['chequebounce'] = int(
+                df[df['transaction_type'] == 'Bounced']['transaction_type'].count()/2)
+        except:
+            bureau_details['chequebounce'] = 0
+
+        try:
+            df['credit'] = pd.to_numeric(df['credit'], errors='coerce')
+            bureau_details['cashcreditratio'] = round((df.loc[(
+                df['mode'].str.lower().str.strip() == 'cash'), 'credit'].sum()/df.credit.sum()), 2)
+        except:
+            bureau_details['cashcreditratio'] = "NR"
+
+    except:
+        pass
+
+    # json_records = bureau_details.to_json(orient='records')
+    # data = json.loads(json_records)
+    # pydict = json.dumps([data])
+    return HttpResponse(json.dumps(bureau_details))

@@ -16,6 +16,7 @@ import ANALYZECOUNTERPARTIES from "./components/analyze/bank/counterParties/coun
 import { useEffect } from "react";
 import BureauMonthwise from "./components/analyze/Bureau/Bureau_Monthwise/bureauMonthwise";
 import BureauAnalyze from "./components/analyze/Bureau/Bureau_analyze/bureauAnalyze";
+import ExecutiveSummary from "./components/executiveSummary/executiveSummary";
 
 function App() {
   const history = createBrowserHistory();
@@ -137,6 +138,16 @@ function App() {
             element={
               user ? (
                 <BureauAnalyze setUser={setUser} />
+              ) : (
+                <HomePage setUser={setUser} />
+              )
+            }
+          ></Route>
+          <Route
+            path="/executivesummary"
+            element={
+              user ? (
+                <ExecutiveSummary setUser={setUser} />
               ) : (
                 <HomePage setUser={setUser} />
               )
