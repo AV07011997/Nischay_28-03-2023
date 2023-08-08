@@ -3,9 +3,22 @@
   border: 1px solid #575757;
   padding: 2px;
 }
+.firstTable td {
+  font-size: 14px;
+}
+.firstTable th {
+  font-size: 15px;
+}
 
 .secondTable td,
 .secondTable th {
   border: 1px solid #575757;
   padding: 2px;
+}
+.secondTable td {
+  font-size: 14px;
+}
+.secondTable th {
+  font-size: 15px;
+  padding: 2.25px;
 }

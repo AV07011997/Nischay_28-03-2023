@@ -181,7 +181,7 @@ const Bureau = ({ info }) => {
   return (
     <div>
       <NavBar1 radiovalue={radiovalue}></NavBar1>
-      <div>
+      <div className="bureau_page">
         <div>
           <button
             onClick={() => window.location.reload(false)}
@@ -195,7 +195,11 @@ const Bureau = ({ info }) => {
             <tr>
               {state.columns.map((items, j) => {
                 return (
-                  <th className="table_bureau_text" key={"bureau_coloumn" + j}>
+                  <th
+                    style={{ fontSize: "15px" }}
+                    className="table_bureau_text"
+                    key={"bureau_coloumn" + j}
+                  >
                     {items.title}
                   </th>
                 );
@@ -429,15 +433,15 @@ const Bureau = ({ info }) => {
         <table className="table_bureau" style={{ marginTop: "2em" }}>
           <thead className="table_bureau_thead">
             <tr>
-              <th> Date Reported</th>
-              <th> Loan Type</th>
-              <th> Loan Status</th>
-              <th> Issue Date</th>
-              <th>High Credit Amount (₹)</th>
-              <th> Current Balance (₹)</th>
-              <th>Last DPD </th>
-              <th> Overdue Amount (₹) </th>
-              <th> Source </th>
+              <th style={{ fontSize: "15px" }}> Date Reported</th>
+              <th style={{ fontSize: "15px" }}> Loan Type</th>
+              <th style={{ fontSize: "15px" }}> Loan Status</th>
+              <th style={{ fontSize: "15px" }}> Issue Date</th>
+              <th style={{ fontSize: "15px" }}>High Credit Amount (₹)</th>
+              <th style={{ fontSize: "15px" }}> Current Balance (₹)</th>
+              <th style={{ fontSize: "15px" }}>Last DPD </th>
+              <th style={{ fontSize: "15px" }}> Overdue Amount (₹) </th>
+              <th style={{ fontSize: "15px" }}> Source </th>
               {/* <th>Value Type</th> */}
             </tr>
           </thead>

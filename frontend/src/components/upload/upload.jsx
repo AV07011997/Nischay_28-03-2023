@@ -251,6 +251,14 @@ const Upload = ({ setUser }) => {
   }, [mergefiles]);
 
   console.log(table);
+  const tableStyles = {
+    header: {
+      fontSize: "15px", // Custom font size for header cells
+    },
+    cell: {
+      fontSize: "14px", // Custom font size for data cells
+    },
+  };
 
   return (
     <div>
@@ -285,11 +293,23 @@ const Upload = ({ setUser }) => {
 
       <div className="upload_table">
         <MaterialTable
-          title="Upload table Records"
+          // title="Upload table Records"
+          title={<h3 style={{ fontSize: "18px" }}>Upload table Records</h3>}
           columns={state.columns}
           data={table}
           options={{
             selection: true,
+            headerStyle: {
+              fontSize: "15px",
+              fontFamily:
+                "Apple-System, Arial, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, STXihei, sans-serif",
+              // Change this value to adjust the header font size
+            },
+            rowStyle: {
+              fontSize: "14px",
+              fontFamily:
+                "Apple-System, Arial, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, STXihei, sans-serif", // Change this value to adjust the row font size
+            },
           }}
           actions={[
             {

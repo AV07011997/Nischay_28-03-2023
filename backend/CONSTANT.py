@@ -19,16 +19,20 @@ PASSWORD = "Knowlvers@555"
 LOC1 = r"/Users/Abhishek/Desktop/a3_kit/templates/test1.html"
 LOC2 = r"/Users/Abhishek/Desktop/a3_kit/templates/test2.html"
 
-# path_static_files='/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/'
-# path_digitized_folder='C:/Users/Abhishek/Desktop/digitized_files/'
-# path_pdf_files_folder='C:/Users/Abhishek/Desktop/pdf_files'
+path_static_files='/Users/Abhishek/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles/'
+path_digitized_folder='C:/Users/Abhishek/Desktop/digitized_files/'
+path_pdf_files_folder='C:/Users/Abhishek/Desktop/pdf_files'
+path_for_digitization_pdf_read=r'C:\Users\Abhishek\Desktop\pdf_files\*.pdf'
+password="Knowlvers@555"
+
 
 # path_static_files='G:/IT Data/Nischay/Nischay_28-03-2023/frontend/staticfiles/'
 # path_digitized_folder='G:/IT Data/Nischay/digitized_files/'
 # path_pdf_files_folder='G:/IT Data/Nischay/pdf_files/'
 # path_for_digitization_pdf_read=r'G:\IT Data\Nischay\pdf_files\*.pdf'
+# password="Knowlvers1@1"
 
-
-path_static_files = '/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles'
-path_digitized_folder = 'C:/Users/HardikBharadwaj/Desktop/digitized_files/'
-path_pdf_files_folder = 'C:/Users/HardikBharadwaj/Desktop/pdf_files'
+#
+# path_static_files = '/Users/hardikbhardwaj/Documents/GitHub/Nischay_28-03-2023/frontend/staticfiles'
+# path_digitized_folder = 'C:/Users/HardikBharadwaj/Desktop/digitized_files/'
+# path_pdf_files_folder = 'C:/Users/HardikBharadwaj/Desktop/pdf_files'

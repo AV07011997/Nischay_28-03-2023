@@ -120,3 +120,12 @@
 .delete_option_upoad_button {
   border-radius: 10%;
 }
+
+.MuiTableCell-head {
+  font-size: 15px; /* Change this to your desired font size */
+}
+
+/* Target the body cells (rows) */
+.MuiTableCell-body {
+  font-size: 14px; /* Change this to your desired font size */
+}

@@ -10,6 +10,7 @@ import pandas as pd
 import re
 import numpy as np
 from pandasql import sqldf
+from CONSTANT import password
 def pysqldf(q): return sqldf(q, globals())
 ####################################### basic table#########################################################
 # conn = pymysql.connect(host = '192.xxx.110.xx', port = 3306, user = 'xxxxxxxxxx', passwd = 'xxxxxxxxxx', charset = 'utf8', db='14july2020')
@@ -24,7 +25,7 @@ def pysqldf(q): return sqldf(q, globals())
 
 
 conn = pymysql.connect(host='localhost', port=3306, user='root',
-                       passwd='Knowlvers@555', charset='utf8', db='a5_kit')
+                       passwd=password, charset='utf8', db='a5_kit')
 
 sql1 = "SELECT e.DEAL_ID AS deal_id, e.CUSTOMER_ID AS cust_id, e.BUREAU_ID AS report_id, e.BUREAU_DATE AS date_issued, e.DATE_OF_BIRTH AS DOB, e.NAME AS name, " \
        "e.PAN_NO AS PAN, v.SCORE, v.source FROM a5_kit.mysite_bureau_ref_dtl e LEFT JOIN a5_kit.mysite_bureau_score_segment v ON v.BUREAU_ID = e.BUREAU_ID AND v.CUSTOMER_ID = e.CUSTOMER_ID AND v.source = e.source "
@@ -127,20 +128,19 @@ data_loan = data_loan.rename(
 data_loan['active_status'] = np.nan
 
 
-############################################################### DPD table#############################################
-data_dpd = data_loan_raw[['deal_id', 'cust_id', 'source', 'report_id', 'loan_id', 'security_status', 'PAYMENT_HST_1', 'PAYMENT_HST_2', 'DATE_PAYMENT_HST_START',
-                          'DATE_PAYMENT_HST_END']]
-data_dpd = data_dpd.dropna(subset=['PAYMENT_HST_1'])
-data_dpd['PAYMENT_HST_2'] = data_dpd['PAYMENT_HST_2'].fillna("XXX")
-data_dpd['payment'] = data_dpd['PAYMENT_HST_1']+data_dpd['PAYMENT_HST_2']
-data_dpd['payment_new'] = data_dpd['payment'].apply(
-    lambda x: [x[i:i+3] for i in range(0, len(x), 3)])
-data_dpd['DATE_PAYMENT_HST_START'] = pd.to_datetime(
-    data_dpd['DATE_PAYMENT_HST_START'], format="%Y-%m-%d")
-data_dpd['DATE_PAYMENT_HST_END'] = pd.to_datetime(
-    data_dpd['DATE_PAYMENT_HST_END'], format="%Y-%m-%d")
-data_dpd['date'] = data_dpd.apply(lambda row: list(pd.date_range(
-    start=row['DATE_PAYMENT_HST_START'], end=row['DATE_PAYMENT_HST_END'], freq='-1MS')), axis=1)
+
+
+
+###############################################################DPD table#############################################
+data_dpd=data_loan_raw[['deal_id','cust_id','source','report_id','loan_id','security_status','PAYMENT_HST_1', 'PAYMENT_HST_2', 'DATE_PAYMENT_HST_START',
+       'DATE_PAYMENT_HST_END']]
+data_dpd=data_dpd.dropna(subset=['PAYMENT_HST_1'])
+data_dpd['PAYMENT_HST_2']=data_dpd['PAYMENT_HST_2'].fillna("XXX")
+data_dpd['payment']=data_dpd['PAYMENT_HST_1']+data_dpd['PAYMENT_HST_2']
+data_dpd['payment_new']=data_dpd['payment'].apply(lambda x: [x[i:i+3] for i in range(0,len(x),3)])
+data_dpd['DATE_PAYMENT_HST_START'] = pd.to_datetime(data_dpd['DATE_PAYMENT_HST_START'], format="%d-%m-%Y")
+data_dpd['DATE_PAYMENT_HST_END'] = pd.to_datetime(data_dpd['DATE_PAYMENT_HST_END'], format="%d-%m-%Y")
+data_dpd['date']=data_dpd.apply(lambda row: list(pd.date_range(start=row['DATE_PAYMENT_HST_START'],end=row['DATE_PAYMENT_HST_END'],freq='-1MS')),axis=1)
 # data_dpd.to_csv(r'D:\\testing1.csv')
 data_dpd['combined'] = data_dpd.apply(lambda row: list(
     zip(row['payment_new'], row['date'])), axis=1)
@@ -418,7 +418,7 @@ except:
     pass
 
 try:
-    data_loan['emi'] = data_loan['emi'].replace(to_replace=[None], value=0)
+    data_loan['emi'] = data_loan['emi'].replace(to_replace='None', value=0)
     data_loan['emi'] = data_loan['emi'].astype(float)
 except:
     pass
@@ -442,23 +442,41 @@ data_loan['disbursed_amount'] = data_loan['disbursed_amount'].astype(float)
 data_loan['emi'] = data_loan['emi'].astype(float)
 
 
-# imputing tenure by formula
-try:
-    conditions = [((data_loan['disbursed_amount'] > 0) & (data_loan['interest_rate_1'] > 0) & (
-        data_loan['emi'] > 0) & ((data_loan['tenure'].isna()) | (data_loan['tenure'] == 0)))]
-except:
-    pass
-# choices=[(np.log2(data_loan['emi']/(data_loan['emi']-(data_loan['disbursed_amount']*data_loan['interest_rate_1'])))/np.log2(data_loan['interest_rate_1']+1))]
-try:
-    choices = [npf.nper(data_loan['interest_rate']/1200,
-                        data_loan['emi'], data_loan['disbursed_amount'])]
-except:
-    pass
 
-data_loan['tenure_new'] = np.select(
-    conditions, choices, default=data_loan['tenure'])
-print('tenure_new=', data_loan['tenure_new'])
-# imputing tenure max of same group
+
+###########################################imputing tenure by formula
+
+
+# Check if the 'interest_rate_1' column exists in the dataframe
+if 'interest_rate_1' in data_loan.columns:
+    try:
+        conditions = [
+            ((data_loan['disbursed_amount'] > 0) &
+             (data_loan['interest_rate_1'] > 0) &
+             (data_loan['emi'] > 0) &
+             ((data_loan['tenure'].isna()) | (data_loan['tenure'] == 0)))
+        ]
+    except:
+        pass
+
+    try:
+        choices = [
+            npf.nper(data_loan['interest_rate_1'] / 1200, data_loan['emi'], data_loan['disbursed_amount'])
+        ]
+    except:
+        pass
+else:
+    # Handle the case when 'interest_rate_1' column doesn't exist
+    # You can provide a default value or do some other handling based on your requirement.
+    conditions = [False]
+    choices = [0]
+
+# Use np.select with default value to set 'tenure_new'
+data_loan['tenure_new'] = np.select(conditions, choices, default=data_loan['tenure'])
+data_loan=data_loan.drop_duplicates()
+
+print('tenure_new=',data_loan['tenure_new'])
+##################################### imputing tenure max of same group
 try:
     data_loan['tenure'] = data_loan['tenure'].replace(
         0, np.nan).replace('', np.nan).astype('float64')
@@ -560,14 +578,20 @@ choices = ["bin_1", "bin_2", "bin_3", "bin_4"]
 crif_cibil_dedup_t['loan_amt_bins'] = np.select(
     conditions, choices, default="NA")
 
-crif_cibil_dedup_1 = pd.merge(crif_cibil_dedup_t, tenure_by_acc_type_loan_amt.iloc[:, 1:], on=[
-                              'acc_type_new', "loan_amt_bins"], how='left')
-crif_cibil_dedup_1 = pd.merge(
-    crif_cibil_dedup_1, tenure_by_acc_type_for_missing.iloc[:, 1:], on='acc_type_new', how='left')
+conditions=[((crif_cibil_dedup_t['disbursed_amount']>0) & (crif_cibil_dedup_t['disbursed_amount']<=crif_cibil_dedup_t['loan_amt_25'])),
+ ((crif_cibil_dedup_t['disbursed_amount']>crif_cibil_dedup_t['loan_amt_25']) & (crif_cibil_dedup_t['disbursed_amount']<=crif_cibil_dedup_t['loan_amt_50'])),
+((crif_cibil_dedup_t['disbursed_amount']>crif_cibil_dedup_t['loan_amt_50']) & (crif_cibil_dedup_t['disbursed_amount']<=crif_cibil_dedup_t['loan_amt_75'])),
+(crif_cibil_dedup_t['disbursed_amount']>crif_cibil_dedup_t['loan_amt_75'])]
+choices=["bin_1","bin_2","bin_3","bin_4"]
+crif_cibil_dedup_t['loan_amt_bins']=np.select(conditions,choices,default="NA")
+
+crif_cibil_dedup_1=pd.merge(crif_cibil_dedup_t,tenure_by_acc_type_loan_amt.iloc[:,1:],on=['acc_type_new',"loan_amt_bins"],how='left')
+crif_cibil_dedup_1=pd.merge(crif_cibil_dedup_1,tenure_by_acc_type_for_missing.iloc[:,1:],on='acc_type_new',how='left')
+# crif_cibil_dedup_1['tenure_new']= crif_cibil_dedup_1['tenure_new'].astype(float)
 
 try:
-    crif_cibil_dedup_1['tenure_new'] = crif_cibil_dedup_1['tenure_new'].replace(
-        0, np.nan).replace('', np.nan).astype('float64')
+    crif_cibil_dedup_1['tenure_new'] = pd.to_numeric(crif_cibil_dedup_1['tenure_new'], errors='coerce')
+    crif_cibil_dedup_1['tenure_new']= crif_cibil_dedup_1['tenure_new'].replace(0,np.nan).replace('',np.nan).astype('float64')
 except:
     pass
 # print(crif_cibil_dedup_1['tenure_new'],crif_cibil_dedup_1['tenure_new'].dtypes)
@@ -600,6 +624,12 @@ print('tenure_new=', crif_cibil_dedup_1['tenure_new'])
 crif_cibil_dedup_1['acc_type_new'] = np.where(((~crif_cibil_dedup_1['acc_type_new'].isin(["corporatecreditcard", "creditcard", "fleetcard", "kisancreditcard", "loanagainstcard", "loanoncreditcard", "securedcreditcard", "overdraft", "primeministerjaandhanyojanaoverdraft",
                                               "telcolandline", "telcowireless", "telcobroadband", "autooverdraft"])) & (~crif_cibil_dedup_1['acc_type_new'].isin(ROI_for_EMI_impute['acc_type_new'].unique().tolist()))), "personalloan", crif_cibil_dedup_1['acc_type_new'])
 
+#########################################################ROI
+
+crif_cibil_dedup_1['acc_type_new']=np.where(((~crif_cibil_dedup_1['acc_type_new'].isin(["corporatecreditcard","creditcard","fleetcard","kisancreditcard","loanagainstcard","loanoncreditcard","securedcreditcard","overdraft", "primeministerjaandhanyojanaoverdraft","telcolandline","telcowireless","telcobroadband", "autooverdraft"])) & (~crif_cibil_dedup_1['acc_type_new'].isin(ROI_for_EMI_impute['acc_type_new'].unique().tolist()))), "personalloan",crif_cibil_dedup_1['acc_type_new'])
+
+# crif_cibil_dedup_1['last_payment_date_som_new']=crif_cibil_dedup_1['last_payment_date_som_new'].astype(datetime)
+crif_cibil_dedup_1['last_payment_date_som_new'] = pd.to_datetime(crif_cibil_dedup_1['last_payment_date_som_new'])
 try:
     crif_cibil_dedup_2 = pd.merge(crif_cibil_dedup_1, ROI_for_EMI_impute.iloc[:, 1:],
                                   on=["acc_type_new", "last_payment_date_som_new"], how='left')
@@ -625,6 +655,15 @@ try:
 except:
     pass
 
+# Option 2: Replace 'None' values with a default value (e.g., 0.0)
+crif_cibil_dedup_4['interest_rate_new'].replace('None', 0.0, inplace=True)
+
+# Now, you can convert the 'interest_rate_new' column to float without any issues
+
+
+crif_cibil_dedup_4['interest_rate_new']=crif_cibil_dedup_4['interest_rate_new'].astype(float)
+crif_cibil_dedup_4['interest_rate_new']=crif_cibil_dedup_4['interest_rate_new'].replace(0,np.nan,inplace=True)
+
 try:
     conditions = [((crif_cibil_dedup_4['last_payment_date_som_new'] < pd.to_datetime("2016-04-01")) & ((crif_cibil_dedup_4['interest_rate_new'].isna()) | (crif_cibil_dedup_4['interest_rate_new'] == 0))), ((crif_cibil_dedup_4['last_payment_date_som_new']
                                                                                                                                                                                                               > crif_cibil_dedup_4['Latest_ROI_date']) & ((crif_cibil_dedup_4['interest_rate_new'].isna()) | (crif_cibil_dedup_4['interest_rate_new'] == 0))), ((crif_cibil_dedup_4['interest_rate_new'].isna()) | (crif_cibil_dedup_4['interest_rate_new'] == 0))]
@@ -637,6 +676,15 @@ try:
 
 except:
     pass
+
+
+# Assuming crif_cibil_dedup_4 is your dataframe
+
+
+
+
+
+
 
 try:
     crif_cibil_dedup_4['interest_rate_new'] = np.select(conditions, choices,

@@ -9,7 +9,12 @@
   margin-right: auto;
   margin-top: 40px;
 }
-
+.table_landingpage th {
+  font-size: 15px;
+}
+.table_landingpage td {
+  font-size: 14px;
+}
 .table_fixed {
   border: 1px solid #5a5a5a;
 }
@@ -23,14 +28,14 @@
 .table_fixed th {
   background: black;
   padding: 15px;
-  font-size: medium;
+  /* font-size: medium; */
   border: 1px solid #5a5a5a;
 }
 
 .table_fixed td {
   text-align: center;
   padding: 15px;
-  font-size: medium;
+  /* font-size: medium; */
   border-bottom: 1px solid #5a5a5a;
 }
 

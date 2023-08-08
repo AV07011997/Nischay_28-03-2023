@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+from CONSTANT import password
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -93,7 +93,7 @@ DATABASES = {
         'NAME': 'a5_kit',
 
         'USER': 'root',
-        'PASSWORD': 'Knowlvers@555',
+        'PASSWORD': password,
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"}

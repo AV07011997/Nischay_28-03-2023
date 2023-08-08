@@ -35,7 +35,7 @@ const NavBar = (props) => {
     } else if (item == "HOME") {
       navigate("/home");
     } else if (item == "SUMMARY") {
-      navigate("/executivesummary");
+      // navigate("/executivesummary");
     }
 
     console.log(item);

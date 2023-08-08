@@ -37,7 +37,7 @@ from mysite.models import failed_digitization
 from mysite.models import bank_bank
 import pandas as pd
 from django.db.models import Min, Max
-from CONSTANT import path_digitized_folder,path_pdf_files_folder,path_static_files,path_for_digitization_pdf_read
+from CONSTANT import path_digitized_folder,path_pdf_files_folder,path_static_files,path_for_digitization_pdf_read,password
 
 
 
@@ -54,7 +54,7 @@ def job():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',  ###connect to database
-        password='Knowlvers1@1',
+        password=password,
         database="a5_kit"
     )
 

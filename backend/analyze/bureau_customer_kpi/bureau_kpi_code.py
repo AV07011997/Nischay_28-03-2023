@@ -612,7 +612,7 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
     temp = temp.sort_values(by=['source', 'deal_id', 'cust_id', 'date_disbursed'], ascending=[True, True, True, False]).groupby(
         ['source', 'deal_id', 'cust_id']).first().reset_index()[['deal_id', 'cust_id', 'source', 'account_type', 'disbursed_amount', 'date_disbursed']]
     temp['date_disbursed'] = pd.to_datetime(
-        temp['date_disbursed'], format='%Y-%m-%d')
+        temp['date_disbursed'], format='%d-%m-%Y')
     temp['last_disbursed_cc/od_loan'] = temp['account_type'].astype(
         str)+" of "+temp['disbursed_amount'].astype(str)+" , "+temp['date_disbursed'].dt.strftime("%b %Y")
     cust_level = cust_level.merge(
@@ -627,7 +627,7 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
     temp = temp.sort_values(by=['source', 'deal_id', 'cust_id', 'date_disbursed'], ascending=[True, True, True, False]).groupby(
         ['source', 'deal_id', 'cust_id']).first().reset_index()[['deal_id', 'cust_id', 'source', 'account_type', 'disbursed_amount', 'date_disbursed']]
     temp['date_disbursed'] = pd.to_datetime(
-        temp['date_disbursed'], format='%Y-%m-%d')
+        temp['date_disbursed'], format='%d-%m-%Y')
     temp['last_disbursed_loan'] = temp['account_type'].astype(
         str)+" of "+temp['disbursed_amount'].astype(str)+" , "+temp['date_disbursed'].dt.strftime("%b %Y")
     cust_level = cust_level.merge(temp[['source', 'deal_id', 'cust_id', 'last_disbursed_loan']], on=[
@@ -638,7 +638,7 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
     temp = temp.sort_values(by=['source', 'deal_id', 'cust_id', 'date_disbursed'], ascending=[True, True, True, True]).groupby(
         ['source', 'deal_id', 'cust_id']).first().reset_index()[['deal_id', 'cust_id', 'source', 'account_type', 'disbursed_amount', 'date_disbursed']]
     temp['date_disbursed'] = pd.to_datetime(
-        temp['date_disbursed'], format='%Y-%m-%d')
+        temp['date_disbursed'], format='%d-%m-%Y')
     temp['oldest_loan_disbursed'] = temp['account_type'].astype(
         str)+" of "+temp['disbursed_amount'].astype(str)+" , "+temp['date_disbursed'].dt.strftime("%b %Y")
     cust_level = cust_level.merge(temp[['source', 'deal_id', 'cust_id', 'oldest_loan_disbursed']], on=[
@@ -737,6 +737,9 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
 # Drop rows containing None values
     temp = temp.dropna()
 
+    temp['EMI']=temp['EMI'].astype(float)
+
+
     temp = temp.groupby(['cust_id', 'source'])['EMI'].sum(
     ).reset_index(name="sum_of_emi_of_active_loans")
     # print(temp)
@@ -747,8 +750,11 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
     temp['cust_id'] = temp['Customer_Id']
     temp['source'] = temp['Source']
     for i in range(len(temp)):
-        if (temp.loc[i, 'EMI'] == 0):
+        if (temp.loc[i, 'EMI'] == 0 or ""):
             temp.loc[i, 'EMI'] = temp.loc[i, 'EMI_edited']
+
+    temp['EMI'] = temp['EMI'].fillna(0)
+    temp['EMI']=temp['EMI'].astype(float)
 
     temp = temp.groupby(['cust_id', 'source'])['EMI'].max(
     ).reset_index(name="max_emi_of_active_loans")
@@ -886,7 +892,7 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
     temp = data_loan_final.copy()
     temp = temp[temp['loan_status'] == "Active"]
     temp['date_disbursed'] = pd.to_datetime(
-        temp['date_disbursed'], format='%Y-%m-%d')
+        temp['date_disbursed'], format='%d-%m-%Y')
     temp = temp.sort_values(by=['deal_id', 'cust_id', 'source', 'disbursed_amount'], ascending=[True, True, True, False]).groupby(
         ['deal_id', 'cust_id', 'source'], as_index=False).first()[['deal_id', 'cust_id', 'source', 'account_type', 'disbursed_amount', 'date_disbursed']]
     temp['largest_active_loan'] = temp['account_type'].astype(
@@ -898,7 +904,7 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
     temp = data_loan_final.copy()
     temp = temp[temp['loan_status'] == "Closed"]
     temp['date_disbursed'] = pd.to_datetime(
-        temp['date_disbursed'], format='%Y-%m-%d')
+        temp['date_disbursed'], format='%d-%m-%Y')
     temp = temp.sort_values(by=['deal_id', 'cust_id', 'source', 'disbursed_amount'], ascending=[True, True, True, False]).groupby(
         ['deal_id', 'cust_id', 'source'], as_index=False).first()[['deal_id', 'cust_id', 'source', 'account_type', 'disbursed_amount', 'date_disbursed']]
     temp['largest_closed_loan'] = temp['account_type'].astype(
@@ -910,7 +916,7 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
     temp = data_loan_final.copy()
     temp = temp[temp['loan_status'] == "Active"]
     temp['date_disbursed'] = pd.to_datetime(
-        temp['date_disbursed'], format='%Y-%m-%d')
+        temp['date_disbursed'], format='%d-%m-%Y')
     temp = temp.sort_values(by=['deal_id', 'cust_id', 'source', 'disbursed_amount'], ascending=[True, True, True, True]).groupby(
         ['deal_id', 'cust_id', 'source'], as_index=False).first()[['deal_id', 'cust_id', 'source', 'account_type', 'disbursed_amount', 'date_disbursed']]
     temp['smallest_active_loan'] = temp['account_type'].astype(
