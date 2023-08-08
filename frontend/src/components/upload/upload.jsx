@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import dateInout from "../../utilities/customDate";
 import DateInput from "../../utilities/customDate";
 import { DateMilisec } from "../../constants/DateConvertFromMilisec";
+import { Loader } from "rsuite";
 
 const Upload = ({ setUser }) => {
   setUser(localStorage.getItem("user"));
@@ -262,110 +263,124 @@ const Upload = ({ setUser }) => {
 
   return (
     <div>
-      <div>
-        <NavBar radiovalue={localStorage.getItem("leadID")}></NavBar>
-      </div>
-      <div>
-        <Pageinfo
-          leadId={localStorage.getItem("leadID")}
-          name={localStorage.getItem("name")}
-        ></Pageinfo>
-      </div>
-
-      <input
-        style={{ display: "none" }}
-        ref={inputRef}
-        type="file"
-        multiple
-        onChange={handleFile}
-      />
-
-      {deleteFileList?.length > 0 && (
-        <div className="delete_option_upoad">
-          <button className="delete_option_upoad_button" onClick={deleteFiles}>
-            <AiFillDelete size={30} style={{ color: "red" }}></AiFillDelete>{" "}
-            <span className="delete_option_upoad_text">
-              Delete selected files
-            </span>
-          </button>
-        </div>
-      )}
-
-      <div className="upload_table">
-        <MaterialTable
-          // title="Upload table Records"
-          title={<h3 style={{ fontSize: "18px" }}>Upload table Records</h3>}
-          columns={state.columns}
-          data={table}
-          options={{
-            selection: true,
-            headerStyle: {
-              fontSize: "15px",
-              fontFamily:
-                "Apple-System, Arial, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, STXihei, sans-serif",
-              // Change this value to adjust the header font size
-            },
-            rowStyle: {
-              fontSize: "14px",
-              fontFamily:
-                "Apple-System, Arial, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, STXihei, sans-serif", // Change this value to adjust the row font size
-            },
-          }}
-          actions={[
-            {
-              icon: () => {
-                return (
-                  <AiOutlineFileAdd
-                    size={40}
-                    style={{ color: "red", size: "10" }}
-                  ></AiOutlineFileAdd>
-                );
-              },
-              tooltip: "Add File",
-              position: "toolbar",
-
-              onClick: () => {
-                handleClick();
-              },
-            },
-          ]}
-          onSelectionChange={(rows) => setDeleteFileList(rows)}
-        />
-      </div>
-
-      {mergefiles &&
-        mergefiles.map((items, i) => {
-          return (
-            <div key={i} className="pdfviewercontainer">
-              <div className="removebutton_uploadpage">
-                <button
-                  onClick={() => {
-                    removepdfview(items[1]);
-                  }}
-                >
-                  <AiFillDelete
-                    size={20}
-                    style={{ color: "red" }}
-                  ></AiFillDelete>
-                  {items[0].name}
-                </button>
-              </div>
-              <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.1.81/build/pdf.worker.min.js">
-                <Viewer
-                  fileUrl={items[1]}
-                  plugins={[defaultLayoutPluginInstance]}
-                />
-              </Worker>
-            </div>
-          );
-        })}
-
-      {mergefiles?.length > 0 && (
+      {table ? (
         <div>
-          <button className="uploadbutton" onClick={uplooadfiles}>
-            Upload
-          </button>
+          <div>
+            <NavBar radiovalue={localStorage.getItem("leadID")}></NavBar>
+          </div>
+          <div>
+            <Pageinfo
+              leadId={localStorage.getItem("leadID")}
+              name={localStorage.getItem("name")}
+            ></Pageinfo>
+          </div>
+
+          <input
+            style={{ display: "none" }}
+            ref={inputRef}
+            type="file"
+            multiple
+            onChange={handleFile}
+          />
+
+          {deleteFileList?.length > 0 && (
+            <div className="delete_option_upoad">
+              <button
+                className="delete_option_upoad_button"
+                onClick={deleteFiles}
+              >
+                <AiFillDelete size={30} style={{ color: "red" }}></AiFillDelete>{" "}
+                <span className="delete_option_upoad_text">
+                  Delete selected files
+                </span>
+              </button>
+            </div>
+          )}
+
+          <div className="upload_table">
+            <MaterialTable
+              // title="Upload table Records"
+              title={<h3 style={{ fontSize: "18px" }}>Upload table Records</h3>}
+              columns={state.columns}
+              data={table}
+              options={{
+                selection: true,
+                headerStyle: {
+                  fontSize: "15px",
+                  fontFamily:
+                    "Apple-System, Arial, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, STXihei, sans-serif",
+                  // Change this value to adjust the header font size
+                },
+                rowStyle: {
+                  fontSize: "14px",
+                  fontFamily:
+                    "Apple-System, Arial, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, STXihei, sans-serif", // Change this value to adjust the row font size
+                },
+              }}
+              actions={[
+                {
+                  icon: () => {
+                    return (
+                      <AiOutlineFileAdd
+                        size={40}
+                        style={{ color: "red", size: "10" }}
+                      ></AiOutlineFileAdd>
+                    );
+                  },
+                  tooltip: "Add File",
+                  position: "toolbar",
+
+                  onClick: () => {
+                    handleClick();
+                  },
+                },
+              ]}
+              onSelectionChange={(rows) => setDeleteFileList(rows)}
+            />
+          </div>
+
+          {mergefiles &&
+            mergefiles.map((items, i) => {
+              return (
+                <div key={i} className="pdfviewercontainer">
+                  <div className="removebutton_uploadpage">
+                    <button
+                      onClick={() => {
+                        removepdfview(items[1]);
+                      }}
+                    >
+                      <AiFillDelete
+                        size={20}
+                        style={{ color: "red" }}
+                      ></AiFillDelete>
+                      {items[0].name}
+                    </button>
+                  </div>
+                  <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.1.81/build/pdf.worker.min.js">
+                    <Viewer
+                      fileUrl={items[1]}
+                      plugins={[defaultLayoutPluginInstance]}
+                    />
+                  </Worker>
+                </div>
+              );
+            })}
+
+          {mergefiles?.length > 0 && (
+            <div>
+              <button className="uploadbutton" onClick={uplooadfiles}>
+                Upload
+              </button>
+            </div>
+          )}
         </div>
+      ) : (
+        <Loader
+          className="loader_landingpage"
+          center
+          size="lg"
+          content="loading..."
+        ></Loader>
       )}
     </div>
   );
