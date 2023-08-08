@@ -4078,9 +4078,9 @@ def executive_summary(request):
             bank_bank = pd.DataFrame(bank_bank)
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT * FROM mysite_bank_bank WHERE lead_id = " + lead_id + ";")
-            bank_bank = dictfetchall(cursor)
-            bank_bank = pd.DataFrame(bank_bank)
+                "SELECT * FROM lead_details.cr_lead_dtl WHERE lead_id = " + lead_id + ";")
+            personal_info = dictfetchall(cursor)
+            lmsdetails = pd.DataFrame(personal_info)
 
     bureau_details = {}
 
@@ -4155,6 +4155,17 @@ def executive_summary(request):
 
     #     if (pd.isnull(bureau_details['recentlyclosedloandate'])):
     #         bureau_details['recentlyclosedloandate'] = "No Loans Closed"
+    # except:
+    #     pass
+    # try:
+    #     bureau_details['Name'] = personal_info['CUSTOMER_NAME'][0]
+    # except:
+    #     pass
+    # try:
+
+    #     bureau_details['DISTRICT'] = personal_info['Location'][0]
+    #     bureau_details['Purpose'] = personal_info['LOAN_PURPOSE'][0]
+    #     bureau_details['Loan_amount'] = personal_info['LOAN_AMOUNT'][0]
     # except:
     #     pass
 
