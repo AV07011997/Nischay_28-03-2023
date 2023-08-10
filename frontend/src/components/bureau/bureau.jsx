@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { APIADDRESS, BUREAUPAGECOLUMNS } from "../../constants/constants";
 import { postApi } from "../../callapi";
 import { useState } from "react";
+import { Loader } from "rsuite";
 
 import NavBar1 from "../../utilities/navbar/navbar1";
 
@@ -181,43 +182,86 @@ const Bureau = ({ info }) => {
   return (
     <div>
       <NavBar1 radiovalue={radiovalue}></NavBar1>
-      <div className="bureau_page">
-        <div>
-          <button
-            onClick={() => window.location.reload(false)}
-            className="button_bureau"
-          >
-            Reset
-          </button>
-        </div>
-        <table className="table_bureau">
-          <thead className="table_bureau_thead">
-            <tr>
-              {state.columns.map((items, j) => {
-                return (
-                  <th
-                    style={{ fontSize: "15px" }}
-                    className="table_bureau_text"
-                    key={"bureau_coloumn" + j}
-                  >
-                    {items.title}
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody className="table_bureau_tbody">
-            {tableData &&
-              selectedValueType &&
-              tableData[0].map((item, i) => {
-                // console.log(selectedValueType);
+      {tableData ? (
+        <div className="bureau_page">
+          <div>
+            <button
+              onClick={() => window.location.reload(false)}
+              className="button_bureau"
+            >
+              Reset
+            </button>
+          </div>
+          <table className="table_bureau">
+            <thead className="table_bureau_thead">
+              <tr>
+                {state.columns.map((items, j) => {
+                  return (
+                    <th
+                      style={{ fontSize: "15px" }}
+                      className="table_bureau_text"
+                      key={"bureau_coloumn" + j}
+                    >
+                      {items.title}
+                    </th>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody className="table_bureau_tbody">
+              {tableData &&
+                selectedValueType &&
+                tableData[0].map((item, i) => {
+                  // console.log(selectedValueType);
 
-                return (
-                  <tr key={"row" + i.toString()}>
-                    {state.columns.map((coloumn, j) => {
-                      if (coloumn.field == "Tenure") {
-                        if (selectedValueType[i] == "edited") {
-                          console.log("Hello");
+                  return (
+                    <tr key={"row" + i.toString()}>
+                      {state.columns.map((coloumn, j) => {
+                        if (coloumn.field == "Tenure") {
+                          if (selectedValueType[i] == "edited") {
+                            console.log("Hello");
+                            return (
+                              <th
+                                key={"bureau_tenure_input" + i.toString()}
+                                id={"bureau_tenure_input" + i.toString()}
+                                className="bureau_border"
+                              >
+                                <input
+                                  ref={inputValueTenure}
+                                  onChange={() => handleChange(i)}
+                                  className=" bureau_input_design"
+                                  key={"tenure_input" + i.toString()}
+                                  id={"tenure_input" + i.toString()}
+                                  type="number"
+                                  defaultValue={parseInt(
+                                    emiDataArray[i]["Tenure_user_edited"]
+                                  )}
+                                ></input>
+                              </th>
+                            );
+                          }
+                          if (selectedValueType[i] == "recommended") {
+                            return (
+                              <th
+                                key={"bureau_tenure_input" + i.toString()}
+                                id={"bureau_tenure_input" + i.toString()}
+                                className="bureau_border"
+                              >
+                                <input
+                                  ref={inputValueTenure}
+                                  onChange={() => handleChange(i)}
+                                  className=" bureau_input_design"
+                                  key={"tenure_input" + i.toString()}
+                                  id={"tenure_input" + i.toString()}
+                                  type="number"
+                                  defaultValue={parseInt(
+                                    emiDataArray[i]["Tenure_edited"]
+                                  )}
+                                ></input>
+                              </th>
+                            );
+                          }
+
                           return (
                             <th
                               key={"bureau_tenure_input" + i.toString()}
@@ -232,75 +276,56 @@ const Bureau = ({ info }) => {
                                 id={"tenure_input" + i.toString()}
                                 type="number"
                                 defaultValue={parseInt(
-                                  emiDataArray[i]["Tenure_user_edited"]
+                                  emiDataArray[i]["Tenure"]
                                 )}
                               ></input>
                             </th>
                           );
-                        }
-                        if (selectedValueType[i] == "recommended") {
-                          return (
-                            <th
-                              key={"bureau_tenure_input" + i.toString()}
-                              id={"bureau_tenure_input" + i.toString()}
-                              className="bureau_border"
-                            >
-                              <input
-                                ref={inputValueTenure}
-                                onChange={() => handleChange(i)}
-                                className=" bureau_input_design"
-                                key={"tenure_input" + i.toString()}
-                                id={"tenure_input" + i.toString()}
-                                type="number"
-                                defaultValue={parseInt(
-                                  emiDataArray[i]["Tenure_edited"]
-                                )}
-                              ></input>
-                            </th>
-                          );
-                        }
+                        } else if (coloumn.field == "ROI") {
+                          if (selectedValueType[i] == "edited") {
+                            return (
+                              <th
+                                key={"bureau_ROI_input" + i.toString()}
+                                id={"bureau_ROI_input" + i.toString()}
+                                className="bureau_border"
+                              >
+                                <input
+                                  ref={inputValueTenure}
+                                  onChange={() => handleChange(i)}
+                                  className=" bureau_input_design"
+                                  key={"roi_input" + i.toString()}
+                                  id={"roi_input" + i.toString()}
+                                  type="number"
+                                  defaultValue={parseInt(
+                                    emiDataArray[i]["ROI_user_edited"]
+                                  )}
+                                ></input>
+                              </th>
+                            );
+                          }
 
-                        return (
-                          <th
-                            key={"bureau_tenure_input" + i.toString()}
-                            id={"bureau_tenure_input" + i.toString()}
-                            className="bureau_border"
-                          >
-                            <input
-                              ref={inputValueTenure}
-                              onChange={() => handleChange(i)}
-                              className=" bureau_input_design"
-                              key={"tenure_input" + i.toString()}
-                              id={"tenure_input" + i.toString()}
-                              type="number"
-                              defaultValue={parseInt(emiDataArray[i]["Tenure"])}
-                            ></input>
-                          </th>
-                        );
-                      } else if (coloumn.field == "ROI") {
-                        if (selectedValueType[i] == "edited") {
-                          return (
-                            <th
-                              key={"bureau_ROI_input" + i.toString()}
-                              id={"bureau_ROI_input" + i.toString()}
-                              className="bureau_border"
-                            >
-                              <input
-                                ref={inputValueTenure}
-                                onChange={() => handleChange(i)}
-                                className=" bureau_input_design"
-                                key={"roi_input" + i.toString()}
-                                id={"roi_input" + i.toString()}
-                                type="number"
-                                defaultValue={parseInt(
-                                  emiDataArray[i]["ROI_user_edited"]
-                                )}
-                              ></input>
-                            </th>
-                          );
-                        }
+                          if (selectedValueType[i] == "recommended") {
+                            return (
+                              <th
+                                key={"bureau_ROI_input" + i.toString()}
+                                id={"bureau_ROI_input" + i.toString()}
+                                className="bureau_border"
+                              >
+                                <input
+                                  ref={inputValueTenure}
+                                  onChange={() => handleChange(i)}
+                                  className=" bureau_input_design"
+                                  key={"roi_input" + i.toString()}
+                                  id={"roi_input" + i.toString()}
+                                  type="number"
+                                  defaultValue={parseInt(
+                                    emiDataArray[i]["ROI_edited"]
+                                  )}
+                                ></input>
+                              </th>
+                            );
+                          }
 
-                        if (selectedValueType[i] == "recommended") {
                           return (
                             <th
                               key={"bureau_ROI_input" + i.toString()}
@@ -308,69 +333,72 @@ const Bureau = ({ info }) => {
                               className="bureau_border"
                             >
                               <input
-                                ref={inputValueTenure}
+                                ref={inputValueROI}
                                 onChange={() => handleChange(i)}
                                 className=" bureau_input_design"
                                 key={"roi_input" + i.toString()}
                                 id={"roi_input" + i.toString()}
                                 type="number"
-                                defaultValue={parseInt(
-                                  emiDataArray[i]["ROI_edited"]
-                                )}
+                                defaultValue={parseInt(emiDataArray[i]["ROI"])}
                               ></input>
                             </th>
                           );
-                        }
-
-                        return (
-                          <th
-                            key={"bureau_ROI_input" + i.toString()}
-                            id={"bureau_ROI_input" + i.toString()}
-                            className="bureau_border"
-                          >
-                            <input
-                              ref={inputValueROI}
-                              onChange={() => handleChange(i)}
-                              className=" bureau_input_design"
-                              key={"roi_input" + i.toString()}
-                              id={"roi_input" + i.toString()}
-                              type="number"
-                              defaultValue={parseInt(emiDataArray[i]["ROI"])}
-                            ></input>
-                          </th>
-                        );
-                      } else if (coloumn.field == "valueType") {
-                        return (
-                          <th
-                            key={"dropdown" + i.toString()}
-                            className="bureau_border"
-                          >
-                            <select
-                              name="Value Type"
-                              id="valuetype"
-                              className=" bureau_dropdown"
-                              value={selectedValueType[i]}
-                              onChange={(e) =>
-                                handleValueTypeChange([i, e.target.value])
-                              }
+                        } else if (coloumn.field == "valueType") {
+                          return (
+                            <th
+                              key={"dropdown" + i.toString()}
+                              className="bureau_border"
                             >
-                              <option value="recommended">Recommended</option>
-                              <option value="edited">Edited</option>
-                              <option value="bureau">Bureau</option>
-                            </select>
-                          </th>
-                        );
-                      } else if (coloumn.field == "EMI") {
-                        return (
-                          <th
-                            className="table_bureau_text"
-                            id={[coloumn.field] + i.toString()}
-                            key={[coloumn.field] + i.toString()}
-                          >
-                            {emiValues?.[i]}
-                          </th>
-                        );
-                      } else if (coloumn.field == "Disbursed_amount") {
+                              <select
+                                name="Value Type"
+                                id="valuetype"
+                                className=" bureau_dropdown"
+                                value={selectedValueType[i]}
+                                onChange={(e) =>
+                                  handleValueTypeChange([i, e.target.value])
+                                }
+                              >
+                                <option value="recommended">Recommended</option>
+                                <option value="edited">Edited</option>
+                                <option value="bureau">Bureau</option>
+                              </select>
+                            </th>
+                          );
+                        } else if (coloumn.field == "EMI") {
+                          return (
+                            <th
+                              className="table_bureau_text"
+                              id={[coloumn.field] + i.toString()}
+                              key={[coloumn.field] + i.toString()}
+                            >
+                              {emiValues?.[i]}
+                            </th>
+                          );
+                        } else if (coloumn.field == "Disbursed_amount") {
+                          return (
+                            <th
+                              className="table_bureau_text"
+                              id={[coloumn.field] + i.toString()}
+                              key={[coloumn.field] + i.toString()}
+                            >
+                              {item[coloumn.field] != null
+                                ? formatIndianCurrency(item[coloumn.field])
+                                : 0}
+                            </th>
+                          );
+                        } else if (coloumn.field == "Current Balance") {
+                          return (
+                            <th
+                              className="table_bureau_text"
+                              id={[coloumn.field] + i.toString()}
+                              key={[coloumn.field] + i.toString()}
+                            >
+                              {item[coloumn.field] != null
+                                ? formatIndianCurrency(item[coloumn.field])
+                                : 0}
+                            </th>
+                          );
+                        }
                         return (
                           <th
                             className="table_bureau_text"
@@ -378,106 +406,90 @@ const Bureau = ({ info }) => {
                             key={[coloumn.field] + i.toString()}
                           >
                             {item[coloumn.field] != null
-                              ? formatIndianCurrency(item[coloumn.field])
+                              ? item[coloumn.field]
                               : 0}
                           </th>
                         );
-                      } else if (coloumn.field == "Current Balance") {
-                        return (
-                          <th
-                            className="table_bureau_text"
-                            id={[coloumn.field] + i.toString()}
-                            key={[coloumn.field] + i.toString()}
-                          >
-                            {item[coloumn.field] != null
-                              ? formatIndianCurrency(item[coloumn.field])
-                              : 0}
-                          </th>
-                        );
-                      }
-                      return (
-                        <th
-                          className="table_bureau_text"
-                          id={[coloumn.field] + i.toString()}
-                          key={[coloumn.field] + i.toString()}
-                        >
-                          {item[coloumn.field] != null
-                            ? item[coloumn.field]
-                            : 0}
-                        </th>
-                      );
-                    })}
+                      })}
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+
+          <div style={{ width: "100%", marginTop: "1.3em" }}>
+            <button
+              onClick={saveButtonClickHandler}
+              disabled={isButtonDisabled}
+              style={{
+                marginLeft: "50em",
+                marginRight: "auto",
+                padding: "8px",
+                width: "90px",
+                backgroundColor: "black",
+                color: "white",
+              }}
+            >
+              <span style={{ fontWeight: "1000" }}>Save</span>
+            </button>
+          </div>
+
+          <table className="table_bureau" style={{ marginTop: "2em" }}>
+            <thead className="table_bureau_thead">
+              <tr>
+                <th style={{ fontSize: "15px" }}> Date Reported</th>
+                <th style={{ fontSize: "15px" }}> Loan Type</th>
+                <th style={{ fontSize: "15px" }}> Loan Status</th>
+                <th style={{ fontSize: "15px" }}> Issue Date</th>
+                <th style={{ fontSize: "15px" }}>High Credit Amount (₹)</th>
+                <th style={{ fontSize: "15px" }}> Current Balance (₹)</th>
+                <th style={{ fontSize: "15px" }}>Last DPD </th>
+                <th style={{ fontSize: "15px" }}> Overdue Amount (₹) </th>
+                <th style={{ fontSize: "15px" }}> Source </th>
+                {/* <th>Value Type</th> */}
+              </tr>
+            </thead>
+
+            <tbody className="table_bureau_tbody">
+              {creditCardData?.[0].map((item, index) => {
+                return (
+                  <tr>
+                    <th className="table_bureau_text">
+                      {item["date_reported_som"]}
+                    </th>
+                    <th className="table_bureau_text">{item["Loan_type"]}</th>
+                    <th className="table_bureau_text">{item["Loan_status"]}</th>
+                    <th className="table_bureau_text">
+                      {item["Disbursal_date"]}
+                    </th>
+                    <th className="table_bureau_text">
+                      {formatIndianCurrency(150000 * (index + 1))}
+                    </th>
+                    <th className="table_bureau_text">
+                      {formatIndianCurrency(item["Current Balance"])}
+                    </th>
+                    <th className="table_bureau_text">
+                      {item["DPD"] === 0 ? item["DPD"] : "NR"}
+                    </th>
+                    {/* <th className="table_bureau_text">{item["DPD"]}</th> */}
+                    <th className="table_bureau_text">
+                      {item["Overdue amount"]}
+                    </th>
+                    <th className="table_bureau_text">{item["Source"]}</th>
                   </tr>
                 );
               })}
-          </tbody>
-        </table>
-
-        <div style={{ width: "100%", marginTop: "1.3em" }}>
-          <button
-            onClick={saveButtonClickHandler}
-            disabled={isButtonDisabled}
-            style={{
-              marginLeft: "50em",
-              marginRight: "auto",
-              padding: "8px",
-              width: "90px",
-              backgroundColor: "black",
-              color: "white",
-            }}
-          >
-            <span style={{ fontWeight: "1000" }}>Save</span>
-          </button>
+            </tbody>
+          </table>
         </div>
-
-        <table className="table_bureau" style={{ marginTop: "2em" }}>
-          <thead className="table_bureau_thead">
-            <tr>
-              <th style={{ fontSize: "15px" }}> Date Reported</th>
-              <th style={{ fontSize: "15px" }}> Loan Type</th>
-              <th style={{ fontSize: "15px" }}> Loan Status</th>
-              <th style={{ fontSize: "15px" }}> Issue Date</th>
-              <th style={{ fontSize: "15px" }}>High Credit Amount (₹)</th>
-              <th style={{ fontSize: "15px" }}> Current Balance (₹)</th>
-              <th style={{ fontSize: "15px" }}>Last DPD </th>
-              <th style={{ fontSize: "15px" }}> Overdue Amount (₹) </th>
-              <th style={{ fontSize: "15px" }}> Source </th>
-              {/* <th>Value Type</th> */}
-            </tr>
-          </thead>
-
-          <tbody className="table_bureau_tbody">
-            {creditCardData?.[0].map((item, index) => {
-              return (
-                <tr>
-                  <th className="table_bureau_text">
-                    {item["date_reported_som"]}
-                  </th>
-                  <th className="table_bureau_text">{item["Loan_type"]}</th>
-                  <th className="table_bureau_text">{item["Loan_status"]}</th>
-                  <th className="table_bureau_text">
-                    {item["Disbursal_date"]}
-                  </th>
-                  <th className="table_bureau_text">
-                    {formatIndianCurrency(150000 * (index + 1))}
-                  </th>
-                  <th className="table_bureau_text">
-                    {formatIndianCurrency(item["Current Balance"])}
-                  </th>
-                  <th className="table_bureau_text">
-                    {item["DPD"] === 0 ? item["DPD"] : "NR"}
-                  </th>
-                  {/* <th className="table_bureau_text">{item["DPD"]}</th> */}
-                  <th className="table_bureau_text">
-                    {item["Overdue amount"]}
-                  </th>
-                  <th className="table_bureau_text">{item["Source"]}</th>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      ) : (
+        <Loader
+          className="loader_landingpage"
+          center
+          size="lg"
+          content="loading..."
+        ></Loader>
+      )}
     </div>
   );
 };

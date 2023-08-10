@@ -171,6 +171,14 @@ const LandingPage = ({ setUser }) => {
 
   var selectionDeafult = "";
 
+  const inProgress = (a, b, c, d) => {
+    if (a - b - c - d > 0) {
+      return a - b - c - d;
+    } else {
+      return 0;
+    }
+  };
+
   return (
     <div>
       <NavBar
@@ -274,10 +282,16 @@ const LandingPage = ({ setUser }) => {
                                     title={
                                       <React.Fragment>
                                         In-progress :{" "}
-                                        {item.bank_uploaded -
+                                        {/* {item.bank_uploaded -
                                           item.failed_count -
                                           item.bank_download -
-                                          item.deleted_count}
+                                          item.deleted_count} */}
+                                        {inProgress(
+                                          item.bank_uploaded,
+                                          item.failed_count,
+                                          item.bank_download,
+                                          item.deleted_count
+                                        )}
                                         <br></br>
                                         Failed : {item.failed_count}
                                         <br></br>
