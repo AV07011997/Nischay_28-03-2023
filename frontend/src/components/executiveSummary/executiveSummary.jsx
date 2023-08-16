@@ -3,6 +3,8 @@ import NavBar from "../../utilities/navbar/navbar";
 import { postApi } from "../../callapi";
 import { APIADDRESS } from "../../constants/constants";
 import "./executiveSummar.css";
+import GaugeChart from "react-gauge-chart";
+import RatioPieChart from "../../constants/ratioPieChart";
 
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import {
@@ -14,6 +16,11 @@ import {
 
 const ExecutiveSummary = () => {
   const [bureau_details, setBureau_Details] = useState();
+  const [total, setTotal] = useState();
+  const [totalemi, setTotalemi] = useState();
+  const [foirIncome, setFoirIncome] = useState();
+  const [foirInflow, setFoirInflow] = useState();
+
   useEffect(() => {
     postApi("analyze/" + APIADDRESS.EXECUTIVESUMMARY, {
       leadID: localStorage.getItem("leadID"),
@@ -21,6 +28,47 @@ const ExecutiveSummary = () => {
       setBureau_Details(res);
     });
   }, []);
+  const Calculate = () => {
+    const amount = 100000;
+
+    const roi1 = document.getElementById("roiCalculator")?.value;
+
+    // Extracting value in the months
+    // section in the variable
+    const months = document.getElementById("monthCalculator").value;
+    console.log(roi1, months, amount);
+
+    parseInt(amount);
+    parseInt(roi1);
+    parseInt(months);
+    const roi = roi1 / 100 / 12;
+
+    const total = (
+      amount *
+      roi *
+      (Math.pow(1 + roi, months) / (Math.pow(1 + roi, months) - 1))
+    ).toFixed(2);
+
+    setTotal(Math.ceil(total));
+    FoirCalculation(total);
+  };
+
+  const FoirCalculation = (total) => {
+    var existingemisum = 8900;
+    var totalEMI = existingemisum + parseInt(total);
+    setTotalemi(totalEMI);
+    NewFoirStated(totalEMI);
+  };
+
+  const NewFoirStated = (totalemi) => {
+    var salary = 50000;
+    var newFoirIncome = ((totalemi / salary) * 100).toFixed(0);
+
+    setFoirIncome(newFoirIncome);
+    var averageMonthlyCredit = 10000;
+    var newFoirInflow = ((totalemi / averageMonthlyCredit) * 100).toFixed(0);
+    setFoirInflow(newFoirInflow);
+  };
 
   return (
     <div>
@@ -29,11 +77,6 @@ const ExecutiveSummary = () => {
         <div style={{ display: "flex", marginTop: "3em" }}>
           <div style={{ display: "grid", marginLeft: "2em" }}>
             <CircularProgressbar
-              //   value={
-              //     bureau_details?.creditscore === "No Credit Score"
-              //       ? 0
-              //       : bureau_details?.creditscore
-              //   }
               value={650}
               circleRatio={0.5}
               strokeWidth={15}
@@ -133,6 +176,7 @@ const ExecutiveSummary = () => {
                 </MDBCardBody>
               </MDBCard>
             </div>
+
             <div>
               <MDBCard
                 style={{
@@ -165,6 +209,7 @@ const ExecutiveSummary = () => {
                 </MDBCardBody>
               </MDBCard>
             </div>
+
             <div>
               <MDBCard
                 style={{
@@ -199,143 +244,289 @@ const ExecutiveSummary = () => {
             </div>
           </div>
         </div>
-        <div style={{ justifyContent: "space-between" }}>
-          <div style={{ marginTop: "2em" }}>
-            {" "}
-            <MDBCard
-              style={{
-                width: "200px",
-                height: "5em", // Adjust the width of the card
-                backgroundColor: "#f0f0f0",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
-                margin: "10px", // Margin for spacing
-                borderRadius: "8px", // Border radius for rounded corners
-              }}
-            >
-              <MDBCardHeader
-                style={{
-                  textAlign: "center", // Center-align the heading
-                  fontSize: "1.5rem", // Increase font size for heading
-                  fontWeight: "bold", // Make the heading bold
-                }}
-              >
-                15.6
-              </MDBCardHeader>
 
-              <MDBCardBody
+        <div style={{ display: "flex" }}>
+          <div>
+            {" "}
+            <div>
+              <MDBCard
                 style={{
-                  textAlign: "center", // Center-align the card body text
-                  fontSize: "1.25rem", // Font size for card body text
+                  width: "200px",
+                  height: "5em", // Adjust the width of the card
+                  backgroundColor: "#f0f0f0",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
+                  margin: "10px", // Margin for spacing
+                  borderRadius: "8px", // Border radius for rounded corners
                 }}
               >
-                {" "}
-                Bureau Risk Score
-              </MDBCardBody>
-            </MDBCard>
+                <MDBCardHeader
+                  style={{
+                    textAlign: "center", // Center-align the heading
+                    fontSize: "1.5rem", // Increase font size for heading
+                    fontWeight: "bold", // Make the heading bold
+                  }}
+                >
+                  15.6
+                </MDBCardHeader>
+
+                <MDBCardBody
+                  style={{
+                    textAlign: "center", // Center-align the card body text
+                    fontSize: "1.25rem", // Font size for card body text
+                  }}
+                >
+                  {" "}
+                  Bureau Risk Score
+                </MDBCardBody>
+              </MDBCard>
+            </div>
+            <div style={{ marginTop: "2em" }}>
+              <MDBCard
+                style={{
+                  width: "200px",
+                  height: "5em", // Adjust the width of the card
+                  backgroundColor: "#f0f0f0",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
+                  margin: "10px", // Margin for spacing
+                  borderRadius: "8px", // Border radius for rounded corners
+                }}
+              >
+                <MDBCardHeader
+                  style={{
+                    textAlign: "center", // Center-align the heading
+                    fontSize: "1.5rem", // Increase font size for heading
+                    fontWeight: "bold", // Make the heading bold
+                  }}
+                >
+                  3.9
+                </MDBCardHeader>
+
+                <MDBCardBody
+                  style={{
+                    textAlign: "center", // Center-align the card body text
+                    fontSize: "1.25rem", // Font size for card body text
+                  }}
+                >
+                  {" "}
+                  Banking Based Score
+                </MDBCardBody>
+              </MDBCard>
+            </div>
+            <div style={{ marginTop: "2em" }}>
+              <MDBCard
+                style={{
+                  width: "200px",
+                  height: "5em", // Adjust the width of the card
+                  backgroundColor: "#f0f0f0",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
+                  margin: "10px", // Margin for spacing
+                  borderRadius: "8px", // Border radius for rounded corners
+                }}
+              >
+                <MDBCardHeader
+                  style={{
+                    textAlign: "center", // Center-align the heading
+                    fontSize: "1.5rem", // Increase font size for heading
+                    fontWeight: "bold", // Make the heading bold
+                  }}
+                >
+                  0.6
+                </MDBCardHeader>
+
+                <MDBCardBody
+                  style={{
+                    textAlign: "center", // Center-align the card body text
+                    fontSize: "1.25rem", // Font size for card body text
+                  }}
+                >
+                  {" "}
+                  Application Score
+                </MDBCardBody>
+              </MDBCard>
+            </div>
+            <div style={{ marginTop: "2em" }}>
+              <MDBCard
+                style={{
+                  width: "200px",
+                  height: "5em", // Adjust the width of the card
+                  backgroundColor: "#f0f0f0",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
+                  margin: "10px", // Margin for spacing
+                  borderRadius: "8px", // Border radius for rounded corners
+                }}
+              >
+                <MDBCardHeader
+                  style={{
+                    textAlign: "center", // Center-align the heading
+                    fontSize: "1.5rem", // Increase font size for heading
+                    fontWeight: "bold", // Make the heading bold
+                  }}
+                >
+                  1.2
+                </MDBCardHeader>
+
+                <MDBCardBody
+                  style={{
+                    textAlign: "center", // Center-align the card body text
+                    fontSize: "1.25rem", // Font size for card body text
+                  }}
+                >
+                  {" "}
+                  Partner Based Score
+                </MDBCardBody>
+              </MDBCard>
+            </div>
           </div>
-          <div style={{ marginTop: "2em" }}>
-            {" "}
-            <MDBCard
-              style={{
-                width: "200px",
-                height: "5em", // Adjust the width of the card
-                backgroundColor: "#f0f0f0",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
-                margin: "10px", // Margin for spacing
-                borderRadius: "8px", // Border radius for rounded corners
-              }}
-            >
-              <MDBCardHeader
+          <div
+            style={{
+              border: "1px solid #C4C4C4",
+              borderRadius: "10px",
+              display: "flex",
+              flexWrap: "wrap",
+              width: "64em",
+              height: "363px",
+              marginTop: "10px",
+              marginLeft: "4em",
+            }}
+          >
+            <div className="element_piechart">
+              <RatioPieChart ratio={bureau_details?.dtocratio}></RatioPieChart>
+              <span
                 style={{
-                  textAlign: "center", // Center-align the heading
-                  fontSize: "1.5rem", // Increase font size for heading
-                  fontWeight: "bold", // Make the heading bold
+                  marginLeft: "-128px",
+                  fontSize: "18px",
+                  fontWeight: "bolder",
                 }}
               >
-                3.9
-              </MDBCardHeader>
+                Debit to Credit Ratio : {bureau_details?.dtocratio}
+              </span>
+            </div>
+            <div className="element_piechart">
+              <RatioPieChart ratio={0.6}></RatioPieChart>
+              <span
+                style={{
+                  marginLeft: "-128px",
+                  fontSize: "18px",
+                  fontWeight: "bolder",
+                }}
+              >
+                Debit to Income Ratio : 0.6
+              </span>
+            </div>
+            <div className="element_piechart">
+              <RatioPieChart ratio={2}></RatioPieChart>
+              <span
+                style={{
+                  marginLeft: "-128px",
+                  fontSize: "18px",
+                  fontWeight: "bolder",
+                }}
+              >
+                Cash Credit Ratio : 2
+              </span>
+            </div>
 
-              <MDBCardBody
+            <div className="element_2">
+              <MDBCard
                 style={{
-                  textAlign: "center", // Center-align the card body text
-                  fontSize: "1.25rem", // Font size for card body text
+                  width: "200px",
+                  height: "5em", // Adjust the width of the card
+                  backgroundColor: "#f0f0f0",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
+                  margin: "10px", // Margin for spacing
+                  borderRadius: "8px", // Border radius for rounded corners
                 }}
               >
-                {" "}
-                Banking Based Score
-              </MDBCardBody>
-            </MDBCard>
-          </div>
-          <div style={{ marginTop: "2em" }}>
-            {" "}
-            <MDBCard
-              style={{
-                width: "200px",
-                height: "5em", // Adjust the width of the card
-                backgroundColor: "#f0f0f0",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
-                margin: "10px", // Margin for spacing
-                borderRadius: "8px", // Border radius for rounded corners
-              }}
-            >
-              <MDBCardHeader
-                style={{
-                  textAlign: "center", // Center-align the heading
-                  fontSize: "1.5rem", // Increase font size for heading
-                  fontWeight: "bold", // Make the heading bold
-                }}
-              >
-                0.6
-              </MDBCardHeader>
+                <MDBCardHeader
+                  style={{
+                    textAlign: "center", // Center-align the heading
+                    fontSize: "1.5rem", // Increase font size for heading
+                    fontWeight: "bold", // Make the heading bold
+                  }}
+                >
+                  {bureau_details?.last3month}
+                </MDBCardHeader>
 
-              <MDBCardBody
+                <MDBCardBody
+                  style={{
+                    textAlign: "center", // Center-align the card body text
+                    fontSize: "1.25rem", // Font size for card body text
+                  }}
+                >
+                  {" "}
+                  Avg. Monthly Balance
+                </MDBCardBody>
+              </MDBCard>
+            </div>
+            <div className="element_2">
+              <MDBCard
                 style={{
-                  textAlign: "center", // Center-align the card body text
-                  fontSize: "1.25rem", // Font size for card body text
+                  width: "200px",
+                  height: "5em", // Adjust the width of the card
+                  backgroundColor: "#f0f0f0",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
+                  margin: "10px", // Margin for spacing
+                  borderRadius: "8px", // Border radius for rounded corners
                 }}
               >
-                {" "}
-                Application Score
-              </MDBCardBody>
-            </MDBCard>
-          </div>
-          <div style={{ marginTop: "2em" }}>
-            {" "}
-            <MDBCard
-              style={{
-                width: "200px",
-                height: "5em", // Adjust the width of the card
-                backgroundColor: "#f0f0f0",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
-                margin: "10px", // Margin for spacing
-                borderRadius: "8px", // Border radius for rounded corners
-              }}
-            >
-              <MDBCardHeader
-                style={{
-                  textAlign: "center", // Center-align the heading
-                  fontSize: "1.5rem", // Increase font size for heading
-                  fontWeight: "bold", // Make the heading bold
-                }}
-              >
-                1.2
-              </MDBCardHeader>
+                <MDBCardHeader
+                  style={{
+                    textAlign: "center", // Center-align the heading
+                    fontSize: "1.5rem", // Increase font size for heading
+                    fontWeight: "bold", // Make the heading bold
+                  }}
+                >
+                  {bureau_details?.chequebounce}
+                </MDBCardHeader>
 
-              <MDBCardBody
+                <MDBCardBody
+                  style={{
+                    textAlign: "center", // Center-align the card body text
+                    fontSize: "1.25rem", // Font size for card body text
+                  }}
+                >
+                  {" "}
+                  Chq. Bounce (Last 6M)
+                </MDBCardBody>
+              </MDBCard>
+            </div>
+            <div className="element_2">
+              <MDBCard
                 style={{
-                  textAlign: "center", // Center-align the card body text
-                  fontSize: "1.25rem", // Font size for card body text
+                  width: "200px",
+                  height: "5em", // Adjust the width of the card
+                  backgroundColor: "#f0f0f0",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
+                  margin: "10px", // Margin for spacing
+                  borderRadius: "8px", // Border radius for rounded corners
                 }}
               >
-                {" "}
-                Partner Based Score
-              </MDBCardBody>
-            </MDBCard>
+                <MDBCardHeader
+                  style={{
+                    textAlign: "center", // Center-align the heading
+                    fontSize: "1.5rem", // Increase font size for heading
+                    fontWeight: "bold", // Make the heading bold
+                  }}
+                >
+                  0
+                </MDBCardHeader>
+
+                <MDBCardBody
+                  style={{
+                    textAlign: "center", // Center-align the card body text
+                    fontSize: "1.25rem", // Font size for card body text
+                  }}
+                >
+                  {" "}
+                  Fixed Outflows:
+                </MDBCardBody>
+              </MDBCard>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="outerbox" style={{ display: "flex" }}>
+      {/* <div className="outerbox" style={{ display: "flex" }}>
         <div className="innertxtandbox">
           <div className="innertxt">
             <h6>Personal and Loan Details</h6>
@@ -392,10 +583,6 @@ const ExecutiveSummary = () => {
             <span className="values">{bureau_details?.maxdpd} days.</span>
             <br />
             <br />
-            {/* 6. Time since recently closed loan :
-            <span className="values">
-              {bureau_details?.recentlyclosedloandate} months.
-            </span> */}
             <br />
             <br />
           </div>
@@ -458,6 +645,97 @@ const ExecutiveSummary = () => {
             <br />
             <br />
           </div>
+        </div>
+      </div> */}
+
+      <div className="loan-heading">
+        <h6 className="calculator-title">Loan Calculator</h6>
+      </div>
+
+      <div className="loan-calculator">
+        <div className="loan-details">
+          <p>
+            Loan Requested :&nbsp;&nbsp;&nbsp;&nbsp;
+            <span className="amount">{bureau_details?.Loan_amount}</span>
+          </p>
+          <p>
+            Loan considered :&nbsp;&nbsp;&nbsp;
+            <span className="loan-considered">
+              {bureau_details?.Loan_amount}
+            </span>
+          </p>
+          <p>
+            Tenure (months) :
+            <input type="number" id="monthCalculator" className="input-field" />
+          </p>
+          <p>
+            Rate of interest(%) :
+            <input type="number" id="roiCalculator" className="input-field" />
+          </p>
+          <button className="calculate-button" onClick={() => Calculate()}>
+            Calculate
+          </button>
+        </div>
+        <div className="bureau-details">
+          <table>
+            <tr>
+              <td className="detail-label" style={{ textAlign: "left" }}>
+                Existing EMIs (₹)
+              </td>
+              <td className="detail-value" style={{ textAlign: "right" }}>
+                &nbsp;&nbsp;&nbsp;&nbsp;{bureau_details?.totalemi}
+              </td>
+            </tr>
+            <tr>
+              <td className="detail-label" style={{ textAlign: "left" }}>
+                FOIR, basis stated Income
+              </td>
+              <td className="detail-value" style={{ textAlign: "right" }}>
+                &nbsp;&nbsp;&nbsp;&nbsp;{bureau_details?.foirstated}
+              </td>
+            </tr>
+            <tr>
+              <td className="detail-label" style={{ textAlign: "left" }}>
+                FOIR, basis Inflows
+              </td>
+              <td className="detail-value" style={{ textAlign: "right" }}>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {bureau_details?.averagemonthlycreditratio}
+              </td>
+            </tr>
+            <tr>
+              <td className="summary-label" style={{ textAlign: "left" }}>
+                New EMIs (₹)
+              </td>
+              <td className="summary-value" style={{ textAlign: "right" }}>
+                &nbsp;&nbsp;&nbsp;&nbsp;{total}
+              </td>
+            </tr>
+            <tr>
+              <td className="summary-label" style={{ textAlign: "left" }}>
+                Total EMIs (₹)
+              </td>
+              <td className="summary-value" style={{ textAlign: "right" }}>
+                &nbsp;&nbsp;&nbsp;&nbsp;{totalemi}
+              </td>
+            </tr>
+            <tr>
+              <td className="summary-label" style={{ textAlign: "left" }}>
+                New FOIR, basis stated Income
+              </td>
+              <td className="summary-value" style={{ textAlign: "right" }}>
+                &nbsp;&nbsp;&nbsp;&nbsp;{foirIncome}
+              </td>
+            </tr>
+            <tr>
+              <td className="summary-label" style={{ textAlign: "left" }}>
+                New FOIR, basis Inflows
+              </td>
+              <td className="summary-value" style={{ textAlign: "right" }}>
+                &nbsp;&nbsp;&nbsp;&nbsp;{foirInflow}
+              </td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>

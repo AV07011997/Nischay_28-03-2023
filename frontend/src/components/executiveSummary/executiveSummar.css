@@ -11,3 +11,97 @@
 .values {
   font-weight: 900;
 }
+/* Styling for the loan calculator container */
+.loan-calculator {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  margin-bottom: 30px;
+}
+
+.loan-calculator td {
+  padding: 5px;
+}
+/* Styling for the calculator title (heading) */
+.calculator-title {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #333;
+  text-align: center;
+}
+
+/* Styling for the left section containing loan details and inputs */
+.loan-details {
+  flex: 1;
+  width: 50%;
+  padding-right: 20px;
+  margin-right: 20px;
+  border-right: 1px solid #ccc;
+}
+
+/* Styling for the input fields */
+.input-field {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Styling for the calculate button */
+.calculate-button {
+  display: inline-block;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Styling for the right section containing bureau details */
+.bureau-details {
+  flex: 1;
+  width: 50%;
+  padding-left: 20px;
+}
+
+/* Styling for detail labels */
+.detail-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Styling for summary labels */
+.summary-label {
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 5px;
+}
+
+/* Styling for detail and summary values */
+.detail-value,
+.summary-value {
+  color: #555;
+}
+.element_piechart {
+  width: 166px;
+  height: 100px;
+  margin-left: 130px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.element_2 {
+  margin-top: 5px;
+  margin-left: 49px;
+  width: 249px;
+}
