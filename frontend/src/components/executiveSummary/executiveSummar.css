@@ -105,3 +105,12 @@
   margin-left: 49px;
   width: 249px;
 }
+
+.highlightText {
+  color: green;
+  font-weight: bold;
+}
+.height_cards {
+  height: 11%;
+  vertical-align: middle;
+}

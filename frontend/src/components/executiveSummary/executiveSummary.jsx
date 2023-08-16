@@ -29,7 +29,7 @@ const ExecutiveSummary = () => {
     });
   }, []);
   const Calculate = () => {
-    const amount = 100000;
+    const amount = document.getElementById("loanAmount")?.value;
 
     const roi1 = document.getElementById("roiCalculator")?.value;
 
@@ -523,6 +523,214 @@ const ExecutiveSummary = () => {
               </MDBCard>
             </div>
           </div>
+          <div>
+            <MDBCard
+              style={{
+                width: "100%",
+                backgroundColor: "#f0f0f0",
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                margin: "10px",
+                borderRadius: "8px",
+              }}
+              className="height_cards"
+            >
+              <MDBCardBody
+                style={{
+                  textAlign: "center",
+                  fontSize: "125%",
+                  color: "green",
+                  fontWeight: "bold",
+                }}
+              >
+                {" "}
+                {bureau_details?.Name}{" "}
+              </MDBCardBody>
+            </MDBCard>
+            <MDBCard
+              style={{
+                width: "100%",
+                backgroundColor: "#f0f0f0",
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                margin: "10px",
+                borderRadius: "8px",
+              }}
+              className="height_cards"
+            >
+              <MDBCardBody
+                style={{
+                  textAlign: "center",
+                  fontSize: "125%",
+                  color: "green",
+                  fontWeight: "bold",
+                }}
+              >
+                {" "}
+                45 Years{" "}
+              </MDBCardBody>
+            </MDBCard>
+            <MDBCard
+              style={{
+                width: "100%",
+                backgroundColor: "#f0f0f0",
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                margin: "10px",
+                borderRadius: "8px",
+              }}
+              className="height_cards"
+            >
+              <MDBCardBody
+                style={{
+                  textAlign: "center",
+                  fontSize: "125%",
+                  color: "green",
+                  fontWeight: "bold",
+                }}
+                className="height_cards"
+              >
+                {" "}
+                {bureau_details?.Location}.{" "}
+              </MDBCardBody>
+            </MDBCard>
+            <MDBCard
+              style={{
+                width: "100%",
+                backgroundColor: "#f0f0f0",
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                margin: "10px",
+                borderRadius: "8px",
+              }}
+              className="height_cards"
+            >
+              <MDBCardBody
+                style={{
+                  textAlign: "center",
+                  fontSize: "125%",
+                  color: "green",
+                  fontWeight: "bold",
+                }}
+                className="height_cards"
+              >
+                {" "}
+                {bureau_details?.Purpose}&nbsp;&nbsp;
+                {bureau_details?.Loan_amount}
+              </MDBCardBody>
+            </MDBCard>
+            <MDBCard
+              style={{
+                width: "100%",
+                backgroundColor: "#f0f0f0",
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                margin: "10px",
+                borderRadius: "8px",
+              }}
+              className="height_cards"
+            >
+              <MDBCardBody
+                style={{
+                  textAlign: "center",
+                  fontSize: "125%",
+                  color: "green",
+                  fontWeight: "bold",
+                }}
+              >
+                {" "}
+                Individual/Joint applicant of the loan.
+              </MDBCardBody>
+            </MDBCard>
+            <MDBCard
+              style={{
+                width: "100%",
+                backgroundColor: "#f0f0f0",
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                margin: "10px",
+                borderRadius: "8px",
+              }}
+              className="height_cards"
+            >
+              <MDBCardBody
+                style={{
+                  textAlign: "center",
+                  fontSize: "125%",
+                  color: "green",
+                  fontWeight: "bold",
+                }}
+              >
+                {" "}
+                Employment :
+              </MDBCardBody>
+            </MDBCard>
+            <MDBCard
+              style={{
+                width: "100%",
+                backgroundColor: "#f0f0f0",
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                margin: "10px",
+                borderRadius: "8px",
+              }}
+              className="height_cards"
+            >
+              <MDBCardBody
+                style={{
+                  textAlign: "center",
+                  fontSize: "125%",
+                  color: "green",
+                  fontWeight: "bold",
+                }}
+              >
+                {" "}
+                Earns : ₹ 50,000 (stated)
+              </MDBCardBody>
+            </MDBCard>
+            {/* <div
+              style={{
+                background: "#f0f0f0",
+                borderRadius: "3%",
+                height: "91%",
+                marginTop: "3%",
+                fontSize: "123%",
+              }}
+              className="innerbox"
+            >
+              <span
+                className="highlightText"
+                style={{ textAlign: "center", fontSize: "125%" }}
+              >
+                {bureau_details?.Name}{" "}
+              </span>
+              <br></br>
+              <br></br>
+              <span className="values"> Age :</span>{" "}
+              <span className="highlightText">45 years</span> <br></br>{" "}
+              <span className="values">Address :</span>
+              <span className="highlightText">
+                {" "}
+                {bureau_details?.Location}.{" "}
+              </span>
+              <br />
+              <br />
+              <span className="highlightText">
+                {bureau_details?.Purpose}
+              </span>{" "}
+              <span className="highlightText">
+                {bureau_details?.Loan_amount}
+              </span>
+              <br />
+              <br />
+              <span className="highlightText">
+                {" "}
+                Individual/Joint applicant of the loan.
+              </span>
+              <br />
+              <br />
+              <span className="values">Employment :</span>
+              <span className="values">{bureau_details?.Salaried} </span>
+              <br />
+              <br />
+              <span className="values">Earns :</span>{" "}
+              <span className="highlightText"> ₹ 50,000</span>
+              <span className="values">{bureau_details?.Salary} (Stated)</span>
+            </div> */}
+          </div>
         </div>
       </div>
 
@@ -663,6 +871,10 @@ const ExecutiveSummary = () => {
             <span className="loan-considered">
               {bureau_details?.Loan_amount}
             </span>
+          </p>
+          <p>
+            Loan Amount :&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="number" id="loanAmount" className="input-field" />
           </p>
           <p>
             Tenure (months) :
