@@ -119,8 +119,14 @@
   vertical-align: middle;
 }
 .top_cards_width {
-  width: 120%;
+  width: 90%;
+  background: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin-left: 104px;
+  margin-top: 64px;
 }
+
 .margin_top_1st_div {
-  margin-top: 17%;
+  margin-top: 24%;
 }

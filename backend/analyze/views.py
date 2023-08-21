@@ -4179,6 +4179,7 @@ def executive_summary(request):
         bureau_details["Purpose"] = lmsdetails["LOAN_PURPOSE"][0]
         bureau_details["Loan_amount"] = format_currency(
             lmsdetails["LOAN_AMOUNT"][0], 'INR', locale='en_IN')
+
         bureau_details["Tenure"] = lmsdetails["TENURE"][0]
 
     except:
@@ -4258,5 +4259,50 @@ def executive_summary(request):
 
     # json_records = bureau_details.to_json(orient='records')
     # data = json.loads(json_records)
-    # pydict = json.dumps([data])
+    # pydict = json.dumps([data])\
+
+    # bureau_details["totalpos"] = format_currency(
+    #     bureau_details["totalpos"][0], 'INR', locale='en_IN')
+    # formatted_totalpos = '₹' + '{:,.2f}'.format(bureau_details['totalpos']).rstrip('0').rstrip('.')
+    #
+    # # formatted_closingbal = '₹' + '{:,.2f}'.format(bureau_details['closingbalance']).rstrip('0').rstrip('.')
+    # # Format closingbalance in Indian Rupees
+    # formatted_closingbalance = '₹' + '{:,.2f}'.format(float(bureau_details['closingbalance'])).rstrip('0').rstrip('.')
+
+
+
+    # # Format last3month in Indian Rupees
+    # last3month_value = float(bureau_details['last3month'])
+    # formatted_last3month = '₹{:,.2f}'.format(last3month_value)
+    # # Update the data dictionary with the formatted value
+    # bureau_details['last3month'] = formatted_last3month
+
+    # Format last3month in Indian Rupees
+    last3month_value = bureau_details['last3month']
+    formatted_last3month = format_currency(last3month_value, 'INR', locale='en_IN')
+
+    # Remove trailing zeroes after decimal
+    formatted_last3month = formatted_last3month.rstrip('0').rstrip(
+        '.') if '.' in formatted_last3month else formatted_last3month
+
+    # Update the bureau_details dictionary with the formatted value
+    bureau_details['last3month'] = formatted_last3month
+
+    # Format totalpos in Indian Rupees
+    totalpos_value = bureau_details['totalpos']
+    formatted_totalpos = format_currency(totalpos_value, 'INR', locale='en_IN')
+
+    # Remove trailing zeroes after decimal
+    formatted_totalpos = formatted_totalpos.rstrip('0').rstrip('.') if '.' in formatted_totalpos else formatted_totalpos
+
+    # Update the bureau_details dictionary with the formatted value
+    bureau_details['totalpos'] = formatted_totalpos
+
+    loan_amount = bureau_details['Loan_amount']
+    loan_amount = loan_amount.replace('.00', '')  # Removing trailing ".00"
+    bureau_details['Loan_amount'] = loan_amount
+
+
+
+
     return HttpResponse(json.dumps(bureau_details))
