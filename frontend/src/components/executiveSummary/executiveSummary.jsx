@@ -72,6 +72,12 @@ const ExecutiveSummary = () => {
     setFoirInflow(newFoirInflow);
   };
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 150, // Replace with the desired pixel height
+      behavior: "smooth", // This enables smooth scrolling
+    });
+  });
   return (
     <div>
       <NavBar></NavBar>
@@ -87,7 +93,7 @@ const ExecutiveSummary = () => {
               >
                 <div
                   style={{
-                    marginLeft: "22%",
+                    marginLeft: "10%",
                     marginRight: "-9%",
                     marginBottom: "4%",
                   }}
@@ -557,11 +563,7 @@ const ExecutiveSummary = () => {
                 <br></br>
                 <br></br>
                 <span className="values">Applicant Type : </span>
-                <br></br>
-                <span className="highlightText">
-                  {" "}
-                  Individual applicant of the loan.
-                </span>
+                <span className="highlightText"> Individual</span>
                 <br></br>
                 <br></br>
                 <span className="values">Employment :</span>
