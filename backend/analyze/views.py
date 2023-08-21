@@ -4181,6 +4181,7 @@ def executive_summary(request):
             lmsdetails["LOAN_AMOUNT"][0], 'INR', locale='en_IN')
 
         bureau_details["Tenure"] = lmsdetails["TENURE"][0]
+        bureau_details["Salary"] = lmsdetails["Salary"][0]
 
     except:
         pass
@@ -4301,7 +4302,23 @@ def executive_summary(request):
     loan_amount = bureau_details['Loan_amount']
     loan_amount = loan_amount.replace('.00', '')  # Removing trailing ".00"
     bureau_details['Loan_amount'] = loan_amount
+    if int(bureau_details['Salary']) > 0 :
+        bureau_details['Employment']='Salaried'
+    else :
+        bureau_details['Employment']='Self Employed'
 
+    salary_value = bureau_details['Salary']
+    formatted_salary = format_currency(salary_value, 'INR', locale='en_IN')
+
+    # Remove trailing zeroes after decimal
+    formatted_salary = formatted_salary.rstrip('0').rstrip('.') if '.' in formatted_salary else formatted_salary
+
+    bureau_details['Salary'] = formatted_salary
+
+    bureau_details['Salary']=bureau_details['Salary'].replace("₹","₹ ")
+    bureau_details['totalpos']=bureau_details['totalpos'].replace("₹","₹ ")
+    bureau_details['last3month']=bureau_details['last3month'].replace("₹","₹ ")
+    bureau_details['Loan_amount']=bureau_details['Loan_amount'].replace("₹","₹ ")
 
 
 

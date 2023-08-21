@@ -93,7 +93,7 @@ const ExecutiveSummary = () => {
               >
                 <div
                   style={{
-                    marginLeft: "10%",
+                    marginLeft: "12%",
                     marginRight: "-9%",
                     marginBottom: "4%",
                   }}
@@ -518,7 +518,7 @@ const ExecutiveSummary = () => {
                       }}
                     >
                       {" "}
-                      Fixed Outflows
+                      Fixed Inflows
                     </MDBCardBody>
                   </MDBCard>
                 </div>
@@ -566,15 +566,14 @@ const ExecutiveSummary = () => {
                 <span className="highlightText"> Individual</span>
                 <br></br>
                 <br></br>
-                <span className="values">Employment :</span>
-                <span className="values">{bureau_details?.Salaried} </span>
+                <span className="values">Employment : </span>
+                <span className="highlightText">
+                  {bureau_details?.Employment}{" "}
+                </span>
                 <br></br>
                 <br></br>
                 <span className="values">Salary :</span>{" "}
-                <span className="highlightText"> ₹ 50,000</span>
-                <span className="values">
-                  {bureau_details?.Salary} (Stated)
-                </span>
+                <span className="highlightText">{bureau_details?.Salary}</span>
               </div>
             </div>
           </div>
