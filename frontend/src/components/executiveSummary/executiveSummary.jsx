@@ -75,53 +75,68 @@ const ExecutiveSummary = () => {
       <NavBar></NavBar>
       <div>
         <div style={{ display: "flex", marginTop: "3em" }}>
-          <div style={{ display: "grid", marginLeft: "2em" }}>
-            <CircularProgressbar
-              value={650}
-              circleRatio={0.5}
-              strokeWidth={15}
-              minValue={0}
-              maxValue={900}
-              text={
-                bureau_details?.creditscore === "No Credit Score"
-                  ? 0
-                  : bureau_details?.creditscore
-              }
-              styles={{
-                root: {
-                  width: "12em",
-                  height: "12em",
-                  transform: "rotate(0.75turn)",
-                },
-                path: { stroke: "green", strokeLinecap: "butt" },
-                trail: { stroke: "#C4C4C4", strokeLinecap: "butt" },
-                trailColor: "grey",
-                backgroundColor: "red",
-              }}
-            />
-            <span style={{ marginTop: "-5em", textAlign: "center" }}>
-              {" "}
-              Bureau Score{" "}
-            </span>
-          </div>
           <div
             style={{
               width: "100%",
               display: "flex",
               justifyContent: "space-around",
-              marginLeft: "4em",
+              marginLeft: "10%",
+              marginRight: "10%",
             }}
           >
+            <div style={{ display: "grid" }}>
+              <CircularProgressbar
+                value={650}
+                circleRatio={0.5}
+                strokeWidth={15}
+                minValue={0}
+                maxValue={900}
+                text={
+                  bureau_details?.creditscore === "No Credit Score"
+                    ? 0
+                    : bureau_details?.creditscore
+                }
+                styles={{
+                  root: {
+                    width: "12em",
+                    height: "12em",
+                    transform: "rotate(0.75turn)",
+                  },
+                  path: { stroke: "green", strokeLinecap: "butt" },
+                  trail: { stroke: "#C4C4C4", strokeLinecap: "butt" },
+                  trailColor: "grey",
+                  backgroundColor: "red",
+                  text: {
+                    // Rotate the text within the CircularProgressbar
+                    transform: "rotate(90deg)",
+                    transformOrigin: "center",
+                  },
+                }}
+              />
+              <br></br>
+              <span
+                style={{
+                  marginTop: "-5em",
+                  textAlign: "center",
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                }}
+              >
+                {" "}
+                Bureau Score{" "}
+              </span>
+            </div>
             <div>
               <MDBCard
                 style={{
-                  width: "250px",
+                  // width: "250px",
                   height: "5em", // Adjust the width of the card
                   backgroundColor: "#f0f0f0",
                   boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
                   margin: "10px", // Margin for spacing
                   borderRadius: "8px", // Border radius for rounded corners
                 }}
+                className="top_cards_width"
               >
                 <MDBCardHeader
                   style={{
@@ -147,13 +162,14 @@ const ExecutiveSummary = () => {
             <div>
               <MDBCard
                 style={{
-                  width: "250px",
+                  // width: "250px",
                   height: "5em", // Adjust the width of the card
                   backgroundColor: "#f0f0f0",
                   boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
                   margin: "10px", // Margin for spacing
                   borderRadius: "8px", // Border radius for rounded corners
                 }}
+                className="top_cards_width"
               >
                 <MDBCardHeader
                   style={{
@@ -180,13 +196,14 @@ const ExecutiveSummary = () => {
             <div>
               <MDBCard
                 style={{
-                  width: "250px",
+                  // width: "250px",
                   height: "5em", // Adjust the width of the card
                   backgroundColor: "#f0f0f0",
                   boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
                   margin: "10px", // Margin for spacing
                   borderRadius: "8px", // Border radius for rounded corners
                 }}
+                className="top_cards_width"
               >
                 <MDBCardHeader
                   style={{
@@ -213,13 +230,14 @@ const ExecutiveSummary = () => {
             <div>
               <MDBCard
                 style={{
-                  width: "250px",
+                  // width: "250px",
                   height: "5em", // Adjust the width of the card
                   backgroundColor: "#f0f0f0",
                   boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
                   margin: "10px", // Margin for spacing
                   borderRadius: "8px", // Border radius for rounded corners
                 }}
+                className="top_cards_width"
               >
                 <MDBCardHeader
                   style={{
@@ -245,8 +263,14 @@ const ExecutiveSummary = () => {
           </div>
         </div>
 
-        <div style={{ display: "flex" }}>
-          <div>
+        <div
+          style={{
+            display: "flex",
+            marginTop: "-3%",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ marginLeft: "2%" }}>
             {" "}
             <div>
               <MDBCard
@@ -280,7 +304,7 @@ const ExecutiveSummary = () => {
                 </MDBCardBody>
               </MDBCard>
             </div>
-            <div style={{ marginTop: "2em" }}>
+            <div className="margin_top_1st_div">
               <MDBCard
                 style={{
                   width: "200px",
@@ -312,7 +336,7 @@ const ExecutiveSummary = () => {
                 </MDBCardBody>
               </MDBCard>
             </div>
-            <div style={{ marginTop: "2em" }}>
+            <div className="margin_top_1st_div">
               <MDBCard
                 style={{
                   width: "200px",
@@ -344,7 +368,7 @@ const ExecutiveSummary = () => {
                 </MDBCardBody>
               </MDBCard>
             </div>
-            <div style={{ marginTop: "2em" }}>
+            <div className="margin_top_1st_div">
               <MDBCard
                 style={{
                   width: "200px",
@@ -384,16 +408,19 @@ const ExecutiveSummary = () => {
               display: "flex",
               flexWrap: "wrap",
               width: "64em",
-              height: "363px",
+              height: "402px",
               marginTop: "10px",
-              marginLeft: "4em",
+              marginLeft: "0",
             }}
           >
             <div className="element_piechart">
-              <RatioPieChart ratio={bureau_details?.dtocratio}></RatioPieChart>
+              <RatioPieChart
+                // style={{ strokeWidth: "15px" }}
+                ratio={bureau_details?.dtocratio}
+              ></RatioPieChart>
               <span
                 style={{
-                  marginLeft: "-128px",
+                  marginLeft: "-101px",
                   fontSize: "18px",
                   fontWeight: "bolder",
                 }}
@@ -405,7 +432,7 @@ const ExecutiveSummary = () => {
               <RatioPieChart ratio={0.6}></RatioPieChart>
               <span
                 style={{
-                  marginLeft: "-128px",
+                  marginLeft: "-101px",
                   fontSize: "18px",
                   fontWeight: "bolder",
                 }}
@@ -417,7 +444,7 @@ const ExecutiveSummary = () => {
               <RatioPieChart ratio={2}></RatioPieChart>
               <span
                 style={{
-                  marginLeft: "-128px",
+                  marginLeft: "-101px",
                   fontSize: "18px",
                   fontWeight: "bolder",
                 }}
@@ -518,218 +545,58 @@ const ExecutiveSummary = () => {
                   }}
                 >
                   {" "}
-                  Fixed Outflows:
+                  Fixed Outflows
                 </MDBCardBody>
               </MDBCard>
             </div>
           </div>
-          <div>
-            <MDBCard
-              style={{
-                width: "100%",
-                backgroundColor: "#f0f0f0",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                margin: "10px",
-                borderRadius: "8px",
-              }}
-              className="height_cards"
+          <div
+            style={{
+              background: "#f0f0f0",
+              borderRadius: "3%",
+              marginTop: "9px",
+              marginRight: "1%",
+              fontSize: "123%",
+              padding: "1%",
+              // textAlign: "centre",
+            }}
+          >
+            <span
+              className="highlightText"
+              style={{ textAlign: "center", fontSize: "125%" }}
             >
-              <MDBCardBody
-                style={{
-                  textAlign: "center",
-                  fontSize: "125%",
-                  color: "green",
-                  fontWeight: "bold",
-                }}
-              >
-                {" "}
-                {bureau_details?.Name}{" "}
-              </MDBCardBody>
-            </MDBCard>
-            <MDBCard
-              style={{
-                width: "100%",
-                backgroundColor: "#f0f0f0",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                margin: "10px",
-                borderRadius: "8px",
-              }}
-              className="height_cards"
-            >
-              <MDBCardBody
-                style={{
-                  textAlign: "center",
-                  fontSize: "125%",
-                  color: "green",
-                  fontWeight: "bold",
-                }}
-              >
-                {" "}
-                45 Years{" "}
-              </MDBCardBody>
-            </MDBCard>
-            <MDBCard
-              style={{
-                width: "100%",
-                backgroundColor: "#f0f0f0",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                margin: "10px",
-                borderRadius: "8px",
-              }}
-              className="height_cards"
-            >
-              <MDBCardBody
-                style={{
-                  textAlign: "center",
-                  fontSize: "125%",
-                  color: "green",
-                  fontWeight: "bold",
-                }}
-                className="height_cards"
-              >
-                {" "}
-                {bureau_details?.Location}.{" "}
-              </MDBCardBody>
-            </MDBCard>
-            <MDBCard
-              style={{
-                width: "100%",
-                backgroundColor: "#f0f0f0",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                margin: "10px",
-                borderRadius: "8px",
-              }}
-              className="height_cards"
-            >
-              <MDBCardBody
-                style={{
-                  textAlign: "center",
-                  fontSize: "125%",
-                  color: "green",
-                  fontWeight: "bold",
-                }}
-                className="height_cards"
-              >
-                {" "}
-                {bureau_details?.Purpose}&nbsp;&nbsp;
-                {bureau_details?.Loan_amount}
-              </MDBCardBody>
-            </MDBCard>
-            <MDBCard
-              style={{
-                width: "100%",
-                backgroundColor: "#f0f0f0",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                margin: "10px",
-                borderRadius: "8px",
-              }}
-              className="height_cards"
-            >
-              <MDBCardBody
-                style={{
-                  textAlign: "center",
-                  fontSize: "125%",
-                  color: "green",
-                  fontWeight: "bold",
-                }}
-              >
-                {" "}
-                Individual/Joint applicant of the loan.
-              </MDBCardBody>
-            </MDBCard>
-            <MDBCard
-              style={{
-                width: "100%",
-                backgroundColor: "#f0f0f0",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                margin: "10px",
-                borderRadius: "8px",
-              }}
-              className="height_cards"
-            >
-              <MDBCardBody
-                style={{
-                  textAlign: "center",
-                  fontSize: "125%",
-                  color: "green",
-                  fontWeight: "bold",
-                }}
-              >
-                {" "}
-                Employment :
-              </MDBCardBody>
-            </MDBCard>
-            <MDBCard
-              style={{
-                width: "100%",
-                backgroundColor: "#f0f0f0",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                margin: "10px",
-                borderRadius: "8px",
-              }}
-              className="height_cards"
-            >
-              <MDBCardBody
-                style={{
-                  textAlign: "center",
-                  fontSize: "125%",
-                  color: "green",
-                  fontWeight: "bold",
-                }}
-              >
-                {" "}
-                Earns : ₹ 50,000 (stated)
-              </MDBCardBody>
-            </MDBCard>
-            {/* <div
-              style={{
-                background: "#f0f0f0",
-                borderRadius: "3%",
-                height: "91%",
-                marginTop: "3%",
-                fontSize: "123%",
-              }}
-              className="innerbox"
-            >
-              <span
-                className="highlightText"
-                style={{ textAlign: "center", fontSize: "125%" }}
-              >
-                {bureau_details?.Name}{" "}
-              </span>
-              <br></br>
-              <br></br>
-              <span className="values"> Age :</span>{" "}
-              <span className="highlightText">45 years</span> <br></br>{" "}
-              <span className="values">Address :</span>
-              <span className="highlightText">
-                {" "}
-                {bureau_details?.Location}.{" "}
-              </span>
-              <br />
-              <br />
-              <span className="highlightText">
-                {bureau_details?.Purpose}
-              </span>{" "}
-              <span className="highlightText">
-                {bureau_details?.Loan_amount}
-              </span>
-              <br />
-              <br />
-              <span className="highlightText">
-                {" "}
-                Individual/Joint applicant of the loan.
-              </span>
-              <br />
-              <br />
-              <span className="values">Employment :</span>
-              <span className="values">{bureau_details?.Salaried} </span>
-              <br />
-              <br />
-              <span className="values">Earns :</span>{" "}
-              <span className="highlightText"> ₹ 50,000</span>
-              <span className="values">{bureau_details?.Salary} (Stated)</span>
-            </div> */}
+              {bureau_details?.Name}{" "}
+            </span>
+            <br></br>
+            <br></br>
+            <span className="values"> Age :</span>
+            <span className="highlightText">45 years</span> <br></br>
+            <br></br>
+            <span className="values">Address :</span>
+            <span className="highlightText"> {bureau_details?.Location}. </span>
+            <br></br>
+            <br></br>
+            <span className="values">Requested Loan Type :</span>
+            <span className="highlightText">{bureau_details?.Purpose}</span>
+            <br></br>
+            <br></br>
+            <span className="values">Requested Loan Amount :</span>
+            <span className="highlightText">{bureau_details?.Loan_amount}</span>
+            <br></br>
+            <br></br>
+            <span className="highlightText">
+              {" "}
+              Individual applicant of the loan.
+            </span>
+            <br></br>
+            <br></br>
+            <span className="values">Employment :</span>
+            <span className="values">{bureau_details?.Salaried} </span>
+            <br></br>
+            <br></br>
+            <span className="values">Salary :</span>{" "}
+            <span className="highlightText"> ₹ 50,000</span>
+            <span className="values">{bureau_details?.Salary} (Stated)</span>
           </div>
         </div>
       </div>
@@ -856,35 +723,34 @@ const ExecutiveSummary = () => {
         </div>
       </div> */}
 
-      <div className="loan-heading">
+      <div style={{ marginTop: "3%" }} className="loan-heading">
         <h6 className="calculator-title">Loan Calculator</h6>
       </div>
 
       <div className="loan-calculator">
         <div className="loan-details">
           <p>
-            Loan Requested :&nbsp;&nbsp;&nbsp;&nbsp;
-            <span className="amount">{bureau_details?.Loan_amount}</span>
+            Loan Requested (₹)&nbsp;&nbsp;: 1,00,000&nbsp;&nbsp;&nbsp;&nbsp;
           </p>
           <p>
-            Loan considered :&nbsp;&nbsp;&nbsp;
-            <span className="loan-considered">
-              {bureau_details?.Loan_amount}
-            </span>
-          </p>
-          <p>
-            Loan Amount :&nbsp;&nbsp;&nbsp;&nbsp;
+            Loan Considered (₹)&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;
             <input type="number" id="loanAmount" className="input-field" />
           </p>
           <p>
             Tenure (months) :
             <input type="number" id="monthCalculator" className="input-field" />
           </p>
+
           <p>
             Rate of interest(%) :
             <input type="number" id="roiCalculator" className="input-field" />
           </p>
-          <button className="calculate-button" onClick={() => Calculate()}>
+          <br></br>
+          <button
+            style={{ fontWeight: "bold" }}
+            className="calculate-button"
+            onClick={() => Calculate()}
+          >
             Calculate
           </button>
         </div>
@@ -919,7 +785,7 @@ const ExecutiveSummary = () => {
               <td className="summary-label" style={{ textAlign: "left" }}>
                 New EMIs (₹)
               </td>
-              <td className="summary-value" style={{ textAlign: "right" }}>
+              <td className="summary-label" style={{ textAlign: "right" }}>
                 &nbsp;&nbsp;&nbsp;&nbsp;{total}
               </td>
             </tr>
@@ -927,7 +793,7 @@ const ExecutiveSummary = () => {
               <td className="summary-label" style={{ textAlign: "left" }}>
                 Total EMIs (₹)
               </td>
-              <td className="summary-value" style={{ textAlign: "right" }}>
+              <td className="summary-label" style={{ textAlign: "right" }}>
                 &nbsp;&nbsp;&nbsp;&nbsp;{totalemi}
               </td>
             </tr>
@@ -935,7 +801,7 @@ const ExecutiveSummary = () => {
               <td className="summary-label" style={{ textAlign: "left" }}>
                 New FOIR, basis stated Income
               </td>
-              <td className="summary-value" style={{ textAlign: "right" }}>
+              <td className="summary-label" style={{ textAlign: "right" }}>
                 &nbsp;&nbsp;&nbsp;&nbsp;{foirIncome}
               </td>
             </tr>
@@ -943,11 +809,59 @@ const ExecutiveSummary = () => {
               <td className="summary-label" style={{ textAlign: "left" }}>
                 New FOIR, basis Inflows
               </td>
-              <td className="summary-value" style={{ textAlign: "right" }}>
+              <td className="summary-label" style={{ textAlign: "right" }}>
                 &nbsp;&nbsp;&nbsp;&nbsp;{foirInflow}
               </td>
             </tr>
           </table>
+        </div>
+        <div className="recommendation_box">
+          <table>
+            <tr>
+              <td className="detail-label" style={{ textAlign: "left" }}>
+                Recommendation :
+              </td>
+              <td className="summary-value" style={{ textAlign: "right" }}>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <select>
+                  <option value="">Yes</option>
+
+                  <option value="option2">No</option>
+                  <option value="option3">Refer</option>
+                </select>
+              </td>
+            </tr>
+          </table>
+          <tr>
+            <td className="detail-label">Notes :</td>
+          </tr>
+          <br></br>
+
+          <tr>
+            <td>
+              <textarea
+                style={{ width: "200%" }}
+                placeholder="Notes"
+                rows={4}
+              ></textarea>
+            </td>
+          </tr>
+
+          <button
+            style={{ width: "30%", borderRadius: "30px" }}
+            className="calculate-button"
+          >
+            Save
+          </button>
+          <br></br>
+          <br></br>
+
+          <button
+            style={{ width: "30%", borderRadius: "30px" }}
+            className="calculate-button"
+          >
+            Print
+          </button>
         </div>
       </div>
     </div>

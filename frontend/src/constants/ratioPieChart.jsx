@@ -14,7 +14,7 @@ const RatioPieChart = ({ ratio }) => {
     <div style={{ width: "100px", height: "130px", marginLeft: "-17px" }}>
       <PieChart
         data={data}
-        lineWidth={20}
+        lineWidth={25}
         labelPosition={0}
         labelStyle={{
           fontSize: "20px",
