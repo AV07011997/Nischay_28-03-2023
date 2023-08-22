@@ -414,7 +414,9 @@ const ExecutiveSummary = () => {
                   </span>
                 </div>
                 <div className="element_piechart">
-                  <RatioPieChart ratio={2}></RatioPieChart>
+                  <RatioPieChart
+                    ratio={bureau_details?.cashcreditratio}
+                  ></RatioPieChart>
                   <span
                     style={{
                       marginLeft: "-101px",
@@ -422,7 +424,7 @@ const ExecutiveSummary = () => {
                       fontWeight: "bolder",
                     }}
                   >
-                    Cash Credit Ratio : 2
+                    Cash Credit Ratio : {bureau_details?.cashcreditratio}
                   </span>
                 </div>
 

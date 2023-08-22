@@ -4270,8 +4270,6 @@ def executive_summary(request):
     # # Format closingbalance in Indian Rupees
     # formatted_closingbalance = '₹' + '{:,.2f}'.format(float(bureau_details['closingbalance'])).rstrip('0').rstrip('.')
 
-
-
     # # Format last3month in Indian Rupees
     # last3month_value = float(bureau_details['last3month'])
     # formatted_last3month = '₹{:,.2f}'.format(last3month_value)
@@ -4280,7 +4278,8 @@ def executive_summary(request):
 
     # Format last3month in Indian Rupees
     last3month_value = bureau_details['last3month']
-    formatted_last3month = format_currency(last3month_value, 'INR', locale='en_IN')
+    formatted_last3month = format_currency(
+        last3month_value, 'INR', locale='en_IN')
 
     # Remove trailing zeroes after decimal
     formatted_last3month = formatted_last3month.rstrip('0').rstrip(
@@ -4294,7 +4293,8 @@ def executive_summary(request):
     formatted_totalpos = format_currency(totalpos_value, 'INR', locale='en_IN')
 
     # Remove trailing zeroes after decimal
-    formatted_totalpos = formatted_totalpos.rstrip('0').rstrip('.') if '.' in formatted_totalpos else formatted_totalpos
+    formatted_totalpos = formatted_totalpos.rstrip('0').rstrip(
+        '.') if '.' in formatted_totalpos else formatted_totalpos
 
     # Update the bureau_details dictionary with the formatted value
     bureau_details['totalpos'] = formatted_totalpos
@@ -4302,24 +4302,31 @@ def executive_summary(request):
     loan_amount = bureau_details['Loan_amount']
     loan_amount = loan_amount.replace('.00', '')  # Removing trailing ".00"
     bureau_details['Loan_amount'] = loan_amount
-    if int(bureau_details['Salary']) > 0 :
-        bureau_details['Employment']='Salaried'
-    else :
-        bureau_details['Employment']='Self Employed'
+    try:
+        if int(bureau_details['Salary']) > 0:
+            bureau_details['Employment'] = 'Salaried'
+        else:
+            bureau_details['Employment'] = 'Self Employed'
+    except:
+        bureau_details['Employment'] = 'Self Employed'
+    try:
+        salary_value = bureau_details['Salary']
+        formatted_salary = format_currency(salary_value, 'INR', locale='en_IN')
+        # Remove trailing zeroes after decimal
+        formatted_salary = formatted_salary.rstrip('0').rstrip(
+            '.') if '.' in formatted_salary else formatted_salary
 
-    salary_value = bureau_details['Salary']
-    formatted_salary = format_currency(salary_value, 'INR', locale='en_IN')
+        bureau_details['Salary'] = formatted_salary
 
-    # Remove trailing zeroes after decimal
-    formatted_salary = formatted_salary.rstrip('0').rstrip('.') if '.' in formatted_salary else formatted_salary
+        bureau_details['Salary'] = bureau_details['Salary'].replace("₹", "₹ ")
 
-    bureau_details['Salary'] = formatted_salary
+    except:
+        bureau_details['Salary'] = ("₹ 0")
 
-    bureau_details['Salary']=bureau_details['Salary'].replace("₹","₹ ")
-    bureau_details['totalpos']=bureau_details['totalpos'].replace("₹","₹ ")
-    bureau_details['last3month']=bureau_details['last3month'].replace("₹","₹ ")
-    bureau_details['Loan_amount']=bureau_details['Loan_amount'].replace("₹","₹ ")
-
-
+    bureau_details['totalpos'] = bureau_details['totalpos'].replace("₹", "₹ ")
+    bureau_details['last3month'] = bureau_details['last3month'].replace(
+        "₹", "₹ ")
+    bureau_details['Loan_amount'] = bureau_details['Loan_amount'].replace(
+        "₹", "₹ ")
 
     return HttpResponse(json.dumps(bureau_details))
