@@ -4187,6 +4187,15 @@ def executive_summary(request):
         pass
 
     try:
+        bureau_automated.dropna(subset=['EMI_edited'], inplace=True)
+        bureau_automated['EMI_edited'].fillna(0, inplace=True)
+        bureau_automated['EMI_edited'] = bureau_automated['EMI_edited'].astype(
+            'float')
+        bureau_details['EMI_Sum'] = int(bureau_automated['EMI_edited'].sum())
+    except:
+        bureau_details['EMI_Sum'] = 0
+
+    try:
 
         from datetime import timedelta
         print(bank_bank)

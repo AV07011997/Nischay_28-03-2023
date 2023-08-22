@@ -748,7 +748,7 @@ const ExecutiveSummary = () => {
                     Existing EMIs (₹)
                   </td>
                   <td className="detail-value" style={{ textAlign: "right" }}>
-                    &nbsp;&nbsp;&nbsp;&nbsp;{bureau_details?.totalemi}
+                    &nbsp;&nbsp;&nbsp;&nbsp;{bureau_details?.EMI_Sum}
                   </td>
                 </tr>
                 <tr>
