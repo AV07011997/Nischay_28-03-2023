@@ -4339,3 +4339,32 @@ def executive_summary(request):
         "₹", "₹ ")
 
     return HttpResponse(json.dumps(bureau_details))
+
+def executivesummarysavefetch(request):
+    # notes=request.POST.getlist('data[notes]')
+    # loan_considered=request.POST.getlist('data[loanAmount]')
+    # tenure=request.POST.getlist('data[tenure]')
+    # roi=request.POST.getlist('data[roi]')
+    # newEmi=request.POST.getlist('data[newEmi]')
+    # totalEmi=request.POST.getlist('data[totalEmi]')
+    # foirStated=request.POST.getlist('data[foirStated]')
+    # foirInflow=request.POST.getlist('data[foirInflow]')
+    # recommendation=request.POST.getlist('data[recommendation]')
+    # notes=request.POST.getlist('data[notes]')
+    # deal_id=request.POST.getlist('data[deal_id]')
+    notes = [str(note) for note in request.POST.getlist('data[notes]')]
+    loan_considered = [str(loan) for loan in request.POST.getlist('data[loanAmount]')]
+    tenure = [str(ten) for ten in request.POST.getlist('data[tenure]')]
+    roi = [str(rate) for rate in request.POST.getlist('data[roi]')]
+    newEmi = [str(emi) for emi in request.POST.getlist('data[newEmi]')]
+    totalEmi = [str(emi) for emi in request.POST.getlist('data[totalEmi]')]
+    foirStated = [str(foir) for foir in request.POST.getlist('data[foirStated]')]
+    foirInflow = [str(foir) for foir in request.POST.getlist('data[foirInflow]')]
+    recommendation = [str(recommend) for recommend in request.POST.getlist('data[recommendation]')]
+    deal_id = [str(id) for id in request.POST.getlist('data[deal_id]')]
+
+    with connection.cursor() as cursor:
+        query = "INSERT INTO `a5_kit`.`mysite_executivesummarydata` (lead_id, loan_considered,tenure,roi,new_emi,total_emi,foir_stated,foir_inflow,recommendation,notes) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        with connection.cursor() as cursor:
+            cursor.execute(query, [deal_id,loan_considered,tenure,roi,newEmi,totalEmi,foirStated,foirInflow,recommendation,notes])
+    return HttpResponse("0")

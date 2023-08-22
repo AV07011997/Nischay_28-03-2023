@@ -26,10 +26,12 @@ const NavBar1 = (props) => {
       return;
     }
 
+    if (localStorage.getItem("SummarySaveState") === "false") {
+      toast.error("Editing done, please Save! or Refresh the page ");
+      return;
+    }
     if (item == "UPLOAD") {
       navigate(`/upload/${navigatevalue}/${navigatenamevalue}/${uploadcount}`);
-      // console.log(item);
-      // console.log(radiovalue);
     } else if (item == "BUREAU") {
       navigate(`/bureau/${navigatevalue}`);
     } else if (item == "HOME") {

@@ -130,3 +130,33 @@
 .margin_top_1st_div {
   margin-top: 24%;
 }
+@media print {
+  body {
+    font-size: 8px;
+    margin: 5mm;
+  }
+}
+@media print {
+  img {
+    display: none;
+  }
+}
+@media print {
+  body {
+    width: 100%;
+  }
+}
+@media print {
+  table {
+    border-collapse: collapse;
+  }
+  th,
+  td {
+    padding: 3px;
+  }
+}
+@media print {
+  p {
+    line-height: 1.2;
+  }
+}

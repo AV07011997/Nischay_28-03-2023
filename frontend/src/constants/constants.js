@@ -28,6 +28,7 @@ export const APIADDRESS = {
   SAVEBUREAUDATA: "update_bureau_data/",
   BUREAUANALYZE: "bureau_customer_kpi/",
   EXECUTIVESUMMARY: "executivesummary/",
+  EXECUTIVESUMMARYSAVEFETCH: "executivesummarysavefetch/",
 };
 
 export const BUREAUPAGECOLUMNS = {

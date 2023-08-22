@@ -15,6 +15,7 @@ import {
   MDBCardHeader,
 } from "mdb-react-ui-kit";
 import BureauScoreSpeedometer from "../../constants/speedomter";
+import NavBar1 from "../../utilities/navbar/navbar1";
 
 const ExecutiveSummary = () => {
   const [bureau_details, setBureau_Details] = useState();
@@ -22,6 +23,12 @@ const ExecutiveSummary = () => {
   const [totalemi, setTotalemi] = useState();
   const [foirIncome, setFoirIncome] = useState();
   const [foirInflow, setFoirInflow] = useState();
+  const [saveState, setSaveState] = useState(true);
+  const [selectedValue, setSelectedValue] = useState("");
+
+  const handleChange1 = (event) => {
+    setSelectedValue(event.target.value);
+  };
 
   useEffect(() => {
     postApi("analyze/" + APIADDRESS.EXECUTIVESUMMARY, {
@@ -38,7 +45,6 @@ const ExecutiveSummary = () => {
     // Extracting value in the months
     // section in the variable
     const months = document.getElementById("monthCalculator").value;
-    console.log(roi1, months, amount);
 
     parseInt(amount);
     parseInt(roi1);
@@ -77,10 +83,55 @@ const ExecutiveSummary = () => {
       top: 150, // Replace with the desired pixel height
       behavior: "smooth", // This enables smooth scrolling
     });
-  });
+  }, [bureau_details]);
+
+  const handleChange = () => {
+    setSaveState(false);
+  };
+  const saveCompleted = () => {
+    setSaveState(true);
+  };
+  console.log(saveState);
+
+  useEffect(() => {
+    localStorage.setItem("SummarySaveState", saveState);
+  }, [saveState]);
+
+  const saveExceutiveSummaryData = () => {
+    const loanAmount = document.getElementById("loanAmount")?.value;
+    const tenure = document.getElementById("monthCalculator")?.value;
+    const roi = document.getElementById("roiCalculator")?.value;
+    const newEmi = total;
+    const totalEmi = totalemi;
+    const foirStated = foirIncome;
+    const foirInfloww = foirInflow;
+    const recommendation = selectedValue;
+    const notes = document.getElementById("notes")?.value;
+    const dealid = bureau_details?.Deal_id;
+    console.log(notes);
+    console.log(dealid);
+    const data = {
+      deal_id: dealid,
+      loanAmount: loanAmount,
+      tenure: tenure,
+      roi: roi,
+      newEmi: newEmi,
+      totalEmi: totalEmi,
+      foirStated: foirStated,
+      foirInflow: foirInfloww,
+      recommendation: recommendation,
+      notes: notes,
+    };
+
+    postApi("analyze/" + APIADDRESS.EXECUTIVESUMMARYSAVEFETCH, {
+      data,
+    });
+  };
+  console.log(bureau_details);
+
   return (
     <div>
-      <NavBar></NavBar>
+      <NavBar1></NavBar1>
       {bureau_details ? (
         <div>
           <div>
@@ -580,128 +631,6 @@ const ExecutiveSummary = () => {
             </div>
           </div>
 
-          {/* <div className="outerbox" style={{ display: "flex" }}>
-        <div className="innertxtandbox">
-          <div className="innertxt">
-            <h6>Personal and Loan Details</h6>
-          </div>
-
-          <div className="innerbox">
-            1.<span className="values">{bureau_details?.Name} </span>is{" "}
-            <span className="values"> Age </span> years old and lives in
-            <span className="values"> {bureau_details?.Location}. </span>
-            <br />
-            <br />
-            2.<span className="values"> {bureau_details?.Name} </span>has
-            applied for{" "}
-            <span className="values">{bureau_details?.Purpose}</span> and{" "}
-            <span className="values">{bureau_details?.Loan_amount}</span>
-            <br />
-            <br />
-            3. <span className="values">{bureau_details?.Name} </span> is
-            Individual/Joint applicant of the loan.
-            <br />
-            <br />
-            4.<span className="values">{bureau_details?.Name} </span> is{" "}
-            <span className="values">{bureau_details?.Salaried} </span>
-            <br />
-            <br />
-            5.Applicant earns{" "}
-            <span className="values">{bureau_details?.Salary} (Stated)</span>
-          </div>
-        </div>
-
-        <div className="innertxtandbox">
-          <div className="innertxt">
-            <h6>Bureau Details</h6>
-          </div>
-
-          <div className="innerbox">
-            1. Credit Bureau Score :
-            <span className="values">{bureau_details?.creditscore}</span>
-            <br />
-            <br />
-            2. Total number of active loans :{" "}
-            <span className="values">{bureau_details?.activeloans}</span>
-            <br />
-            <br />
-            3. Total live POS :{" "}
-            <span className="values">{bureau_details?.totalpos}</span>
-            <br />
-            <br />
-            4. Most Recent DPD :{" "}
-            <span className="values">{bureau_details?.maxdpd} days. </span>
-            <br />
-            <br />
-            5. Max dpd :{" "}
-            <span className="values">{bureau_details?.maxdpd} days.</span>
-            <br />
-            <br />
-            <br />
-            <br />
-          </div>
-        </div>
-
-        <div className="innertxtandbox">
-          <div className="innertxt">
-            <h6>Banking</h6>
-          </div>
-
-          <div className="innerbox">
-            1. Latest Month Closing Balance :
-            <span className="values">{bureau_details?.closingbalance}</span>
-            <br />
-            <br />
-            2. Average Monthly Balance :
-            <span className="values">{bureau_details?.last3month}</span>
-            <br />
-            <br />
-            3. Debit to Credit Ratio(3M) :{" "}
-            <span className="values">{bureau_details?.dtocratio} </span>
-            <br />
-            <br />
-            4. Fixed Inflows =
-            <br />
-            <br />
-            5.Fixed Outflows
-            <br />
-            <br />
-            6. Debt to Income Ratio
-            <br />
-            <br />
-            7. Cheque Bounce (Last 6M) :
-            <span className="values">{bureau_details?.chequebounce} </span>
-            <br />
-            <br />
-            8. Cash Credit Ratio::
-            <span className="values">{bureau_details?.cashcreditratio} %</span>
-            <br />
-            <br />
-          </div>
-        </div>
-
-        <div className="innertxtandbox">
-          <div className="innertxt">
-            <h6>Lending Scores</h6>
-          </div>
-
-          <div className="innerbox" style={{ width: "210px" }}>
-            1. Bureau Risk Score
-            <br />
-            <br />
-            2. Banking Based Score
-            <br />
-            <br />
-            3. Application Score
-            <br />
-            <br />
-            4. Alternate Partner Score
-            <br />
-            <br />
-          </div>
-        </div>
-      </div> */}
-
           <div style={{ marginTop: "3%" }} className="loan-heading">
             <h6 className="calculator-title">Loan Calculator</h6>
           </div>
@@ -709,7 +638,8 @@ const ExecutiveSummary = () => {
           <div className="loan-calculator">
             <div className="loan-details">
               <p>
-                Loan Requested (₹)&nbsp;&nbsp;: 1,00,000&nbsp;&nbsp;&nbsp;&nbsp;
+                Loan Requested (₹)&nbsp;&nbsp;:{bureau_details?.Loan_amount}
+                &nbsp;&nbsp;&nbsp;&nbsp;
               </p>
               <p>
                 Loan Considered (₹)&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;
@@ -736,7 +666,11 @@ const ExecutiveSummary = () => {
               <button
                 style={{ fontWeight: "bold" }}
                 className="calculate-button"
-                onClick={() => Calculate()}
+                onClick={() => {
+                  handleChange();
+
+                  Calculate();
+                }}
               >
                 Calculate
               </button>
@@ -810,17 +744,29 @@ const ExecutiveSummary = () => {
                   </td>
                   <td className="summary-value" style={{ textAlign: "right" }}>
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                    <select>
-                      <option value="">Yes</option>
+                    <select
+                      onChange={handleChange1}
+                      id="recommendation"
+                      value={selectedValue}
+                    >
+                      <option value="">Select</option>
 
-                      <option value="option2">No</option>
-                      <option value="option3">Refer</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                      <option value="Refer">Refer</option>
                     </select>
                   </td>
                 </tr>
               </table>
               <tr>
-                <td className="detail-label">Notes :</td>
+                <td
+                  className="detail-label"
+                  onChange={() => {
+                    handleChange();
+                  }}
+                >
+                  Notes :
+                </td>
               </tr>
 
               <tr>
@@ -828,7 +774,11 @@ const ExecutiveSummary = () => {
                   <textarea
                     style={{ width: "224%", resize: "none" }}
                     placeholder="Notes"
+                    id="notes"
                     rows={4}
+                    onChange={() => {
+                      handleChange();
+                    }}
                   ></textarea>
                 </td>
               </tr>
@@ -836,6 +786,10 @@ const ExecutiveSummary = () => {
               <button
                 style={{ width: "30%", borderRadius: "30px" }}
                 className="calculate-button"
+                onClick={() => {
+                  saveCompleted();
+                  saveExceutiveSummaryData();
+                }}
               >
                 Save
               </button>
@@ -845,6 +799,9 @@ const ExecutiveSummary = () => {
               <button
                 style={{ width: "30%", borderRadius: "30px" }}
                 className="calculate-button"
+                onClick={() => {
+                  window.print();
+                }}
               >
                 Print
               </button>
