@@ -19,6 +19,8 @@ import NavBar1 from "../../utilities/navbar/navbar1";
 
 const ExecutiveSummary = () => {
   const [bureau_details, setBureau_Details] = useState();
+  const [bureau_details_calculator, setBureau_Details_calculator] = useState();
+
   const [total, setTotal] = useState();
   const [totalemi, setTotalemi] = useState();
   const [foirIncome, setFoirIncome] = useState();
@@ -34,7 +36,9 @@ const ExecutiveSummary = () => {
     postApi("analyze/" + APIADDRESS.EXECUTIVESUMMARY, {
       leadID: localStorage.getItem("leadID"),
     }).then((res) => {
-      setBureau_Details(res);
+      // console.log(res);
+      setBureau_Details(res[0]);
+      setBureau_Details_calculator(res[1][0]);
     });
   }, []);
   const Calculate = () => {
@@ -128,6 +132,17 @@ const ExecutiveSummary = () => {
     });
   };
   console.log(bureau_details);
+  console.log(bureau_details_calculator);
+
+  useEffect(() => {
+    if (bureau_details_calculator) {
+      setTotal(bureau_details_calculator?.new_emi);
+      setTotalemi(bureau_details_calculator?.total_emi);
+      setFoirIncome(bureau_details_calculator?.foir_stated);
+      setFoirInflow(bureau_details_calculator?.foir_inflow);
+      setSelectedValue(bureau_details_calculator?.recommendation);
+    }
+  }, [bureau_details_calculator]);
 
   return (
     <div>
@@ -643,13 +658,19 @@ const ExecutiveSummary = () => {
               </p>
               <p>
                 Loan Considered (₹)&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="number" id="loanAmount" className="input-field" />
+                <input
+                  type="number"
+                  defaultValue={bureau_details_calculator?.loan_considered}
+                  id="loanAmount"
+                  className="input-field"
+                />
               </p>
               <p>
                 Tenure (months) :
                 <input
                   type="number"
                   id="monthCalculator"
+                  defaultValue={bureau_details_calculator?.tenure}
                   className="input-field"
                 />
               </p>
@@ -659,6 +680,7 @@ const ExecutiveSummary = () => {
                 <input
                   type="number"
                   id="roiCalculator"
+                  defaultValue={bureau_details_calculator?.roi}
                   className="input-field"
                 />
               </p>
@@ -749,7 +771,7 @@ const ExecutiveSummary = () => {
                       id="recommendation"
                       value={selectedValue}
                     >
-                      <option value="">Select</option>
+                      <option value="">Options</option>
 
                       <option value="Yes">Yes</option>
                       <option value="No">No</option>
@@ -776,6 +798,7 @@ const ExecutiveSummary = () => {
                     placeholder="Notes"
                     id="notes"
                     rows={4}
+                    defaultValue={bureau_details_calculator?.notes}
                     onChange={() => {
                       handleChange();
                     }}

@@ -4027,6 +4027,13 @@ def executive_summary(request):
         lead_id = lead_id.join(request.POST.getlist('leadID'))
         lead_id = lead_id.rstrip()
         deal_id = lead_id
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM `a5_kit`.`mysite_executivesummarydata` WHERE lead_id = " + lead_id + ";")
+            summary_calculator_data = dictfetchall(cursor)
+            summary_calculator_data = pd.DataFrame(summary_calculator_data)
+
         with connection.cursor() as cursor:
             cursor.execute(
                 "SELECT * FROM a5_kit.mysite_bureau_ref_dtl WHERE CUSTOMER_ID = " + customer_id + ";")
@@ -4338,7 +4345,18 @@ def executive_summary(request):
     bureau_details['Loan_amount'] = bureau_details['Loan_amount'].replace(
         "₹", "₹ ")
 
-    return HttpResponse(json.dumps(bureau_details))
+
+
+    json_records_1 = summary_calculator_data.to_json(orient='records')
+    summary_calculator_data = json.loads(json_records_1)
+
+
+
+
+    return HttpResponse(json.dumps([bureau_details,summary_calculator_data]))
+
+
+
 
 def executivesummarysavefetch(request):
     # notes=request.POST.getlist('data[notes]')
@@ -4364,7 +4382,8 @@ def executivesummarysavefetch(request):
     deal_id = [str(id) for id in request.POST.getlist('data[deal_id]')]
 
     with connection.cursor() as cursor:
-        query = "INSERT INTO `a5_kit`.`mysite_executivesummarydata` (lead_id, loan_considered,tenure,roi,new_emi,total_emi,foir_stated,foir_inflow,recommendation,notes) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        query = "INSERT INTO `a5_kit`.`mysite_executivesummarydata` (lead_id, loan_considered, tenure, roi, new_emi, total_emi, foir_stated, foir_inflow, recommendation, notes) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE lead_id = VALUES(lead_id), loan_considered = VALUES(loan_considered), tenure = VALUES(tenure), roi = VALUES(roi), new_emi = VALUES(new_emi), total_emi = VALUES(total_emi), foir_stated = VALUES(foir_stated), foir_inflow = VALUES(foir_inflow), recommendation = VALUES(recommendation), notes = VALUES(notes);"
+
         with connection.cursor() as cursor:
             cursor.execute(query, [deal_id,loan_considered,tenure,roi,newEmi,totalEmi,foirStated,foirInflow,recommendation,notes])
     return HttpResponse("0")

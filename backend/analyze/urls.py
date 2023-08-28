@@ -32,5 +32,4 @@ urlpatterns = [
     path('executivesummary/', analyze_views.executive_summary,name='executivesummary'),
     path('executivesummarysavefetch/', analyze_views.executivesummarysavefetch, name='executivesummarysavefetch'),
 
-
 ]
