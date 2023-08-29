@@ -144,6 +144,26 @@ const ExecutiveSummary = () => {
     }
   }, [bureau_details_calculator]);
 
+  const formatCurrency = (value) => {
+    const numericValue = typeof value === "string" ? parseFloat(value) : value;
+
+    if (isNaN(numericValue)) {
+      return "Invalid value";
+    }
+
+    const formattedValue = numericValue.toLocaleString("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    });
+
+    // Manually add a space after the rupee symbol
+    const valueWithSpace = formattedValue.replace("₹", "₹ ");
+
+    return valueWithSpace;
+  };
+
   return (
     <div>
       <NavBar1></NavBar1>
@@ -647,13 +667,13 @@ const ExecutiveSummary = () => {
           </div>
 
           <div style={{ marginTop: "3%" }} className="loan-heading">
-            <h6 className="calculator-title">Loan Calculator</h6>
+            <h4 className="calculator-title">Loan Calculator</h4>
           </div>
 
-          <div className="loan-calculator">
+          <div className="loan-calculator" style={{ fontSize: "15px" }}>
             <div className="loan-details">
               <p>
-                Loan Requested (₹)&nbsp;&nbsp;:{bureau_details?.Loan_amount}
+                Loan Requested &nbsp;&nbsp;:&nbsp;{bureau_details?.Loan_amount}
                 &nbsp;&nbsp;&nbsp;&nbsp;
               </p>
               <p>
@@ -676,7 +696,7 @@ const ExecutiveSummary = () => {
               </p>
 
               <p>
-                Rate of interest(%) :
+                Rate of interest (%) :
                 <input
                   type="number"
                   id="roiCalculator"
@@ -701,10 +721,11 @@ const ExecutiveSummary = () => {
               <table>
                 <tr>
                   <td className="detail-label" style={{ textAlign: "left" }}>
-                    Existing EMIs (₹)
+                    Existing EMIs
                   </td>
                   <td className="detail-value" style={{ textAlign: "right" }}>
-                    &nbsp;&nbsp;&nbsp;&nbsp;{bureau_details?.EMI_Sum}
+                    &nbsp;&nbsp;&nbsp;&nbsp;{" "}
+                    {formatCurrency(bureau_details?.EMI_Sum)}
                   </td>
                 </tr>
                 <tr>
@@ -726,18 +747,19 @@ const ExecutiveSummary = () => {
                 </tr>
                 <tr>
                   <td className="summary-label" style={{ textAlign: "left" }}>
-                    New EMIs (₹)
+                    New EMIs
                   </td>
                   <td className="summary-label" style={{ textAlign: "right" }}>
-                    &nbsp;&nbsp;&nbsp;&nbsp;{total}
+                    &nbsp;&nbsp;&nbsp;&nbsp; {formatCurrency(total)}
                   </td>
                 </tr>
                 <tr>
                   <td className="summary-label" style={{ textAlign: "left" }}>
-                    Total EMIs (₹)
+                    Total EMIs
                   </td>
                   <td className="summary-label" style={{ textAlign: "right" }}>
-                    &nbsp;&nbsp;&nbsp;&nbsp;{totalemi}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    {formatCurrency(totalemi)}
                   </td>
                 </tr>
                 <tr>
@@ -745,7 +767,8 @@ const ExecutiveSummary = () => {
                     New FOIR, basis stated Income
                   </td>
                   <td className="summary-label" style={{ textAlign: "right" }}>
-                    &nbsp;&nbsp;&nbsp;&nbsp;{foirIncome}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    {formatCurrency(foirIncome)}
                   </td>
                 </tr>
                 <tr>
@@ -753,7 +776,8 @@ const ExecutiveSummary = () => {
                     New FOIR, basis Inflows
                   </td>
                   <td className="summary-label" style={{ textAlign: "right" }}>
-                    &nbsp;&nbsp;&nbsp;&nbsp;{foirInflow}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    {formatCurrency(foirInflow)}
                   </td>
                 </tr>
               </table>
@@ -805,6 +829,10 @@ const ExecutiveSummary = () => {
                   ></textarea>
                 </td>
               </tr>
+              <br></br>
+              <br></br>
+              <br></br>
+              <br></br>
 
               <button
                 style={{ width: "30%", borderRadius: "30px" }}
@@ -818,16 +846,6 @@ const ExecutiveSummary = () => {
               </button>
               <br></br>
               <br></br>
-
-              <button
-                style={{ width: "30%", borderRadius: "30px" }}
-                className="calculate-button"
-                onClick={() => {
-                  window.print();
-                }}
-              >
-                Print
-              </button>
             </div>
           </div>
         </div>
