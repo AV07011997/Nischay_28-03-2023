@@ -184,34 +184,34 @@ const ExecutiveSummary = () => {
                     marginBottom: "4%",
                   }}
                 >
-                  {/* <CircularProgressbar
-                    value={650}
-                    circleRatio={0.5}
-                    strokeWidth={15}
-                    minValue={0}
-                    maxValue={900}
-                    text={
-                      bureau_details?.creditscore === "No Credit Score"
-                        ? 0
-                        : bureau_details?.creditscore
-                    }
-                    styles={{
-                      root: {
-                        width: "12em",
-                        height: "12em",
-                        transform: "rotate(0.75turn)",
-                      },
-                      path: { stroke: "green", strokeLinecap: "butt" },
-                      trail: { stroke: "#C4C4C4", strokeLinecap: "butt" },
-                      trailColor: "grey",
-                      backgroundColor: "red",
-                      text: {
-                        // Rotate the text within the CircularProgressbar
-                        transform: "rotate(90deg)",
-                        transformOrigin: "center",
-                      },
-                    }} */}
-                  <BureauScoreSpeedometer score={650}></BureauScoreSpeedometer>
+                  {bureau_details?.creditscore >= 300 &&
+                  bureau_details?.creditscore <= 900 ? (
+                    <BureauScoreSpeedometer
+                      score={bureau_details?.creditscore}
+                    ></BureauScoreSpeedometer>
+                  ) : (
+                    <MDBCard className="top_cards_width">
+                      <MDBCardHeader
+                        style={{
+                          textAlign: "center", // Center-align the heading
+                          fontSize: "1.5rem", // Increase font size for heading
+                          fontWeight: "bold", // Make the heading bold
+                        }}
+                      >
+                        {bureau_details?.creditscore}
+                      </MDBCardHeader>
+
+                      <MDBCardBody
+                        style={{
+                          textAlign: "center", // Center-align the card body text
+                          fontSize: "1.25rem", // Font size for card body text
+                        }}
+                      >
+                        {" "}
+                        Bureau Score
+                      </MDBCardBody>
+                    </MDBCard>
+                  )}
 
                   <br></br>
                 </div>
