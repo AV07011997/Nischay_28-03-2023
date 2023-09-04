@@ -160,3 +160,58 @@
     line-height: 1.2;
   }
 }
+.image_summary_1 {
+  margin-left: 14%;
+  margin-top: 7%;
+  width: 250px;
+  margin-bottom: 4%;
+}
+.image_summary_2 {
+  margin-left: 34%;
+  margin-top: 7%;
+
+  width: 250px;
+}
+.image_summary_3 {
+  margin-left: 41%;
+  margin-top: 7%;
+  width: 250px;
+}
+.image_summary_4 {
+  margin-left: 10%;
+  margin-top: 7%;
+  width: 250px;
+}
+.image_summary_5 {
+  margin-left: 21%;
+  margin-top: 7%;
+  width: 250px;
+}
+.image_summary_6 {
+  margin-left: 29%;
+  margin-top: 7%;
+  width: 250px;
+}
+
+.kpi_headings_1 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 13%;
+  margin-right: -55%;
+  margin-top: 5%;
+  margin-bottom: 2%;
+}
+.kpi_headings_2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 49%;
+  margin-right: -55%;
+  margin-top: 5%;
+}
+.kpi_headings_3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 65%;
+  margin-right: -55%;
+  margin-top: 5%;
+}

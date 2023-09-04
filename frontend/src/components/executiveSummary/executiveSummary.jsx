@@ -6,7 +6,6 @@ import "./executiveSummar.css";
 import GaugeChart from "react-gauge-chart";
 import RatioPieChart from "../../constants/ratioPieChart";
 import { Loader } from "rsuite";
-
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import {
   MDBCard,
@@ -470,145 +469,47 @@ const ExecutiveSummary = () => {
                   height: "446px",
                   marginTop: "10px",
                   marginLeft: "0",
+                  alignContent: "flex-start",
                 }}
               >
-                <div className="element_piechart">
-                  <RatioPieChart
-                    // style={{ strokeWidth: "15px" }}
-                    ratio={bureau_details?.dtocratio}
-                  ></RatioPieChart>
-                  <span
-                    style={{
-                      marginLeft: "-101px",
-                      fontSize: "18px",
-                      fontWeight: "bolder",
-                    }}
-                  >
+                <div>
+                  <img className="image_summary_1" src="/debit_to_credit.png" />
+
+                  <p className="kpi_headings_1">
                     Debit to Credit Ratio : {bureau_details?.dtocratio}
-                  </span>
+                  </p>
                 </div>
-                <div className="element_piechart">
-                  <RatioPieChart ratio={0.6}></RatioPieChart>
-                  <span
-                    style={{
-                      marginLeft: "-101px",
-                      fontSize: "18px",
-                      fontWeight: "bolder",
-                    }}
-                  >
-                    Debit to Income Ratio : 0.6
-                  </span>
+                <div>
+                  <img className="image_summary_2" src="/debit_to_income.png" />
+
+                  <p className="kpi_headings_2">Debit to Income Ratio : 0.6</p>
                 </div>
-                <div className="element_piechart">
-                  <RatioPieChart
-                    ratio={bureau_details?.cashcreditratio}
-                  ></RatioPieChart>
-                  <span
-                    style={{
-                      marginLeft: "-101px",
-                      fontSize: "18px",
-                      fontWeight: "bolder",
-                    }}
-                  >
+                <div>
+                  <img className="image_summary_3" src="/cash_credit.png" />
+
+                  <p className="kpi_headings_3">
                     Cash Credit Ratio : {bureau_details?.cashcreditratio}
-                  </span>
+                  </p>
                 </div>
 
-                <div className="element_2">
-                  <MDBCard
-                    style={{
-                      width: "200px",
-                      height: "5em", // Adjust the width of the card
-                      backgroundColor: "#f0f0f0",
-                      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
-                      margin: "10px", // Margin for spacing
-                      borderRadius: "8px", // Border radius for rounded corners
-                    }}
-                  >
-                    <MDBCardHeader
-                      style={{
-                        textAlign: "center", // Center-align the heading
-                        fontSize: "1.5rem", // Increase font size for heading
-                        fontWeight: "bold", // Make the heading bold
-                      }}
-                    >
-                      {bureau_details?.last3month}
-                    </MDBCardHeader>
+                <div>
+                  <img className="image_summary_4" src="/monthly_balance.png" />
 
-                    <MDBCardBody
-                      style={{
-                        textAlign: "center", // Center-align the card body text
-                        fontSize: "1.25rem", // Font size for card body text
-                      }}
-                    >
-                      {" "}
-                      Avg. Monthly Balance
-                    </MDBCardBody>
-                  </MDBCard>
+                  <p className="kpi_headings_1">
+                    Avg. Monthly Balance :{bureau_details?.last3month}
+                  </p>
                 </div>
-                <div className="element_2">
-                  <MDBCard
-                    style={{
-                      width: "200px",
-                      height: "5em", // Adjust the width of the card
-                      backgroundColor: "#f0f0f0",
-                      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
-                      margin: "10px", // Margin for spacing
-                      borderRadius: "8px", // Border radius for rounded corners
-                    }}
-                  >
-                    <MDBCardHeader
-                      style={{
-                        textAlign: "center", // Center-align the heading
-                        fontSize: "1.5rem", // Increase font size for heading
-                        fontWeight: "bold", // Make the heading bold
-                      }}
-                    >
-                      {bureau_details?.chequebounce}
-                    </MDBCardHeader>
+                <div>
+                  <img className="image_summary_5" src="/cheque_bounce.png" />
 
-                    <MDBCardBody
-                      style={{
-                        textAlign: "center", // Center-align the card body text
-                        fontSize: "1.25rem", // Font size for card body text
-                      }}
-                    >
-                      {" "}
-                      Chq. Bounce (Last 6M)
-                    </MDBCardBody>
-                  </MDBCard>
+                  <p className="kpi_headings_2">
+                    Chq. Bounce (Last 6M) : {bureau_details?.chequebounce}
+                  </p>
                 </div>
-                <div className="element_2">
-                  <MDBCard
-                    style={{
-                      width: "200px",
-                      height: "5em", // Adjust the width of the card
-                      backgroundColor: "#f0f0f0",
-                      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
-                      margin: "10px", // Margin for spacing
-                      borderRadius: "8px", // Border radius for rounded corners
-                    }}
-                  >
-                    <MDBCardHeader
-                      style={{
-                        textAlign: "center", // Center-align the heading
-                        fontSize: "1.5rem", // Increase font size for heading
-                        fontWeight: "bold", // Make the heading bold
-                      }}
-                    >
-                      ₹ 0
-                    </MDBCardHeader>
+                <div>
+                  <img className="image_summary_6" src="/fixed_inflow.png" />
 
-                    <MDBCardBody
-                      style={{
-                        textAlign: "center", // Center-align the card body text
-                        fontSize: "1.25rem", // Font size for card body text
-                      }}
-                    >
-                      {" "}
-                      Fixed Inflows
-                    </MDBCardBody>
-                  </MDBCard>
+                  <p className="kpi_headings_3">Fixed Inflows : ₹ 0</p>
                 </div>
               </div>
               <div

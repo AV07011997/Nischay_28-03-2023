@@ -56,6 +56,8 @@ def bck(data):
   a=temp.loc[temp.credit.notnull(),:].groupby('month_year').credit.mean()
   avg_mthly_credit = (a.sum()/a.shape[0])
 
+  # df=df.reset_index
+  df.balance=df.balance.astype(float)
 
   max_bal = df.balance.max()
 
