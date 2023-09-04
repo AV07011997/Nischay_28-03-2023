@@ -29,6 +29,7 @@ const ExecutiveSummary = () => {
 
   const handleChange1 = (event) => {
     setSelectedValue(event.target.value);
+    handleChange();
   };
 
   useEffect(() => {
@@ -139,7 +140,6 @@ const ExecutiveSummary = () => {
       setTotalemi(bureau_details_calculator?.total_emi);
       setFoirIncome(bureau_details_calculator?.foir_stated);
       setFoirInflow(bureau_details_calculator?.foir_inflow);
-      setSelectedValue(bureau_details_calculator?.recommendation);
     }
   }, [bureau_details_calculator]);
 
@@ -496,7 +496,7 @@ const ExecutiveSummary = () => {
                   <img className="image_summary_4" src="/monthly_balance.png" />
 
                   <p className="kpi_headings_1">
-                    Avg. Monthly Balance :{bureau_details?.last3month}
+                    Avg. Monthly Balance : {bureau_details?.last3month}
                   </p>
                 </div>
                 <div>
@@ -696,7 +696,12 @@ const ExecutiveSummary = () => {
                       id="recommendation"
                       value={selectedValue}
                     >
-                      <option value="">Options</option>
+                      <option
+                        style={{ color: "red" }}
+                        value={bureau_details_calculator?.recommendation}
+                      >
+                        {bureau_details_calculator?.recommendation}
+                      </option>
 
                       <option value="Yes">Yes</option>
                       <option value="No">No</option>
