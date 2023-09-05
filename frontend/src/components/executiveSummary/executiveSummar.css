@@ -215,3 +215,319 @@
   margin-right: -55%;
   margin-top: 5%;
 }
+.div1 {
+  display: flex;
+  margin-top: 3em;
+}
+.div2 {
+  margin-left: 12%;
+  margin-right: -9%;
+  margin-bottom: 4%;
+}
+.div3 {
+  border: 1px solid #c4c4c4;
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 64em;
+  height: 446px;
+  margin-top: 10px;
+  margin-left: 0;
+  align-content: flex-start;
+}
+.div4 {
+  background: #f0f0f0;
+  border-radius: 3%;
+  margin-top: 9px;
+  margin-right: 1%;
+  font-size: 123%;
+  padding: 1%;
+}
+.mbdcardHeader {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.mbdcardBody {
+  text-align: center;
+  font-size: 1.25rem;
+}
+.mbdcard {
+  width: 200px;
+  height: 5em;
+  background-color: #f0f0f0;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  border-radius: 8px;
+}
+/* Your existing CSS rules here */
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1367px) {
+  .innertxt {
+    text-align: center;
+  }
+  .values {
+    font-weight: 900;
+  }
+  /* Styling for the loan calculator container */
+  .loan-calculator {
+    display: flex;
+    flex-wrap: wrap;
+    color: black;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    margin-bottom: 30px;
+  }
+
+  .loan-calculator td {
+    padding: 5px;
+  }
+  /* Styling for the calculator title (heading) */
+  .calculator-title {
+    font-size: 26px;
+    margin-bottom: 10px;
+    color: #333;
+    text-align: center;
+  }
+
+  /* Styling for the left section containing loan details and inputs */
+  .loan-details {
+    flex: 1;
+    width: 50%;
+    padding-right: 20px;
+    margin-right: 20px;
+    border-right: 1px solid #ccc;
+  }
+  .recommendation_box {
+    flex: 1;
+    width: 50%;
+    padding-right: 20px;
+    margin-right: 20px;
+    border-left: 1px solid #ccc;
+    height: 305px;
+    padding: 10px;
+  }
+
+  /* Styling for the input fields */
+  .input-field {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  /* Styling for the calculate button */
+  .calculate-button {
+    display: inline-block;
+    padding: 10px;
+    background-color: blue;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 41%;
+  }
+
+  /* Styling for the right section containing bureau details */
+  .bureau-details {
+    flex: 1;
+    width: 50%;
+    padding-left: 20px;
+  }
+
+  /* Styling for detail labels */
+  .detail-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  /* Styling for summary labels */
+  .summary-label {
+    font-weight: bold;
+    color: blue;
+    margin-bottom: 5px;
+  }
+
+  /* Styling for detail and summary values */
+  .detail-value,
+  .summary-value {
+    color: #555;
+  }
+  .element_piechart {
+    width: 166px;
+    height: 100px;
+    margin-left: 130px;
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  .element_2 {
+    margin-top: 75px;
+    margin-left: 49px;
+    width: 249px;
+  }
+
+  .highlightText {
+    color: green;
+    font-weight: bold;
+  }
+  .height_cards {
+    height: 11%;
+    vertical-align: middle;
+  }
+  .top_cards_width {
+    width: 90%;
+    background: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin-left: 150px;
+    margin-top: 64px;
+  }
+
+  .margin_top_1st_div {
+    margin-top: 24%;
+  }
+  @media print {
+    body {
+      font-size: 8px;
+      margin: 5mm;
+    }
+  }
+  @media print {
+    img {
+      display: none;
+    }
+  }
+  @media print {
+    body {
+      width: 100%;
+    }
+  }
+  @media print {
+    table {
+      border-collapse: collapse;
+    }
+    th,
+    td {
+      padding: 3px;
+    }
+  }
+  @media print {
+    p {
+      line-height: 1.2;
+    }
+  }
+  .image_summary_1 {
+    margin-left: 14%;
+    margin-top: 7%;
+    width: 250px;
+    margin-bottom: 4%;
+  }
+  .image_summary_2 {
+    margin-left: 34%;
+    margin-top: 7%;
+
+    width: 250px;
+  }
+  .image_summary_3 {
+    margin-left: 41%;
+    margin-top: 7%;
+    width: 250px;
+  }
+  .image_summary_4 {
+    margin-left: 10%;
+    margin-top: 30%;
+    width: 250px;
+  }
+  .image_summary_5 {
+    margin-left: 21%;
+    margin-top: 33%;
+    width: 250px;
+  }
+  .image_summary_6 {
+    margin-left: 29%;
+    margin-top: 33%;
+    width: 250px;
+  }
+
+  .kpi_headings_1 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 13%;
+    margin-right: -55%;
+    margin-top: 5%;
+    margin-bottom: 2%;
+  }
+  .kpi_headings_2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 49%;
+    margin-right: -55%;
+    margin-top: 5%;
+  }
+  .kpi_headings_3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 65%;
+    margin-right: -55%;
+    margin-top: 5%;
+  }
+  .div1 {
+    display: flex;
+    margin-top: 3em;
+  }
+  .div2 {
+    margin-left: 12%;
+    margin-right: -9%;
+    margin-bottom: 4%;
+  }
+  .div3 {
+    border: 1px solid #c4c4c4;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    width: 64em;
+    height: 524px;
+    margin-top: 10px;
+    margin-left: 0;
+    align-content: flex-start;
+  }
+  .div4 {
+    background: #f0f0f0;
+    border-radius: 3%;
+    margin-top: 9px;
+    margin-right: 1%;
+    font-size: 123%;
+    padding: 1%;
+    width: 17%;
+  }
+  .mbdcardHeader {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  .mbdcardBody {
+    text-align: center;
+    font-size: 1.25rem;
+  }
+  .mbdcard {
+    width: 153px;
+    height: 7em;
+    background-color: #f0f0f0;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    border-radius: 8px;
+  }
+  /* Add more styles as needed for larger screens */
+}
+
+/* Additional styles for other elements as needed */

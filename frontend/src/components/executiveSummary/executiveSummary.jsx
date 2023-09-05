@@ -95,7 +95,7 @@ const ExecutiveSummary = () => {
   const saveCompleted = () => {
     setSaveState(true);
   };
-  console.log(saveState);
+  // console.log(saveState);
 
   useEffect(() => {
     localStorage.setItem("SummarySaveState", saveState);
@@ -112,8 +112,8 @@ const ExecutiveSummary = () => {
     const recommendation = selectedValue;
     const notes = document.getElementById("notes")?.value;
     const dealid = bureau_details?.Deal_id;
-    console.log(notes);
-    console.log(dealid);
+    // console.log(notes);
+    // console.log(dealid);
     const data = {
       deal_id: dealid,
       loanAmount: loanAmount,
@@ -131,8 +131,8 @@ const ExecutiveSummary = () => {
       data,
     });
   };
-  console.log(bureau_details);
-  console.log(bureau_details_calculator);
+  // console.log(bureau_details);
+  // console.log(bureau_details_calculator);
 
   useEffect(() => {
     if (bureau_details_calculator) {
@@ -163,26 +163,45 @@ const ExecutiveSummary = () => {
     return valueWithSpace;
   };
 
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  // Function to update window size
+  const handleResize = () => {
+    setWindowSize({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  };
+
+  useEffect(() => {
+    // Add a resize event listener
+    window.addEventListener("resize", handleResize);
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  console.log(window.innerWidth);
+
   return (
     <div>
       <NavBar1></NavBar1>
       {bureau_details ? (
-        <div>
+        <div className="executive-summary-container">
           <div>
-            <div style={{ display: "flex", marginTop: "3em" }}>
+            <div className="div1">
               <div
                 style={{
                   display: "flex",
                   // justifyContent: "space-around",
                 }}
               >
-                <div
-                  style={{
-                    marginLeft: "12%",
-                    marginRight: "-9%",
-                    marginBottom: "4%",
-                  }}
-                >
+                <div className="div2">
                   {bureau_details?.creditscore >= 300 &&
                   bureau_details?.creditscore <= 900 ? (
                     <BureauScoreSpeedometer
@@ -190,22 +209,11 @@ const ExecutiveSummary = () => {
                     ></BureauScoreSpeedometer>
                   ) : (
                     <MDBCard className="top_cards_width">
-                      <MDBCardHeader
-                        style={{
-                          textAlign: "center", // Center-align the heading
-                          fontSize: "1.5rem", // Increase font size for heading
-                          fontWeight: "bold", // Make the heading bold
-                        }}
-                      >
+                      <MDBCardHeader className="mbdcardHeader">
                         {bureau_details?.creditscore}
                       </MDBCardHeader>
 
-                      <MDBCardBody
-                        style={{
-                          textAlign: "center", // Center-align the card body text
-                          fontSize: "1.25rem", // Font size for card body text
-                        }}
-                      >
+                      <MDBCardBody className="mbdcardBody">
                         {" "}
                         Bureau Score
                       </MDBCardBody>
@@ -216,22 +224,11 @@ const ExecutiveSummary = () => {
                 </div>
                 <div>
                   <MDBCard className="top_cards_width">
-                    <MDBCardHeader
-                      style={{
-                        textAlign: "center", // Center-align the heading
-                        fontSize: "1.5rem", // Increase font size for heading
-                        fontWeight: "bold", // Make the heading bold
-                      }}
-                    >
+                    <MDBCardHeader className="mbdcardHeader">
                       {bureau_details?.activeloans}
                     </MDBCardHeader>
 
-                    <MDBCardBody
-                      style={{
-                        textAlign: "center", // Center-align the card body text
-                        fontSize: "1.25rem", // Font size for card body text
-                      }}
-                    >
+                    <MDBCardBody className="mbdcardBody">
                       {" "}
                       Active Loans
                     </MDBCardBody>
@@ -249,70 +246,31 @@ const ExecutiveSummary = () => {
                     // }}
                     className="top_cards_width"
                   >
-                    <MDBCardHeader
-                      style={{
-                        textAlign: "center", // Center-align the heading
-                        fontSize: "1.5rem", // Increase font size for heading
-                        fontWeight: "bold", // Make the heading bold
-                      }}
-                    >
+                    <MDBCardHeader className="mbdcardHeader">
                       {bureau_details?.totalpos}
                     </MDBCardHeader>
 
-                    <MDBCardBody
-                      style={{
-                        textAlign: "center", // Center-align the card body text
-                        fontSize: "1.25rem", // Font size for card body text
-                      }}
-                    >
-                      {" "}
-                      Live POS
-                    </MDBCardBody>
+                    <MDBCardBody className="mbdcardBody"> Live POS</MDBCardBody>
                   </MDBCard>
                 </div>
 
                 <div>
                   <MDBCard className="top_cards_width">
-                    <MDBCardHeader
-                      style={{
-                        textAlign: "center", // Center-align the heading
-                        fontSize: "1.5rem", // Increase font size for heading
-                        fontWeight: "bold", // Make the heading bold
-                      }}
-                    >
+                    <MDBCardHeader className="mbdcardHeader">
                       {bureau_details?.maxdpd} Days
                     </MDBCardHeader>
 
-                    <MDBCardBody
-                      style={{
-                        textAlign: "center", // Center-align the card body text
-                        fontSize: "1.25rem", // Font size for card body text
-                      }}
-                    >
-                      {" "}
-                      Max DPD
-                    </MDBCardBody>
+                    <MDBCardBody className="mbdcardBody"> Max DPD</MDBCardBody>
                   </MDBCard>
                 </div>
 
                 <div>
                   <MDBCard className="top_cards_width">
-                    <MDBCardHeader
-                      style={{
-                        textAlign: "center", // Center-align the heading
-                        fontSize: "1.5rem", // Increase font size for heading
-                        fontWeight: "bold", // Make the heading bold
-                      }}
-                    >
+                    <MDBCardHeader className="mbdcardHeader">
                       {bureau_details?.maxdpd} Days
                     </MDBCardHeader>
 
-                    <MDBCardBody
-                      style={{
-                        textAlign: "center", // Center-align the card body text
-                        fontSize: "1.25rem", // Font size for card body text
-                      }}
-                    >
+                    <MDBCardBody className="mbdcardBody">
                       {" "}
                       Recent DPD
                     </MDBCardBody>
@@ -331,147 +289,49 @@ const ExecutiveSummary = () => {
               <div style={{ marginLeft: "2%" }}>
                 {" "}
                 <div>
-                  <MDBCard
-                    style={{
-                      width: "200px",
-                      height: "5em", // Adjust the width of the card
-                      backgroundColor: "#f0f0f0",
-                      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
-                      margin: "10px", // Margin for spacing
-                      borderRadius: "8px", // Border radius for rounded corners
-                    }}
-                  >
-                    <MDBCardHeader
-                      style={{
-                        textAlign: "center", // Center-align the heading
-                        fontSize: "1.5rem", // Increase font size for heading
-                        fontWeight: "bold", // Make the heading bold
-                      }}
-                    >
+                  <MDBCard className="mbdcard">
+                    <MDBCardHeader className="mbdcardHeader">
                       15.6
                     </MDBCardHeader>
 
-                    <MDBCardBody
-                      style={{
-                        textAlign: "center", // Center-align the card body text
-                        fontSize: "1.25rem", // Font size for card body text
-                      }}
-                    >
+                    <MDBCardBody className="mbdcardBody">
                       {" "}
                       Bureau Risk Score
                     </MDBCardBody>
                   </MDBCard>
                 </div>
                 <div className="margin_top_1st_div">
-                  <MDBCard
-                    style={{
-                      width: "200px",
-                      height: "5em", // Adjust the width of the card
-                      backgroundColor: "#f0f0f0",
-                      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
-                      margin: "10px", // Margin for spacing
-                      borderRadius: "8px", // Border radius for rounded corners
-                    }}
-                  >
-                    <MDBCardHeader
-                      style={{
-                        textAlign: "center", // Center-align the heading
-                        fontSize: "1.5rem", // Increase font size for heading
-                        fontWeight: "bold", // Make the heading bold
-                      }}
-                    >
-                      3.9
-                    </MDBCardHeader>
+                  <MDBCard className="mbdcard">
+                    <MDBCardHeader className="mbdcardHeader">3.9</MDBCardHeader>
 
-                    <MDBCardBody
-                      style={{
-                        textAlign: "center", // Center-align the card body text
-                        fontSize: "1.25rem", // Font size for card body text
-                      }}
-                    >
+                    <MDBCardBody className="mbdcardBody">
                       {" "}
                       Banking Based Score
                     </MDBCardBody>
                   </MDBCard>
                 </div>
                 <div className="margin_top_1st_div">
-                  <MDBCard
-                    style={{
-                      width: "200px",
-                      height: "5em", // Adjust the width of the card
-                      backgroundColor: "#f0f0f0",
-                      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
-                      margin: "10px", // Margin for spacing
-                      borderRadius: "8px", // Border radius for rounded corners
-                    }}
-                  >
-                    <MDBCardHeader
-                      style={{
-                        textAlign: "center", // Center-align the heading
-                        fontSize: "1.5rem", // Increase font size for heading
-                        fontWeight: "bold", // Make the heading bold
-                      }}
-                    >
-                      0.6
-                    </MDBCardHeader>
+                  <MDBCard className="mbdcard">
+                    <MDBCardHeader className="mbdcardHeader">0.6</MDBCardHeader>
 
-                    <MDBCardBody
-                      style={{
-                        textAlign: "center", // Center-align the card body text
-                        fontSize: "1.25rem", // Font size for card body text
-                      }}
-                    >
+                    <MDBCardBody className="mbdcardBody">
                       {" "}
                       Application Score
                     </MDBCardBody>
                   </MDBCard>
                 </div>
                 <div className="margin_top_1st_div">
-                  <MDBCard
-                    style={{
-                      width: "200px",
-                      height: "5em", // Adjust the width of the card
-                      backgroundColor: "#f0f0f0",
-                      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Box shadow for uplifted effect
-                      margin: "10px", // Margin for spacing
-                      borderRadius: "8px", // Border radius for rounded corners
-                    }}
-                  >
-                    <MDBCardHeader
-                      style={{
-                        textAlign: "center", // Center-align the heading
-                        fontSize: "1.5rem", // Increase font size for heading
-                        fontWeight: "bold", // Make the heading bold
-                      }}
-                    >
-                      1.2
-                    </MDBCardHeader>
+                  <MDBCard className="mbdcard">
+                    <MDBCardHeader className="mbdcardHeader">1.2</MDBCardHeader>
 
-                    <MDBCardBody
-                      style={{
-                        textAlign: "center", // Center-align the card body text
-                        fontSize: "1.25rem", // Font size for card body text
-                      }}
-                    >
+                    <MDBCardBody className="mbdcardBody">
                       {" "}
                       Partner Based Score
                     </MDBCardBody>
                   </MDBCard>
                 </div>
               </div>
-              <div
-                style={{
-                  border: "1px solid #C4C4C4",
-                  borderRadius: "10px",
-                  display: "flex",
-                  flexWrap: "wrap",
-                  width: "64em",
-                  height: "446px",
-                  marginTop: "10px",
-                  marginLeft: "0",
-                  alignContent: "flex-start",
-                }}
-              >
+              <div className="div3">
                 <div>
                   <img className="image_summary_1" src="/debit_to_credit.png" />
 
@@ -512,17 +372,7 @@ const ExecutiveSummary = () => {
                   <p className="kpi_headings_3">Fixed Inflows : ₹ 0</p>
                 </div>
               </div>
-              <div
-                style={{
-                  background: "#f0f0f0",
-                  borderRadius: "3%",
-                  marginTop: "9px",
-                  marginRight: "1%",
-                  fontSize: "123%",
-                  padding: "1%",
-                  // textAlign: "centre",
-                }}
-              >
+              <div className="div4">
                 <span
                   className="highlightText"
                   style={{ textAlign: "center", fontSize: "125%" }}
