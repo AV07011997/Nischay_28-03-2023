@@ -24,3 +24,7 @@
 }
 @media (max-width: 1367px) {
 }
+.bureaumonthwise_maindiv {
+  transform: scale(1); /* 80% scaling factor */
+  transform-origin: top left;
+}

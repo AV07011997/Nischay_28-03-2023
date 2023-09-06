@@ -75,6 +75,7 @@ const BureauMonthwise = () => {
 
       {data ? (
         <div
+          className="bureaumonthwise_maindiv"
           style={{
             display: "flex",
             marginLeft: "16px",
