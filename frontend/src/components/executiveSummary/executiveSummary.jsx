@@ -283,8 +283,9 @@ const ExecutiveSummary = () => {
               style={{
                 display: "flex",
                 marginTop: "-3%",
-                justifyContent: "space-between",
+                // justifyContent: "space-between",
               }}
+              className="div_adjusted"
             >
               <div style={{ marginLeft: "2%" }}>
                 {" "}
