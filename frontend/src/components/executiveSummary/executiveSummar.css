@@ -564,14 +564,15 @@
     color: black;
     justify-content: space-between;
     align-items: flex-start;
-    width: 96%;
-    margin-left: 12%;
+    width: 99%;
+    margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     margin-bottom: 30px;
+    margin-left: 14%;
   }
 
   .loan-calculator td {
@@ -579,11 +580,11 @@
   }
   /* Styling for the calculator title (heading) */
   .calculator-title {
-    margin-left: 22%;
     font-size: 26px;
     margin-bottom: 10px;
     color: #333;
     text-align: center;
+    margin-left: 30%;
   }
 
   /* Styling for the left section containing loan details and inputs */
@@ -786,7 +787,7 @@
     width: 64em;
     height: 524px;
     margin-top: 10px;
-    margin-left: 4%;
+    margin-left: 1%;
     align-content: flex-start;
   }
   .div4 {
@@ -796,7 +797,7 @@
     margin-right: 1%;
     font-size: 123%;
     padding: 1%;
-    margin-left: 95px;
+    margin-left: 36px;
     width: 20%;
     margin-right: 40px;
   }

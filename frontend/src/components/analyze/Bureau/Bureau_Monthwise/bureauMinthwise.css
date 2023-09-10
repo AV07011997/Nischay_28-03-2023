@@ -1,30 +1,294 @@
-.firstTable td,
-.firstTable th {
-  border: 1px solid #575757;
-  padding: 2px;
-}
-.firstTable td {
-  font-size: 14px;
-}
-.firstTable th {
-  font-size: 15px;
+@media (min-width: 1536px) {
+  .bureaumonthwise_maindiv {
+    transform: scale(1); /* 80% scaling factor */
+    transform-origin: top left;
+  }
+  .firstTable td,
+  .firstTable th {
+    border: 1px solid #575757;
+    padding: 2px;
+  }
+  .firstTable td {
+    font-size: 14px;
+  }
+  .firstTable th {
+    font-size: 15px;
+  }
+
+  .secondTable td,
+  .secondTable th {
+    border: 1px solid #575757;
+    padding: 2px;
+  }
+  .secondTable td {
+    font-size: 14px;
+  }
+  .secondTable th {
+    font-size: 15px;
+    padding: 2.25px;
+  }
+  .padding_td {
+    padding: 2px;
+  }
+
+  .bureaumonthwise_maindiv {
+    display: flex;
+    margin-left: 16px;
+    text-align: center;
+    margin-right: 15px;
+    /* margin-top: 20px; */
+    margin-bottom: 20px;
+  }
+  .div1bureaumonthwise {
+    width: 176px;
+  }
+  .div2bureaumonthwise {
+    width: 1308px;
+    overflow-x: auto;
+    table-layout: fixed;
+    margin-left: 0px;
+  }
+  .thead1bureaumonthwise {
+    height: 23.8px;
+    font-size: 15px;
+    background: black;
+    color: white;
+  }
+  .td1_1bureaumonthwise {
+    height: 25px;
+  }
+  .td2_bureaumonthwise {
+    width: 30px;
+    padding: 0px;
+    margin: 0px;
+  }
+  .td3_bureaumonthwise {
+    height: 25px;
+    background: #e9eeee;
+  }
+  .td4_bureaumonthwise {
+    width: 30px;
+    padding: 0px;
+    margin: 0px;
+    background: #e9eeee;
+  }
+  .td5_bureaumonthwise {
+    height: 25px;
+  }
+  .td6_bureaumonthwise {
+    padding: 0px;
+    margin: 0px;
+    width: 30px;
+  }
+  .td7_bureaumonthwise {
+    height: 25px;
+    background: #e9eeee;
+  }
+  .td8_bureaumonthwise {
+    background: #e9eeee;
+    height: 24.5px;
+  }
+  .td9_bureaumonthwise {
+    padding: 0px;
+    margin: 0px;
+    width: 30px;
+    background: #e9eeee;
+  }
 }
 
-.secondTable td,
-.secondTable th {
-  border: 1px solid #575757;
-  padding: 2px;
+@media (min-width: 1367px) and (max-width: 1535px) {
+  .bureaumonthwise_maindiv {
+    transform: scale(0.89); /* 80% scaling factor */
+    transform-origin: top left;
+  }
+  .firstTable td,
+  .firstTable th {
+    border: 1px solid #575757;
+    padding: 2px;
+  }
+  .firstTable td {
+    font-size: 14px;
+  }
+  .firstTable th {
+    font-size: 15px;
+  }
+
+  .secondTable td,
+  .secondTable th {
+    border: 1px solid #575757;
+    padding: 2px;
+  }
+  .secondTable td {
+    font-size: 14px;
+  }
+  .secondTable th {
+    font-size: 15px;
+    padding: 2.25px;
+  }
+  .padding_td {
+    padding: 2px;
+  }
+
+  .bureaumonthwise_maindiv {
+    display: flex;
+    margin-left: 16px;
+    text-align: center;
+    margin-right: 15px;
+    /* margin-top: 20px; */
+    margin-bottom: 20px;
+    width: 110%;
+  }
+  .div1bureaumonthwise {
+    width: 176px;
+  }
+  .div2bureaumonthwise {
+    width: 1308px;
+    overflow-x: auto;
+    table-layout: fixed;
+    margin-left: 0px;
+  }
+  .thead1bureaumonthwise {
+    height: 23.8px;
+    font-size: 15px;
+    background: black;
+    color: white;
+  }
+  .td1_1bureaumonthwise {
+    height: 25px;
+  }
+  .td2_bureaumonthwise {
+    width: 30px;
+    padding: 0px;
+    margin: 0px;
+  }
+  .td3_bureaumonthwise {
+    height: 25px;
+    background: #e9eeee;
+  }
+  .td4_bureaumonthwise {
+    width: 30px;
+    padding: 0px;
+    margin: 0px;
+    background: #e9eeee;
+  }
+  .td5_bureaumonthwise {
+    height: 25px;
+  }
+  .td6_bureaumonthwise {
+    padding: 0px;
+    margin: 0px;
+    width: 30px;
+  }
+  .td7_bureaumonthwise {
+    height: 25px;
+    background: #e9eeee;
+  }
+  .td8_bureaumonthwise {
+    background: #e9eeee;
+    height: 24.5px;
+  }
+  .td9_bureaumonthwise {
+    padding: 0px;
+    margin: 0px;
+    width: 30px;
+    background: #e9eeee;
+  }
 }
-.secondTable td {
-  font-size: 14px;
-}
-.secondTable th {
-  font-size: 15px;
-  padding: 2.25px;
-}
-@media (max-width: 1367px) {
-}
-.bureaumonthwise_maindiv {
-  transform: scale(1); /* 80% scaling factor */
-  transform-origin: top left;
+@media (min-width: 1280px) and (max-width: 1367px) {
+  .bureaumonthwise_maindiv {
+    transform: scale(0.84); /* 80% scaling factor */
+    transform-origin: top left;
+  }
+  .firstTable td,
+  .firstTable th {
+    border: 1px solid #575757;
+    padding: 2px;
+  }
+  .firstTable td {
+    font-size: 14px;
+  }
+  .firstTable th {
+    font-size: 15px;
+  }
+
+  .secondTable td,
+  .secondTable th {
+    border: 1px solid #575757;
+    padding: 2px;
+  }
+  .secondTable td {
+    font-size: 14px;
+  }
+  .secondTable th {
+    font-size: 15px;
+    padding: 2.25px;
+  }
+  .padding_td {
+    padding: 2px;
+  }
+
+  .bureaumonthwise_maindiv {
+    display: flex;
+    margin-left: 16px;
+    text-align: center;
+    margin-right: 15px;
+    /* margin-top: 20px; */
+    margin-bottom: 20px;
+    width: 116%;
+  }
+  .div1bureaumonthwise {
+    width: 176px;
+  }
+  .div2bureaumonthwise {
+    width: 1308px;
+    overflow-x: auto;
+    table-layout: fixed;
+    margin-left: 0px;
+  }
+  .thead1bureaumonthwise {
+    height: 23.8px;
+    font-size: 15px;
+    background: black;
+    color: white;
+  }
+  .td1_1bureaumonthwise {
+    height: 25px;
+  }
+  .td2_bureaumonthwise {
+    width: 30px;
+    padding: 0px;
+    margin: 0px;
+  }
+  .td3_bureaumonthwise {
+    height: 25px;
+    background: #e9eeee;
+  }
+  .td4_bureaumonthwise {
+    width: 30px;
+    padding: 0px;
+    margin: 0px;
+    background: #e9eeee;
+  }
+  .td5_bureaumonthwise {
+    height: 25px;
+  }
+  .td6_bureaumonthwise {
+    padding: 0px;
+    margin: 0px;
+    width: 30px;
+  }
+  .td7_bureaumonthwise {
+    height: 25px;
+    background: #e9eeee;
+  }
+  .td8_bureaumonthwise {
+    background: #e9eeee;
+    height: 24.5px;
+  }
+  .td9_bureaumonthwise {
+    padding: 0px;
+    margin: 0px;
+    width: 30px;
+    background: #e9eeee;
+  }
 }

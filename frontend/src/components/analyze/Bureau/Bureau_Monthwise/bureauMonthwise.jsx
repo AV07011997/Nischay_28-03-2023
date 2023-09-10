@@ -74,19 +74,8 @@ const BureauMonthwise = () => {
       <NavBar></NavBar>
 
       {data ? (
-        <div
-          className="bureaumonthwise_maindiv"
-          style={{
-            display: "flex",
-            marginLeft: "16px",
-            textAlign: "center",
-            // overflowX: "auto",
-            marginRight: "15px",
-            marginTop: "20px",
-            marginBottom: "20px",
-          }}
-        >
-          <div style={{ width: "176px" }}>
+        <div className="bureaumonthwise_maindiv">
+          <div className="div1bureaumonthwise">
             <table style={{ tableLayout: "fixed" }} className="firstTable">
               <thead>
                 <tr>
@@ -138,18 +127,9 @@ const BureauMonthwise = () => {
               )}
             </table>
           </div>
-          <div
-            style={{ width: "1308px", overflowX: "auto", tableLayout: "fixed" }}
-          >
+          <div className="div2bureaumonthwise">
             <table className="secondTable" style={{ height: "50px" }}>
-              <thead
-                style={{
-                  height: "23.8px",
-                  background: "black",
-                  color: "white",
-                  fontSize: "15px",
-                }}
-              >
+              <thead className="thead1bureaumonthwise">
                 <th>DEC</th>
                 <th>NOV</th>
                 <th>OCT</th>
@@ -167,7 +147,7 @@ const BureauMonthwise = () => {
                 <tr>
                   {data12 &&
                     Object.keys(data12).map((key) => (
-                      <td style={{ height: "25px" }}>
+                      <td className="td1_1bureaumonthwise">
                         {data12[key][0]?.sum_emi}
                       </td>
                     ))}
@@ -182,7 +162,8 @@ const BureauMonthwise = () => {
                   {data11 &&
                     Object.keys(data11).map((key) => (
                       <td
-                        style={{ padding: "0px", margin: "0px", width: "30px" }}
+                        className="td2_bureaumonthwise"
+                        style={{ padding: "0" }}
                       >
                         <NestedTable cell_data={data11[key]}></NestedTable>
                       </td>
@@ -194,7 +175,7 @@ const BureauMonthwise = () => {
                 <tr>
                   {data22 &&
                     Object.keys(data22).map((key) => (
-                      <td style={{ height: "25px", background: blueshade }}>
+                      <td className="td3_bureaumonthwise">
                         {data22[key][0]?.sum_emi}
                       </td>
                     ))}
@@ -211,12 +192,8 @@ const BureauMonthwise = () => {
                   {data21 &&
                     Object.keys(data21).map((key) => (
                       <td
-                        style={{
-                          padding: "0px",
-                          margin: "0px",
-                          width: "30px",
-                          background: blueshade,
-                        }}
+                        className="td4_bureaumonthwise"
+                        style={{ padding: "0" }}
                       >
                         <NestedTable cell_data={data21[key]}></NestedTable>
                       </td>
@@ -226,7 +203,7 @@ const BureauMonthwise = () => {
                 <tr>
                   {data32 &&
                     Object.keys(data32).map((key) => (
-                      <td style={{ height: "25px" }}>
+                      <td className="td5_bureaumonthwise">
                         {/* {data32[key][0]?.sum_emi} */}
                         {data32[key][0]?.sum_emi &&
                         data32[key][0]?.sum_emi !== "₹ 0"
@@ -245,7 +222,8 @@ const BureauMonthwise = () => {
                   {data31 &&
                     Object.keys(data31).map((key) => (
                       <td
-                        style={{ padding: "0px", margin: "0px", width: "30px" }}
+                        className="td6_bureaumonthwise"
+                        style={{ padding: "0" }}
                       >
                         <NestedTable cell_data={data31[key]}></NestedTable>
                       </td>
@@ -256,7 +234,7 @@ const BureauMonthwise = () => {
                 <tr>
                   {data42 &&
                     Object.keys(data42).map((key) => (
-                      <td style={{ height: "25px", background: blueshade }}>
+                      <td className="td7_bureaumonthwise">
                         {/* {data42[key][0]?.sum_emi} */}
                         {data42[key][0]?.sum_emi &&
                         data42[key][0]?.sum_emi !== "₹ 0"
@@ -268,7 +246,7 @@ const BureauMonthwise = () => {
                 <tr>
                   {data42 &&
                     Object.keys(data42).map((key) => (
-                      <td style={{ background: blueshade, height: "24.5px" }}>
+                      <td className="td8_bureaumonthwise">
                         {data42[key][0]?.cnt_active_accounts
                           ? data42[key][0].cnt_active_accounts
                           : " "}
@@ -279,12 +257,8 @@ const BureauMonthwise = () => {
                   {data41 &&
                     Object.keys(data41).map((key) => (
                       <td
-                        style={{
-                          padding: "0px",
-                          margin: "0px",
-                          width: "30px",
-                          background: blueshade,
-                        }}
+                        className="td9_bureaumonthwise"
+                        style={{ padding: "0" }}
                       >
                         <NestedTable cell_data={data41[key]}></NestedTable>
                       </td>

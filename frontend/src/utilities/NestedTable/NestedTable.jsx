@@ -14,13 +14,16 @@ const NestedTable = (props) => {
           <div className="custom-scrollbar-thumb-horizontal" style={style} />
         )}
       >
-        <table style={{ width: table_width }}>
+        <table
+          className="tablebureaunestedtablemonthwise"
+          style={{ width: table_width, tableLayout: "fixed", padding: "0px" }}
+        >
           <thead>
             <tr>
               {cell_data.map((item) => {
                 if (item.acc_type_new1 !== null) {
                   return (
-                    <td style={{ height: "24px", padding: "0px" }}>
+                    <td className="td1nestedtable" style={{ padding: "0px" }}>
                       {item.acc_type_new1}
                     </td>
                   );
@@ -33,7 +36,7 @@ const NestedTable = (props) => {
               {cell_data.map((item) => {
                 if (item.valid_emi !== "nan") {
                   return (
-                    <td style={{ padding: "0px", height: "25px" }}>
+                    <td className="td2nestedtable" style={{ padding: "0px" }}>
                       {item.valid_emi}
                     </td>
                   );
@@ -44,7 +47,7 @@ const NestedTable = (props) => {
               {cell_data.map((item) => {
                 if (item.DPD !== null) {
                   return (
-                    <td style={{ padding: "0px", height: "24.5px" }}>
+                    <td className="td3nestedtable" style={{ padding: "0" }}>
                       {item.DPD}
                     </td>
                   );
@@ -55,12 +58,7 @@ const NestedTable = (props) => {
               {cell_data.map((item) => {
                 if (item.asset_classification !== null) {
                   return (
-                    <td
-                      style={{
-                        padding: "0px",
-                        height: "25px",
-                      }}
-                    >
+                    <td className="td2nestedtable" style={{ padding: "0px" }}>
                       {item.asset_classification}
                     </td>
                   );
