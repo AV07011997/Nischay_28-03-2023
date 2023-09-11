@@ -336,7 +336,7 @@ const ExecutiveSummary = () => {
                 <div>
                   <img className="image_summary_1" src="/debit_to_credit.png" />
 
-                  <p className="kpi_headings_1">
+                  <p className="kpi_headings_11">
                     Debit to Credit Ratio : {bureau_details?.dtocratio}
                   </p>
                 </div>

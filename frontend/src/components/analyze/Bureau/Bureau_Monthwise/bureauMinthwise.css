@@ -96,7 +96,7 @@
   }
 }
 
-@media (min-width: 1367px) and (max-width: 1535px) {
+@media (min-width: 1366px) and (max-width: 1535px) {
   .bureaumonthwise_maindiv {
     transform: scale(0.89); /* 80% scaling factor */
     transform-origin: top left;
@@ -194,7 +194,7 @@
     background: #e9eeee;
   }
 }
-@media (min-width: 1280px) and (max-width: 1367px) {
+@media (min-width: 1280px) and (max-width: 1366px) {
   .bureaumonthwise_maindiv {
     transform: scale(0.84); /* 80% scaling factor */
     transform-origin: top left;
