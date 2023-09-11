@@ -13,6 +13,7 @@ const NestedTable = (props) => {
         renderThumbHorizontal={({ style }) => (
           <div className="custom-scrollbar-thumb-horizontal" style={style} />
         )}
+        renderTrackVertical={() => <div style={{ display: "none" }} />}
       >
         <table
           className="tablebureaunestedtablemonthwise"

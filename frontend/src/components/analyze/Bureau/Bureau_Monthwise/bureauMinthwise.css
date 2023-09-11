@@ -237,13 +237,15 @@
     width: 116%;
   }
   .div1bureaumonthwise {
-    width: 176px;
+    width: 178px;
+    margin-top: 6px;
   }
   .div2bureaumonthwise {
-    width: 1308px;
+    width: 1409px;
     overflow-x: auto;
     table-layout: fixed;
-    margin-left: 0px;
+    margin-left: -1px;
+    margin-top: 6px;
   }
   .thead1bureaumonthwise {
     height: 23.8px;
