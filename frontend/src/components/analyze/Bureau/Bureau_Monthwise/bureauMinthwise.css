@@ -96,7 +96,7 @@
   }
 }
 
-@media (min-width: 1366px) and (max-width: 1535px) {
+@media (min-width: 1365px) and (max-width: 1535px) {
   .bureaumonthwise_maindiv {
     transform: scale(0.89); /* 80% scaling factor */
     transform-origin: top left;
@@ -142,7 +142,7 @@
     width: 176px;
   }
   .div2bureaumonthwise {
-    width: 1308px;
+    width: 1304px;
     overflow-x: auto;
     table-layout: fixed;
     margin-left: 0px;
@@ -194,7 +194,7 @@
     background: #e9eeee;
   }
 }
-@media (min-width: 1280px) and (max-width: 1366px) {
+@media (min-width: 1280px) and (max-width: 1365px) {
   .bureaumonthwise_maindiv {
     transform: scale(0.84); /* 80% scaling factor */
     transform-origin: top left;
