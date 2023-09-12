@@ -13,8 +13,12 @@ def bck(data):
   df = data
   df['txn_date'] = pd.to_datetime(df['txn_date'], format='%Y-%m-%d')
   df['month_year'] = df['txn_date'].dt.month.astype(str)+'-'+df['txn_date'].dt.year.astype(str)
+  df.debit=df.debit.astype("float")
+  df.credit=df.credit.astype("float")
+
   df.debit = df.debit.replace(0.0,np.nan)
   df.credit = df.credit.replace(0.0,np.nan)
+  # df['credit'] = df['credit'].replace(0.0, np.nan)
   df.sort_values('txn_date', ascending=True, inplace=True)
   print('output from python code')
   print(df['account_number'])
@@ -47,12 +51,14 @@ def bck(data):
 
   
   df['debit']=df['debit'].astype(float)
-  temp=df[df['debit']>0]
+  temp = df[df['debit'].notnull()]
+
   a=temp.loc[temp.debit.notnull(),:].groupby('month_year').debit.mean()
   avg_mthly_debit = (a.sum()/a.shape[0])
 
   df['credit']=df['credit'].astype(float)
-  temp=df[df['credit']>0]
+  temp = df[df['credit'].notnull()]
+
   a=temp.loc[temp.credit.notnull(),:].groupby('month_year').credit.mean()
   avg_mthly_credit = (a.sum()/a.shape[0])
 
@@ -83,14 +89,21 @@ def bck(data):
     if pd.isna(mode_str):
       mode_str=''
     low_deb_amt = format_currency(df.loc[df.debit.idxmin(), 'debit'], 'INR', locale='en_IN') + ' ('+mode_str+')'
+    low_credit_amt = format_currency(df.loc[df.credit.idxmin(), 'credit'], 'INR', locale='en_IN')
+
   else:
     mode_str = ''
     low_deb_amt = u"\u20B9"+str(np.nan) + ' ('+mode_str+')'  
   low_deb_amt_org = low_deb_amt.replace(',','').replace('₹','').split(' ')[0]
+  low_credit_amt = low_credit_amt.replace('₹','₹ ').split('.')[0]
+
   
-  table2 = pd.DataFrame({'Ratio_Debit_Credit':[ratio_deb_cr], 'Ratio_Cash_Total_Credit':[ratio_cash_tot_cr], 'Lowest_Debit_Amount':[low_deb_amt], 'Highest_Credit_Amount':[hi_cr_amt], 'Lowest_Debit_Amount_Org':[low_deb_amt_org], 'Highest_Credit_Amount_Org':[hi_cr_amt_org]})
+  table2 = pd.DataFrame({'Ratio_Debit_Credit':[ratio_deb_cr], 'Ratio_Cash_Total_Credit':[ratio_cash_tot_cr], 'Lowest_Debit_Amount':[low_deb_amt], 'Highest_Credit_Amount':[hi_cr_amt], 'Lowest_Debit_Amount_Org':[low_deb_amt_org],"Lowest_Credit_amount":[low_credit_amt], 'Highest_Credit_Amount_Org':[hi_cr_amt_org]})
   table2['Lowest_Debit_Amount_Source'] = table2['Lowest_Debit_Amount'].apply(lambda x:x.split(' ')[1])
   table2['Highest_Credit_Amount_Source'] = table2['Highest_Credit_Amount'].apply(lambda x:x.split(' ')[1])
+  # table2['Lowest_Credit_amount'] = table2['Lowest_Credit_amount'].apply(lambda x:x.split(' ')[1])
+
+
   
   number_cheque_bounce = int(df[df['transaction_type'] == 'Bounced']['transaction_type'].count()/2)
   

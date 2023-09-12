@@ -95,7 +95,13 @@ const NavBar1 = (props) => {
                   >
                     <Dropdown.Menu title="BUREAU">
                       <Dropdown.Item>
-                        <a>Summary</a>
+                        <a
+                          onClick={() => {
+                            navigate("/bureauanalyze");
+                          }}
+                        >
+                          Summary
+                        </a>
                       </Dropdown.Item>
                       <Dropdown.Item>
                         {/* <a>Month-wise</a> */}

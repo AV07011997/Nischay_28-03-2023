@@ -782,6 +782,7 @@ def bank_customer_kpi(request):
                     KPI4['Opening_Balance'] = KPI4['Opening_Balance'].apply(
                         lambda x: str(x).split('.')[0])
 
+
                     # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x : round(x))
                     # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
                     # KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(lambda x: str(x).split('.')[0])
@@ -795,6 +796,7 @@ def bank_customer_kpi(request):
                         lambda x: format_currency(x, 'INR', locale='en_IN'))
                     KPI4['Closing_Balance'] = KPI4['Closing_Balance'].apply(
                         lambda x: str(x).split('.')[0])
+
 
                     KPI2['Ratio_Debit_Credit'] = KPI2['Ratio_Debit_Credit'].apply(
                         lambda x: round(x, 2))
@@ -811,6 +813,9 @@ def bank_customer_kpi(request):
                         lambda x: str(x).split('.')[0])
                     KPI2['Lowest_Debit_Amount'] = KPI2['Lowest_Debit_Amount'].apply(
                         lambda x: str(x).split('.')[0])
+
+
+
 
                     # KPI3['Min_Amt_Chq_Bounce'] = KPI3['Min_Amt_Chq_Bounce'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))
                     # KPI3['Latest_Chq_Bounce'] = KPI3['Latest_Chq_Bounce'].apply(lambda x: format_currency(x, 'INR', locale='en_IN'))

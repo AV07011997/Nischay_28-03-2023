@@ -4,6 +4,6 @@ export const DateMilisec = (array) => {
   for (let data of array) {
     data.date_of_action = new Date(data.date_of_action);
   }
-  console.log(array);
+  // console.log(array);
   return array;
 };

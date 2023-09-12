@@ -124,6 +124,26 @@ const AnalyzeBankSummary = ({ setUser }) => {
   //   });
   // };
 
+  const formatCurrency = (value) => {
+    const numericValue = typeof value === "string" ? parseFloat(value) : value;
+
+    if (isNaN(numericValue)) {
+      return "Invalid value";
+    }
+
+    const formattedValue = numericValue.toLocaleString("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    });
+
+    // Manually add a space after the rupee symbol
+    const valueWithSpace = formattedValue.replace("₹", "₹ ");
+
+    return valueWithSpace;
+  };
+
   useEffect(() => {
     var statementsArray = [];
     postApi("analyze/" + APIADDRESS.ANALYZEBANKSUMMARY, {
@@ -199,6 +219,8 @@ const AnalyzeBankSummary = ({ setUser }) => {
       });
     }
   }, [info]);
+
+  console.log(info);
 
   return (
     <div>
@@ -585,7 +607,7 @@ const AnalyzeBankSummary = ({ setUser }) => {
                       padding: "3px",
                     }}
                   >
-                    {info.data3.Lowest_Debit_Amount}{" "}
+                    {info.data3.Lowest_Credit_amount}{" "}
                   </td>
                 </tr>
                 <tr>

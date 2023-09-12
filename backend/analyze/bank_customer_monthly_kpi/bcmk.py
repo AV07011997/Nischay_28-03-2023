@@ -103,7 +103,17 @@ def KPIs(data):
                 print(e)
 
         else:
-            months_df=pd.DataFrame({"months":pd.date_range(final["txn_date"].min(),final["txn_date"].max(), freq='MS')})
+            min_date = final["txn_date"].min()
+            max_date = final["txn_date"].max()
+
+            # Get the minimum year from the minimum date
+            min_year = min_date.year
+
+            # Create a custom date range starting from January of the minimum year
+            date_range = pd.date_range(start=f"{min_year}-01-01", end=max_date, freq='MS')
+
+            # Create a DataFrame with the date_range
+            months_df = pd.DataFrame({"months": date_range})
         #months_df=pd.DataFrame({"months":pd.date_range(final["txn_date"].min(),final["txn_date"].max(), freq='MS')})
         months_df["month_year"]=pd.to_datetime(months_df["months"]).dt.to_period('m')
         Month_End_balance=final.groupby(['month_year']).agg(Month_End_balance=("balance","last")).reset_index()

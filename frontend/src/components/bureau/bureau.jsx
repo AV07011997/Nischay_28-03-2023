@@ -33,6 +33,7 @@ const Bureau = ({ info }) => {
     postApi(APIADDRESS.BUREAUDATA, {
       leadID: localStorage.getItem("leadID"),
     }).then((res) => {
+      console.log(res);
       var table1 = [];
       var table2 = [];
       for (var j = 0; j < res[0].length; j++) {
@@ -47,6 +48,7 @@ const Bureau = ({ info }) => {
           table2.push(res[0][j]);
         }
       }
+
       // console.log(selectedvalueArray);
       setSelectedValueType(selectedvalueArray);
       setTableData([table1]);
@@ -178,6 +180,8 @@ const Bureau = ({ info }) => {
   useEffect(() => {
     updateEMI();
   }, [selectedValueType]);
+
+  console.log(creditCardData);
 
   return (
     <div>
@@ -455,15 +459,13 @@ const Bureau = ({ info }) => {
                 return (
                   <tr>
                     <th className="table_bureau_text">
-                      {item["date_reported_som"]}
+                      {item["Date_reported"]}
                     </th>
                     <th className="table_bureau_text">{item["Loan_type"]}</th>
                     <th className="table_bureau_text">{item["Loan_status"]}</th>
+                    <th className="table_bureau_text">{item["date_issued"]}</th>
                     <th className="table_bureau_text">
-                      {item["Disbursal_date"]}
-                    </th>
-                    <th className="table_bureau_text">
-                      {formatIndianCurrency(150000 * (index + 1))}
+                      {formatIndianCurrency(item["High_credit_amount"])}
                     </th>
                     <th className="table_bureau_text">
                       {formatIndianCurrency(item["Current Balance"])}

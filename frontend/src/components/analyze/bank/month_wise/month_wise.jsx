@@ -626,7 +626,7 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                   }
                 })}
               </tr>
-              <tr>
+              {/* <tr>
                 <td
                   className="highlighted_headers"
                   colSpan={3}
@@ -643,7 +643,7 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                     );
                   }
                 })}
-              </tr>
+              </tr> */}
               <tr>
                 <td
                   className="highlighted_headers"

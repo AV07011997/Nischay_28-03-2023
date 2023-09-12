@@ -56,9 +56,7 @@ const Upload = ({ setUser }) => {
     getApi(
       APIADDRESS.UPLOADSTATEMENT + localStorage.getItem("leadID") + "/"
     ).then((response) => {
-      console.log(response[0]);
       if (response) {
-        // console.log(response);
         if (response[0]) {
           table = DateMilisec(response[0]);
           const updatedArray = response[0].map((obj) => {
@@ -67,22 +65,19 @@ const Upload = ({ setUser }) => {
             }
             return obj;
           });
-          console.log(updatedArray);
 
           settable(response[0]);
         }
-
-        // const table1 = objectFunction(response[0]);
 
         settable1(response[0]);
       }
     });
   }, []);
-  // console.log(table1);
   var newFiles = [];
   var pdfurl = [];
 
   const handleFile = (e) => {
+    console.log(e.target.files);
     newFiles.push(e.target.files);
     for (let i = 0; i < e.target.files.length; i++) {
       let reader = new FileReader();
@@ -127,15 +122,10 @@ const Upload = ({ setUser }) => {
 
     if (table) {
       for (let filesDataBase of table) {
-        // console.log(filesDataBase);
         for (let newFiles in mergefiles) {
-          // console.log(table1);
-          // console.log(table);
-
           if (
             filesDataBase.file_name == mergefiles[newFiles][0].name &&
             filesDataBase.status != "Deleted"
-            // JSON.stringify(filesDataBase.lead_id) == JSON.stringify(radiovalue)
           ) {
             repeatnumber = repeatnumber + 1;
             let repeatfilesvariable =
@@ -175,7 +165,6 @@ const Upload = ({ setUser }) => {
       );
     }
   };
-
   const removepdfview = (fileurl) => {
     const localmergedfile = [];
     for (let combinedfile of mergefiles) {
@@ -189,7 +178,6 @@ const Upload = ({ setUser }) => {
   const deleteFiles = async () => {
     var jsonData = JSON.stringify(deleteFileList);
 
-    // console.log(deleteFileList);
     const response = await postApi(
       "upload_file/" + APIADDRESS.UPLOADEDFILESDELETE,
       {
@@ -198,15 +186,12 @@ const Upload = ({ setUser }) => {
         name: localStorage.getItem("name"),
       }
     );
-    // console.log(response);
 
     if (response == 1) {
       alert("File(s) successfully deleted");
       window.location.reload();
     }
   };
-
-  console.log(table);
 
   useEffect(() => {
     removeDuplicates(table);
@@ -235,10 +220,7 @@ const Upload = ({ setUser }) => {
         // If it's not a duplicate, add it to uniqueObjects
         uniqueObjects.push(object);
       }
-
-      console.log(uniqueObjects);
     } else {
-      console.log("The input array is empty or undefined.");
     }
     settable(uniqueObjects);
   };
@@ -251,7 +233,6 @@ const Upload = ({ setUser }) => {
     });
   }, [mergefiles]);
 
-  console.log(table);
   const tableStyles = {
     header: {
       fontSize: "15px", // Custom font size for header cells

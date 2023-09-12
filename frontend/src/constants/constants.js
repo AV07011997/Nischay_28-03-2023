@@ -33,7 +33,7 @@ export const APIADDRESS = {
 
 export const BUREAUPAGECOLUMNS = {
   columns: [
-    { title: "Date Reported", field: "date_reported_som" },
+    { title: "Date Reported", field: "Date_reported" },
     { title: "Loan Type", field: "Loan_type" },
     { title: "Loan Status", field: "Loan_status" },
     { title: "Disbursal Date", field: "Disbursal_date" },
