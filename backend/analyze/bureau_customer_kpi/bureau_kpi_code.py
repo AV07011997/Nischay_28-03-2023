@@ -624,6 +624,8 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
                                                                   "loanoncreditcard", "securedcreditcard", "overdraft",
                                                                  "primeministerjaandhanyojanaoverdraft", "telcolandline",
                                                                   "telcowireless", "telcobroadband", "autooverdraft"])]
+    temp['date_disbursed'] = pd.to_datetime(temp['date_disbursed'], format='%d-%m-%Y')
+
     temp = temp.sort_values(by=['source', 'deal_id', 'cust_id', 'date_disbursed'], ascending=[True, True, True, False]).groupby(
         ['source', 'deal_id', 'cust_id']).first().reset_index()[['deal_id', 'cust_id', 'source', 'account_type', 'disbursed_amount', 'date_disbursed']]
     temp['date_disbursed'] = pd.to_datetime(
@@ -696,7 +698,7 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
     temp1 = temp.loc[temp.groupby(['source', 'deal_id', 'cust_id'])[
         'disbursed_amount'].idxmax()]
     temp1['last_closed_loan'] = temp1['account_type'].astype(
-        str)+" of "+temp1['disbursed_amount'].astype(str)+" , "+temp1['date_disbursed_som_new'].dt.strftime("%b %Y")
+        str)+" of "+temp1['disbursed_amount'].astype(str)+" , "+temp1['date_closed']
     cust_level = cust_level.merge(temp1[['source', 'deal_id', 'cust_id', 'last_closed_loan']], on=['source', 'deal_id', 'cust_id'], how='left')\
 
     # sum of current blance of un-secured active loans
@@ -731,16 +733,16 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
     temp = temp.replace('', 0.00)
 
 # Drop rows containing None values
-    temp = temp.dropna()
-    temp = temp.replace('', None)
+#     temp = temp.dropna()
+#     temp = temp.replace('', None)
 
 # Drop rows containing None values
-    temp = temp.dropna()
+#     temp = temp.dropna()
 
-    temp['EMI']=temp['EMI'].astype(float)
+    temp['EMI_edited']=temp['EMI_edited'].astype(float)
 
 
-    temp = temp.groupby(['cust_id', 'source'])['EMI'].sum(
+    temp = temp.groupby(['cust_id', 'source'])['EMI_edited'].sum(
     ).reset_index(name="sum_of_emi_of_active_loans")
     # print(temp)
     cust_level = cust_level.merge(temp, on=['cust_id', 'source'], how='left')
@@ -1025,8 +1027,10 @@ def bureau_cust_kpi(bureau_ref_dtl, bureau_score_segment, bureau_account_segment
     )
 
     temp = temp.reset_index()
-    temp['credit_utilization_ratio'] = round(
-        (temp['current_balance']/temp['disbursed_amount'])*100, 2)
+    temp['credit_utilization_ratio'] = (bureau_account_segment_tl['CURRENT_BALANCE'].sum() /
+                                               bureau_account_segment_tl['HIGH_CREDIT_AMOUNT'].sum()) * 100
+    temp['credit_utilization_ratio']=temp['credit_utilization_ratio'].round(2)
+
     cust_level = cust_level.merge(temp[['deal_id', 'cust_id', 'source', 'credit_utilization_ratio']], on=[
                                   'deal_id', 'cust_id', 'source'], how='left')
 
