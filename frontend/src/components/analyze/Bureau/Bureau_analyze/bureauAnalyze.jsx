@@ -200,7 +200,10 @@ const BureauAnalyze = () => {
                 className="BureayAnalyzeCell"
               >
                 <tr>
-                  <th className="header-table-bureau-analayze">
+                  <th
+                    style={{ width: "285px" }}
+                    className="header-table-bureau-analayze"
+                  >
                     Age (in years)
                   </th>
                   <td className="num-bureau-analyze">{item?.age}</td>

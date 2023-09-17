@@ -760,10 +760,10 @@ def bureau_c_m_k(bureau_ref_dtl, bureau_score_segment, bureau_account_segment_tl
     # crif_cibil_dedup_4['emi_impute']=np.where(crif_cibil_dedup_4['emi_impute']>500,crif_cibil_dedup_4['emi_impute'],np.nan)
     crif_cibil_dedup_4['emi'] = crif_cibil_dedup_4['emi'].fillna(0)
 
-    crif_cibil_dedup_4['emi_impute'] = np.where(((crif_cibil_dedup_4['emi_new'] <= 500) | (
-                (crif_cibil_dedup_4['emi_new'] >= crif_cibil_dedup_4['disbursed_amount']) & (
+    crif_cibil_dedup_4['emi_impute'] = np.where(((crif_cibil_dedup_4['emi'] <= 500) | (
+                (crif_cibil_dedup_4['emi'] >= crif_cibil_dedup_4['disbursed_amount']) & (
                     crif_cibil_dedup_4['disbursed_amount'] > 0))), crif_cibil_dedup_4['emi_deflate'],
-                                                crif_cibil_dedup_4['emi_new'])
+                                                crif_cibil_dedup_4['emi'])
 
     # crif_cibil_dedup_4['emi_impute']=np.where(crif_cibil_dedup_4['emi_amount']<=500,crif_cibil_dedup_4['emi_deflate'],crif_cibil_dedup_4['emi_amount'])
 

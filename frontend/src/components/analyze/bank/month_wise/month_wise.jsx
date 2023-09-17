@@ -721,24 +721,6 @@ const AnalyzeBankMonthWise = ({ setUser }) => {
                   colSpan={3}
                   style={{ fontSize: "15px" }}
                 >
-                  Month End Balance{" (₹)"}
-                </td>
-                {optbank.map((item) => {
-                  if (item) {
-                    return (
-                      <td style={{ textAlign: "right" }}>
-                        {item.Month_End_balance}
-                      </td>
-                    );
-                  }
-                })}
-              </tr>
-              <tr>
-                <td
-                  className="highlighted_headers"
-                  colSpan={3}
-                  style={{ fontSize: "15px" }}
-                >
                   Net Inflow Amount{" (₹)"}
                 </td>
                 {optbank.map((item) => {

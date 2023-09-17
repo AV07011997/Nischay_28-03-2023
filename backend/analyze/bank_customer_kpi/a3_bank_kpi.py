@@ -199,16 +199,14 @@ def bck(data):
 ### @@@@@@@@@@@@@@@@@@       Main logic code credit-debit frequency distribution graph  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
-  debit_cash=df[df['mode'].str.lower().str.strip() == 'cash'][df['credit'] == 0]['debit'].count()
-  credit_cash=df[(df['mode'].str.lower().str.strip() == 'cash') & (df['debit'] == 0)]['credit'].count()
+  debit_cash=df[df['mode'].str.lower().str.strip() == 'cash']['debit'].count()
+  credit_cash = df[df['mode'].str.lower().str.strip() == 'cash']['credit'].count()
 
+  debit_cheque = df[df['mode'].str.lower().str.strip() == 'cheque']['debit'].count()
+  credit_cheque = df[(df['mode'].str.lower().str.strip() == 'cheque') & (df['debit'] == 0)]['credit'].count()
 
-  debit_cheque=df[df['mode'].str.lower().str.strip() == 'cheque'][df['credit'] == 0]['debit'].count()
-  credit_cheque=df[df['mode'].str.lower().str.strip() == 'cheque'][df['debit'] == 0]['credit'].count()
-
-
-  debit_net=df[(df['mode'].str.lower().str.strip().str.replace(' ', '')=='netbanking') & (df['credit'] == 0)]['credit'].count()
-  credit_net=df[(df['mode'].str.lower().str.strip().str.replace(' ', '')=='netbanking') & (df['debit'] == 0)]['credit'].count()
+  debit_net = df[df['mode'].str.lower().str.strip().str.replace(' ', '') == 'netbanking']['credit'].count()
+  credit_net = df[df['mode'].str.lower().str.strip().str.replace(' ', '') == 'netbanking']['credit'].count()
 
   data = {'debit': [debit_cheque, debit_cash, debit_net],
           'credit': [credit_cheque, credit_cash, credit_net]
