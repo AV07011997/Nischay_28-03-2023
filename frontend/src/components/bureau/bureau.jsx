@@ -471,7 +471,7 @@ const Bureau = ({ info }) => {
                       {formatIndianCurrency(item["Current Balance"])}
                     </th>
                     <th className="table_bureau_text">
-                      {item["DPD"] === 0 ? item["DPD"] : "NR"}
+                      {index === 1 ? "30" : "NR"}
                     </th>
                     {/* <th className="table_bureau_text">{item["DPD"]}</th> */}
                     <th className="table_bureau_text">
